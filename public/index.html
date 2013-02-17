@@ -33,75 +33,6 @@
 		</div> 
 	</div> 
 	<script type="text/javascript">
-		var HexPlanetGeometry = function(radius, subdivisions){
-			THREE.Geometry.call(this);
-			this.radius = radius || 50;
-			var x, y, hexes = [
-					[ 0.723606, 0.0, 1.17082 ],
-					[ 0.0, 1.17082, 0.723606 ],
-					[ -0.723606, 0.0, 1.17082 ],
-					[ 0.0, -1.17082,  0.723606 ],
-					[ 0.723606, 0.0, -1.17082 ],
-					[ 0.0, -1.17082, -0.723606 ],
-					[ -0.723606, 0.0, -1.17082 ],
-					[ 0.0, 1.17082, -0.723606 ],
-					[ 1.17082, -0.723606, 0.0 ],
-					[ 1.17082, 0.723606, 0.0 ],
-					[ -1.17082, 0.723606, 0.0 ],
-					[ -1.17082, -0.723606,  0.0]
-				], hexdual = [
-					[5, 11, 6],
-					[1, 2, 0],
-					[0, 2, 3],
-					[5, 6, 4],
-					[4, 6, 7],
-					[9, 1, 0],
-					[10, 2, 1],
-					[2, 10, 11],
-					[11, 3, 2],
-					[8, 9, 0],
-					[0, 3, 8],
-					[11, 10, 6],
-					[4, 7, 9],
-					[9, 8, 4],
-					[7, 6, 10],
-					[1, 9, 7],
-					[10, 1, 7],
-					[5, 4, 8],
-					[3, 11, 5],
-					[8, 3, 5]
-				], vertices = [], uvs = [];
-
-			// build initial (level 0) mesh
-
-			// subdivide until desired level
-			for (var i = 0; i < subdivisions; i++){
-				
-			}
-
-			// project to sphere
-
-			// make vertices
-			for (var i in hexes){
-				var pos = new THREE.Vector3(hexes[i][0], hexes[i][1], hexes[i][2]);
-				this.vertices.push( new THREE.Vertex(pos) );
-			}
-			// Make faces
-			for (var i in hexdual){
-				var dual = hexdual[i];
-				var a = dual[0];
-				var b = dual[1];
-				var c = dual[2];
-				this.faces.push(new THREE.Face3(a, b, c));
-			}
-
-			this.computeCentroids();
-			this.computeFaceNormals();
-			//this.boundingSphere = new THREE.Sphere(new THREE.Vector3(), radius);
-		};
-		HexPlanetGeometry.prototype = Object.create(THREE.Geometry.prototype);
-	</script>
-	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 
@@ -169,8 +100,10 @@
 						.normalize().multiplyScalar(1.2);
 			scene.add( light );
 
-			var geometry	= new HexPlanetGeometry( 1, 3);
-			var material	= new THREE.MeshNormalMaterial();
+			var geometry	= new THREE.IcosahedronGeometry(2, 200);
+			setHexUVs(geometry);
+			var material	= new THREE.MeshLambertMaterial(
+							{map: THREE.ImageUtils.loadTexture("images/hex.jpg")});
 			var mesh	= new THREE.Mesh( geometry, material ); 
 			scene.add( mesh );
 
@@ -205,22 +138,30 @@
 				scene.objects[ i ].rotation.x = PIseconds*0.0002 * (i % 2 ? 1 : -1);
 			}
 			// animate DirectionalLight
-			scene.lights.forEach(function(light, idx){
-				if( light instanceof THREE.DirectionalLight === false )	return;
-				var ang	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1);
-				light.position.set(Math.cos(ang), Math.sin(ang), Math.cos(ang*2)).normalize();							
-			});
+			//scene.lights.forEach(function(light, idx){
+			//	if( light instanceof THREE.DirectionalLight === false )	return;
+			//	var ang	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1);
+			//	light.position.set(Math.cos(ang), Math.sin(ang), Math.cos(ang*2)).normalize();							
+			//});
 			// animate PointLights
-			scene.lights.forEach(function(light, idx){
-				if( light instanceof THREE.PointLight === false )	return;
-				var angle	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1) + idx * Math.PI/3;
-				light.position.set(Math.cos(angle)*3, Math.sin(angle*3)*2, Math.cos(angle*2)).normalize().multiplyScalar(2);
-			});
+			//scene.lights.forEach(function(light, idx){
+			//	if( light instanceof THREE.PointLight === false )	return;
+			//	var angle	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1) + idx * Math.PI/3;
+			//	light.position.set(Math.cos(angle)*3, Math.sin(angle*3)*2, Math.cos(angle*2)).normalize().multiplyScalar(2);
+			//});
 
 			// actually render the scene
 			renderer.render( scene, camera );
 		}
 
+		function setHexUVs(geometry){
+			for(var f in geometry.faceVertexUvs[0]){
+			  	var uvs = geometry.faceVertexUvs[0][f];
+			  	uvs[0].set(0.18, 0.16);
+			  	uvs[1].set(0.5, 1.0);
+			  	uvs[2].set(0.8, 0.17);
+			}
+		}
 	</script>
 </body>
 </html>
