@@ -64,10 +64,11 @@
 			scene = new THREE.Scene();
 
 			// put a camera in the scene
-			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 500000 );
-			camera.position.z = 5000;
-			controls = new THREE.OrbitControls( camera );
-			controls.addEventListener( 'change', render );
+			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 5000);
+			camera.position.z = 5;
+			//controls = new THREE.OrbitControls( camera );
+			//controls.addEventListener( 'change', render );
+			scene.add(camera);
 
 			// create a camera contol
 			cameraControls	= new THREE.TrackballControls( camera )
