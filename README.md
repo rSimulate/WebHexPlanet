@@ -12,6 +12,13 @@ Downloading and Running
 Setup RubyGems if you haven't yet.
 http://docs.rubygems.org/read/chapter/3
 
+Setup GemBundler if you haven't yet.
+http://gembundler.com/
+
+`gem install bundler`
+
+Checkout the source, setup, and run.
+
 `git clone https://github.com/rSimulate/WebHexPlanet.git`
 
 `cd WebHexPlanet`
