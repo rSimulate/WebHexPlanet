@@ -88,6 +88,7 @@
 			lights();
 			// - you will most likely replace this part by your own
 			createPlanet();
+			createMoon();
 		}
 
 		// animation loop
@@ -191,6 +192,19 @@
 		
 			}
 		
+		function createMoon() {
+		
+			var geometry	= new THREE.IcosahedronGeometry(0.8, 4);
+			setHexUVs(geometry);
+			var material	= new THREE.MeshLambertMaterial(
+							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
+			var moonmesh	= new THREE.Mesh( geometry, material ); 
+			moonmesh.position.x = 15;
+			moonmesh.position.y = 2;
+			
+			scene.add( moonmesh );
+						
+		}
 		
 	</script>
 </body>
