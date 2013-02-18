@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>MetaSim using Three.js</title>
+		<title>MetaSim - Alpha 0.6</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		
@@ -11,9 +11,7 @@
 		<script src="vendor/three.js/three-extras.min.js"></script>
 		<script src="vendor/three.js/OrbitControls.js"></script>
 		<script src="vendor/three.js/Detector.js"></script>
-		<!-- https://github.com/mrdoob/stats.js -->
 		<script src="vendor/three.js/Stats.js"></script>
-
 		<script src="vendor/threex/THREEx.screenshot.js"></script>
 		<script src="vendor/threex/THREEx.FullScreen.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
@@ -27,9 +25,10 @@
 	<!-- info on screen display -->
 	<div id="info">
 		<div class="top">
-			<a href="http://learningthreejs.com/blog/2011/12/20/boilerplate-for-three-js/" target="_blank">LearningThree.js</a>
-			boiler plate for
-			<a href="https://github.com/mrdoob/three.js/" target="_blank">three.js</a>
+		Links:
+			<a href="https://github.com/rSimulate/WebHexPlanet" target="_blank">Github</a>
+			&
+			<a href="https://www.dropbox.com/home/rSIM" target="_blank">Dropbox</a>
 		</div>
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
@@ -38,7 +37,7 @@
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
-
+		scene = new THREE.Scene();
 		if( !init() )	animate();
 
 		// init the scene
@@ -57,19 +56,17 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.getElementById('container').appendChild(renderer.domElement);
 
-			// add Stats.js - https://github.com/mrdoob/stats.js
 			stats = new Stats();
 			stats.domElement.style.position	= 'absolute';
 			stats.domElement.style.bottom	= '0px';
 			document.body.appendChild( stats.domElement );
 
 			// create a scene
-			scene = new THREE.Scene();
+			
 
 			// put a camera in the scene
-			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 5000);
-			camera.position.z = 5;
-			//controls.addEventListener( 'change', render );
+			camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 50000);
+			camera.position.set(0, 0, 5);
 			scene.add(camera);
 
 			// create a camera contol
@@ -86,29 +83,9 @@
 			}
 
 			// here you add your objects
+			lights();
 			// - you will most likely replace this part by your own
-			var light	= new THREE.DirectionalLight( 0xffffff );
-			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
-			scene.add( light );
-			var light	= new THREE.DirectionalLight( 0xffffaa );
-			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
-			scene.add( light );
-			var light	= new THREE.PointLight( 0xffffff );
-			light.position.set( Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 )
-						.normalize().multiplyScalar(1.2);
-			scene.add( light );
-			var light	= new THREE.PointLight( 0xffffff );
-			light.position.set( Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 )
-						.normalize().multiplyScalar(1.2);
-			scene.add( light );
-
-			var geometry	= new THREE.IcosahedronGeometry(2, 4);
-			setHexUVs(geometry);
-			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/hex.jpg")});
-			var mesh	= new THREE.Mesh( geometry, material ); 
-			scene.add( mesh );
-
+			createPlanet();
 		}
 
 		// animation loop
@@ -135,10 +112,8 @@
 			cameraControls.update();
 
 			// animation of all objects
-			//for( var i = 0; i < scene.objects.length; i ++ ){
-			//	scene.objects[ i ].rotation.y = PIseconds*0.0003 * (i % 2 ? 1 : -1);
-			//	scene.objects[ i ].rotation.x = PIseconds*0.0002 * (i % 2 ? 1 : -1);
-			//}
+			// TODO
+
 			// animate DirectionalLight
 			//scene.lights.forEach(function(light, idx){
 			//	if( light instanceof THREE.DirectionalLight === false )	return;
@@ -164,6 +139,37 @@
 			  	uvs[2].set(0.8, 0.17);
 			}
 		}
+		
+		
+		function lights() {
+		
+			var light	= new THREE.DirectionalLight( 0xffffff );
+			light.position.set( 5, 0, 0).normalize();
+			scene.add( light );
+
+		
+		}
+		
+		
+		function createPlanet() {
+		
+			var geometry	= new THREE.IcosahedronGeometry(2, 4);
+			setHexUVs(geometry);
+			var material	= new THREE.MeshLambertMaterial(
+							{map: THREE.ImageUtils.loadTexture("images/hex.jpg"),transparent:true});
+			var mesh	= new THREE.Mesh( geometry, material ); 
+			scene.add( mesh );
+			
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.1 , 4);
+			var atmospherematerial	= new THREE.MeshBasicMaterial({
+				color: 0x2EFEF7,
+				transparent: true,
+				opacity: 0.1} );
+			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
+			
+			scene.add( atmospheremesh );
+		}
+		
 	</script>
 </body>
 </html>
