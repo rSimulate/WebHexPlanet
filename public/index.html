@@ -163,7 +163,7 @@
 			scene.add( mesh );
 			
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
-			var atmospherematerial	= new THREE.MeshBasicMaterial({
+			var atmospherematerial	= new THREE.MeshLambertMaterial({
 				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
 				color: 0xFFFFFF,
 				transparent: true,
