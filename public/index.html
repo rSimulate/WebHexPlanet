@@ -82,6 +82,8 @@
 				document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
 			}
 
+			drawSkyBox();
+
 			// here you add your objects
 			lights();
 			// - you will most likely replace this part by your own
@@ -170,6 +172,25 @@
 			
 			scene.add( atmospheremesh );
 		}
+		
+		function drawSkyBox()  {
+		
+			var urls = [ 
+				"images/skybox.png", "images/skybox.png", //Unused These is the array of the sides of the skybox, currently it uses 1 image for all of them
+				"images/skybox.png", "images/skybox.png", //Unused
+				"images/skybox.png", "images/skybox.png" ]; //unsude
+			var textureCube = THREE.ImageUtils.loadTextureCube( "images/skybox.png" ); //unused 
+			var skymaterial = new THREE.MeshBasicMaterial( {map : THREE.ImageUtils.loadTexture("images/skybox.png"),side: THREE.BackSide} ) ;
+				
+			var skybox = new THREE.CubeGeometry( 500, 500, 500 );
+				
+		
+			var skymesh = new THREE.Mesh( skybox, skymaterial ); 
+				
+			scene.add( skymesh );
+		
+			}
+		
 		
 	</script>
 </body>
