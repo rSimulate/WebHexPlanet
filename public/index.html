@@ -160,11 +160,12 @@
 			var mesh	= new THREE.Mesh( geometry, material ); 
 			scene.add( mesh );
 			
-			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.1 , 4);
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
 			var atmospherematerial	= new THREE.MeshBasicMaterial({
-				color: 0x2EFEF7,
+				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
+				color: 0xFFFFFF,
 				transparent: true,
-				opacity: 0.1} );
+				opacity: 1.0} );
 			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
 			
 			scene.add( atmospheremesh );
