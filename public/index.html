@@ -156,7 +156,7 @@
 			var geometry	= new THREE.IcosahedronGeometry(2, 4);
 			setHexUVs(geometry);
 			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/hex.jpg"),transparent:true});
+							{map: THREE.ImageUtils.loadTexture("images/hex.jpg")});
 			var mesh	= new THREE.Mesh( geometry, material ); 
 			scene.add( mesh );
 			
