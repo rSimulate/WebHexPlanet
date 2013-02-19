@@ -97,6 +97,25 @@
 			lights();
 			createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			createMoon();
+			
+			var sungeometry	= new THREE.IcosahedronGeometry(50, 2);
+			var sunmaterial	= new THREE.MeshBasicMaterial(
+						{
+						map: THREE.ImageUtils.loadTexture("images/sun.png"),
+						color: 0xFFFF00
+						});
+			var sunmesh	= new THREE.Mesh( sungeometry, sunmaterial ); 
+			//sunmesh.scale.x = 4;
+			//sunmesh.scale.y = 4;
+			//sunmesh.scale.z = 4;
+			sunmesh.position.x = 500;
+			scene.add( sunmesh );
+			
+			
+			
+			
+			
+			
 		}
 
 		// animation loop
