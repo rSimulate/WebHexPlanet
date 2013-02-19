@@ -118,6 +118,16 @@
 		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
 			var PIseconds	= Date.now() * Math.PI;
+			var time = Date.now() / 50;
+			var radius = 15;
+			var scalingfactor = 0.03;
+			
+			moonmesh.rotation.y += 0.01;// Moon rotation
+			//Moon's orbit
+			moonmesh.position.x = radius * Math.cos(scalingfactor * time);
+			moonmesh.position.z = radius * Math.sin(scalingfactor * time);
+
+
 
 			// update camera controls
 			cameraControls.update();
@@ -140,6 +150,41 @@
 			  	uvs[2] = new THREE.Vector2(0.78, 0.70);
 			}
 		}
+		
+		
+		function createMoon() { // had to move back to index.html for now
+		
+		
+			var planetgeometry	= new THREE.IcosahedronGeometry(0.7, 4);
+			var material	= new THREE.MeshLambertMaterial(
+							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
+			moonmesh	= new THREE.Mesh( planetgeometry, material ); 
+			moonmesh.position.x = 15;
+			moonmesh.position.y = 2;
+			scene.add( moonmesh );
+
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(0.71 , 4);
+			var atmospherematerial	= new THREE.MeshLambertMaterial({
+				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
+				color: 0xFFFFFF,
+				transparent: true,
+				//opacity: 1.0
+				} );
+			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
+			scene.add( atmospheremesh );
+			var hexgeometry	= new THREE.IcosahedronGeometry(0.71, 4);
+
+			setHexUVs(hexgeometry);
+			var material	= new THREE.MeshLambertMaterial({
+				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
+				color: 0xFFFFFF,
+				transparent: true,
+				opacity: 0.2
+				});
+
+			
+		}
+		
 		
 	</script>
 </body>
