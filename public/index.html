@@ -11,12 +11,14 @@
 		<script src="vendor/three.js/three-extras.min.js"></script>
 		<script src="vendor/three.js/OrbitControls.js"></script>
 		<script src="vendor/three.js/Detector.js"></script>
+		<script src="vendor/dat.gui.min.js"></script>
 		<script src="vendor/three.js/Stats.js"></script>
 		<script src="vendor/threex/THREEx.screenshot.js"></script>
 		<script src="vendor/threex/THREEx.FullScreen.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
-		<script src="main.js"></script>
+		<script src="vendor/main.js"></script>
+
 		<link  href="css/main.css" rel="stylesheet"/>
 	</head>
 <body>
@@ -29,14 +31,23 @@
 			<a href="https://github.com/rSimulate/WebHexPlanet" target="_blank">Github</a>
 			&
 			<a href="https://www.dropbox.com/home/rSIM" target="_blank">Dropbox</a>
+			
 		</div>
+		
+		
+
+			
+
+		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
 		</div> 
 	</div> 
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
+		var moongeometry,moonmaterial,moonmesh;
 		var camera, cameraControl;
+		var gui;
 		scene = new THREE.Scene();
 		if( !init() )	animate();
 
@@ -83,10 +94,7 @@
 			}
 
 			skymesh = drawSkyBox();
-
-			// here you add your objects
 			lights();
-			// - you will most likely replace this part by your own
 			createPlanet();
 			createMoon();
 		}
@@ -98,7 +106,7 @@
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame( animate );
-
+			
 			// do the render
 			render();
 
@@ -135,14 +143,19 @@
 			renderer.render( scene, camera );
 		}
 
+
 		function setHexUVs(geometry){
 			for(var f in geometry.faceVertexUvs[0]){
 			  	var uvs = geometry.faceVertexUvs[0][f];
-			  	uvs[0].set(0.18, 0.16);
-			  	uvs[1].set(0.5, 1.0);
-			  	uvs[2].set(0.8, 0.17);
+			  	uvs[0].set(0.55, 0.57);
+			  	uvs[1].set(0.15, 0.4);
+			  	uvs[2].set(0.6, 0.8);
 			}
 		}
+		
+
+		
+
 		
 	</script>
 </body>
