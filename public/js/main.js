@@ -1,10 +1,14 @@
   
-		function createPlanet() {
+			function createPlanet(size) {
 		
 			var planetgeometry	= new THREE.IcosahedronGeometry(2, 4);
 			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/TEWworld.jpg")});
+					{map: THREE.ImageUtils.loadTexture("images/TEWworld.jpg")});
 			var mesh	= new THREE.Mesh( planetgeometry, material ); 
+			//Scale the object to the size variable
+			mesh.scale.x = size;
+			mesh.scale.y = size;
+			mesh.scale.z = size;
 			scene.add( mesh );
 
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
@@ -15,6 +19,12 @@
 				//opacity: 1.0
 				} );
 			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
+			//Scale the object to the size variable
+			atmospheremesh.scale.x = size + 0.05;
+			atmospheremesh.scale.y = size + 0.05;
+			atmospheremesh.scale.z = size + 0.05;
+			
+			
 			scene.add( atmospheremesh );
 			var hexgeometry	= new THREE.IcosahedronGeometry(2.01, 4);
 
@@ -23,10 +33,16 @@
 				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
 				color: 0xFFFFFF,
 				transparent: true,
-				opacity: 0.2
+				opacity: 0.4
 				});
-			var mesh	= new THREE.Mesh( hexgeometry, material ); 
-			scene.add( mesh );
+			var hexmesh	= new THREE.Mesh( hexgeometry, material ); 
+			hexmesh.scale.x = size + 0.05;
+			hexmesh.scale.y = size + 0.05;
+			hexmesh.scale.z = size + 0.05;
+			
+			
+			
+			scene.add( hexmesh );
 			
 		}
 		
