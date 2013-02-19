@@ -74,15 +74,7 @@
 			moonmesh.position.y = 2;
 			scene.add( moonmesh );
 
-			var atmopheregeometry	= new THREE.IcosahedronGeometry(0.71 , 4);
-			var atmospherematerial	= new THREE.MeshLambertMaterial({
-				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
-				color: 0xFFFFFF,
-				transparent: true,
-				//opacity: 1.0
-				} );
-			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
-			scene.add( atmospheremesh );
+	
 			var hexgeometry	= new THREE.IcosahedronGeometry(0.71, 4);
 
 			setHexUVs(hexgeometry);
