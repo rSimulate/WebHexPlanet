@@ -63,35 +63,7 @@
 			return starmesh;
 		}
 		
-		function createMoon() {
-		
-		
-			var planetgeometry	= new THREE.IcosahedronGeometry(0.7, 4);
-			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
-			var moonmesh	= new THREE.Mesh( planetgeometry, material ); 
-			moonmesh.position.x = 15;
-			moonmesh.position.y = 2;
-			scene.add( moonmesh );
 
-	
-			var hexgeometry	= new THREE.IcosahedronGeometry(0.71, 4);
-
-			setHexUVs(hexgeometry);
-			var material	= new THREE.MeshLambertMaterial({
-				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-				color: 0xFFFFFF,
-				transparent: true,
-				opacity: 0.2
-				});
-			var moonmesh	= new THREE.Mesh( hexgeometry, material ); 
-			moonmesh.position.x = 15;
-			moonmesh.position.y = 2;
-			
-			scene.add( moonmesh );
-						
-			
-		}
 		
 		function lights() {
 		
