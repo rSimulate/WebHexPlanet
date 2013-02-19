@@ -7,7 +7,17 @@
 			var mesh	= new THREE.Mesh( planetgeometry, material ); 
 			scene.add( mesh );
 
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
+			var atmospherematerial	= new THREE.MeshLambertMaterial({
+				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
+				color: 0xFFFFFF,
+				transparent: true,
+				//opacity: 1.0
+				} );
+			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
+			scene.add( atmospheremesh );
 			var hexgeometry	= new THREE.IcosahedronGeometry(2.01, 4);
+
 			setHexUVs(hexgeometry);
 			var material	= new THREE.MeshLambertMaterial({
 				map: THREE.ImageUtils.loadTexture("images/hex.png"),
@@ -18,16 +28,6 @@
 			var mesh	= new THREE.Mesh( hexgeometry, material ); 
 			scene.add( mesh );
 			
-			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
-			var atmospherematerial	= new THREE.MeshLambertMaterial({
-				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
-				color: 0xFFFFFF,
-				transparent: true,
-				//opacity: 1.0
-				} );
-			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
-			
-			scene.add( atmospheremesh );
 		}
 		
 		function drawSkyBox()  {
