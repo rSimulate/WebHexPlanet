@@ -1,11 +1,21 @@
   
 		function createPlanet() {
 		
-			var geometry	= new THREE.IcosahedronGeometry(2, 4);
-			setHexUVs(geometry);
+			var planetgeometry	= new THREE.IcosahedronGeometry(2, 4);
 			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/hex.jpg")});
-			var mesh	= new THREE.Mesh( geometry, material ); 
+							{map: THREE.ImageUtils.loadTexture("images/world.jpg")});
+			var mesh	= new THREE.Mesh( planetgeometry, material ); 
+			scene.add( mesh );
+
+			var hexgeometry	= new THREE.IcosahedronGeometry(2.01, 4);
+			setHexUVs(hexgeometry);
+			var material	= new THREE.MeshLambertMaterial({
+				map: THREE.ImageUtils.loadTexture("images/hex.png"),
+				color: 0xFFFFFF,
+				transparent: true,
+				//opacity: 1.0
+				});
+			var mesh	= new THREE.Mesh( hexgeometry, material ); 
 			scene.add( mesh );
 			
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
@@ -13,7 +23,8 @@
 				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
 				color: 0xFFFFFF,
 				transparent: true,
-				opacity: 1.0} );
+				//opacity: 1.0
+				} );
 			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
 			
 			scene.add( atmospheremesh );
