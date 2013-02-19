@@ -118,18 +118,6 @@
 			// TODO
 
 			skymesh.position = camera.position;
-			// animate DirectionalLight
-			//scene.lights.forEach(function(light, idx){
-			//	if( light instanceof THREE.DirectionalLight === false )	return;
-			//	var ang	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1);
-			//	light.position.set(Math.cos(ang), Math.sin(ang), Math.cos(ang*2)).normalize();							
-			//});
-			// animate PointLights
-			//scene.lights.forEach(function(light, idx){
-			//	if( light instanceof THREE.PointLight === false )	return;
-			//	var angle	= 0.0005 * PIseconds * (idx % 2 ? 1 : -1) + idx * Math.PI/3;
-			//	light.position.set(Math.cos(angle)*3, Math.sin(angle*3)*2, Math.cos(angle*2)).normalize().multiplyScalar(2);
-			//});
 
 			// actually render the scene
 			renderer.render( scene, camera );
@@ -138,9 +126,9 @@
 		function setHexUVs(geometry){
 			for(var f in geometry.faceVertexUvs[0]){
 			  	var uvs = geometry.faceVertexUvs[0][f];
-			  	uvs[0].set(0.18, 0.16);
-			  	uvs[1].set(0.5, 1.0);
-			  	uvs[2].set(0.8, 0.17);
+			  	uvs[0] = new THREE.Vector2(0.20, 0.73);
+			  	uvs[1] = new THREE.Vector2(0.51, 0.15);
+			  	uvs[2] = new THREE.Vector2(0.78, 0.70);
 			}
 		}
 		
@@ -164,7 +152,7 @@
 			var mesh	= new THREE.Mesh( geometry, material ); 
 			scene.add( mesh );
 			
-			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.02 , 4);
 			var atmospherematerial	= new THREE.MeshLambertMaterial({
 				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
 				color: 0xFFFFFF,
