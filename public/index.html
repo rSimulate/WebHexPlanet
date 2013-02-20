@@ -183,16 +183,16 @@
 		function createMoon() { // had to move back to index.html for now
 		
 		
-			var planetgeometry	= new THREE.IcosahedronGeometry(0.7, 4);
+			var planetgeometry	= new THREE.IcosahedronGeometry(0.9, 4);
 			var material	= new THREE.MeshLambertMaterial(
 							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
 			moonmesh	= new THREE.Mesh( planetgeometry, material ); 
 			moonmesh.position.x = 15;
-			moonmesh.position.y = 2;
+			moonmesh.position.y = 0;
 			scene.add( moonmesh );
 
 
-			var hexgeometry	= new THREE.IcosahedronGeometry(0.71, 4);
+			var hexgeometry	= new THREE.IcosahedronGeometry(0.91, 4);
 
 			setHexUVs(hexgeometry);
 			var material	= new THREE.MeshLambertMaterial({
