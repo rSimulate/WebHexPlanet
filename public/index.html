@@ -77,7 +77,7 @@
 
 			// put a camera in the scene
 			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, .01, 50000);
-			camera.position.set(0, 0, 8);
+			camera.position.set(0, 0, 15);
 			scene.add(camera);
 
 			// create a camera contol
@@ -98,18 +98,18 @@
 			createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			createMoon();
 			
-			var sungeometry	= new THREE.IcosahedronGeometry(50, 2);
-			var sunmaterial	= new THREE.MeshBasicMaterial(
-						{
-						map: THREE.ImageUtils.loadTexture("images/sun.png"),
-						color: 0xFFFF00
-						});
-			var sunmesh	= new THREE.Mesh( sungeometry, sunmaterial ); 
-			//sunmesh.scale.x = 4;
-			//sunmesh.scale.y = 4;
-			//sunmesh.scale.z = 4;
-			sunmesh.position.x = 300;
-			scene.add( sunmesh );
+			//var sungeometry	= new THREE.IcosahedronGeometry(50, 2);
+			//var sunmaterial	= new THREE.MeshBasicMaterial(
+			//			{
+			//			map: THREE.ImageUtils.loadTexture("images/sun.png"),
+			//			color: 0xFFFF00
+			//			});
+			//var sunmesh	= new THREE.Mesh( sungeometry, sunmaterial ); 
+			////sunmesh.scale.x = 4;
+			////sunmesh.scale.y = 4;
+			////sunmesh.scale.z = 4;
+			//sunmesh.position.x = 300;
+			//scene.add( sunmesh );
 			
 			
 			
