@@ -97,25 +97,6 @@
 			lights();
 			createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			createMoon();
-			
-			//var sungeometry	= new THREE.IcosahedronGeometry(50, 2);
-			//var sunmaterial	= new THREE.MeshBasicMaterial(
-			//			{
-			//			map: THREE.ImageUtils.loadTexture("images/sun.png"),
-			//			color: 0xFFFF00
-			//			});
-			//var sunmesh	= new THREE.Mesh( sungeometry, sunmaterial ); 
-			////sunmesh.scale.x = 4;
-			////sunmesh.scale.y = 4;
-			////sunmesh.scale.z = 4;
-			//sunmesh.position.x = 300;
-			//scene.add( sunmesh );
-			
-			
-			
-			
-			
-			
 		}
 
 		// animation loop
@@ -138,13 +119,22 @@
 			// variable which is increase by Math.PI every seconds - usefull for animation
 			var PIseconds	= Date.now() * Math.PI;
 			var time = Date.now() / 50;
-			var radius = 15;
-			var scalingfactor = 0.03;
-			
-			moonmesh.rotation.y += 0.01;// Moon rotation
+			var semimajoraxis = 5;    		// Turn into parameter
+			var eccentricity = .9//0.0549; 		// Turn into parameter
+			var angularvelocity = 0.03;		// Turn into paratmeter
+			var orbitphase = angularvelocity * time;
+			var radius = semimajoraxis * ((1.0 - eccentricity^2)/(1.0 + eccentricity * Math.cos(orbitphase)));
+			var inclination = 6.0 ;
+			var incRadian = (inclination / 180.0) * Math.PI;
+			var maxH = 2;
+			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
+			var rotationspeed = 0.02; //need to study up on this relation to orbit and mass. 
+						
+			moonmesh.rotation.y += rotationspeed;	// Moon rotation
 			//Moon's orbit
-			moonmesh.position.x = radius * Math.cos(scalingfactor * time);
-			moonmesh.position.z = radius * Math.sin(scalingfactor * time);
+			moonmesh.position.x = radius * Math.cos(orbitphase);
+			moonmesh.position.z = radius * Math.sin(orbitphase);
+			moonmesh.position.y = height;
 
 
 
