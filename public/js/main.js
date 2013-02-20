@@ -9,7 +9,8 @@
 			mesh.scale.x = size;
 			mesh.scale.y = size;
 			mesh.scale.z = size;
-			scene.add( mesh );
+						scene.add( mesh );
+			mesh.rotation.y += 0.02;
 
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
 			var atmospherematerial	= new THREE.MeshLambertMaterial({
@@ -33,7 +34,7 @@
 				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
 				color: 0xFFFFFF,
 				transparent: true,
-				opacity: 0.4
+				opacity: 0.25
 				});
 			var hexmesh	= new THREE.Mesh( hexgeometry, material ); 
 			hexmesh.scale.x = size + 0.05;

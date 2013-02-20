@@ -119,8 +119,8 @@
 			// variable which is increase by Math.PI every seconds - usefull for animation
 			var PIseconds	= Date.now() * Math.PI;
 			var time = Date.now() / 50;
-			var semimajoraxis = 5;    		// Turn into parameter
-			var eccentricity = .9//0.0549; 		// Turn into parameter
+			var semimajoraxis = 7;    		// Turn into parameter
+			var eccentricity = 0.0549; 		// Turn into parameter
 			var angularvelocity = 0.03;		// Turn into paratmeter
 			var orbitphase = angularvelocity * time;
 			var radius = semimajoraxis * ((1.0 - eccentricity^2)/(1.0 + eccentricity * Math.cos(orbitphase)));
@@ -135,6 +135,10 @@
 			moonmesh.position.x = radius * Math.cos(orbitphase);
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
+			
+			//Planet Rotation
+			//mesh.rotation.y += 0.01;
+			
 
 
 
