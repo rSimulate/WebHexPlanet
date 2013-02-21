@@ -1,17 +1,13 @@
   
 			function createPlanet(size) {
 		
-			var planetgeometry	= new THREE.IcosahedronGeometry(2, 4);
+			var planetgeometry	= new THREE.IcosahedronGeometry(size, 3);
 			var material	= new THREE.MeshLambertMaterial(
 					{map: THREE.ImageUtils.loadTexture("images/TEWworld.jpg")});
 			var mesh	= new THREE.Mesh( planetgeometry, material ); 
-			//Scale the object to the size variable
-			mesh.scale.x = size;
-			mesh.scale.y = size;
-			mesh.scale.z = size;
 			scene.add( mesh );
 
-			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
+			var atmopheregeometry	= new THREE.IcosahedronGeometry(size + 0.05 , 3);
 			var atmospherematerial	= new THREE.MeshLambertMaterial({
 				map: THREE.ImageUtils.loadTexture("images/clouds.png"),
 				color: 0xFFFFFF,
@@ -19,14 +15,9 @@
 				//opacity: 1.0
 				} );
 			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
-			//Scale the object to the size variable
-			atmospheremesh.scale.x = size + 0.05;
-			atmospheremesh.scale.y = size + 0.05;
-			atmospheremesh.scale.z = size + 0.05;
-			
 			
 			scene.add( atmospheremesh );
-			var hexgeometry	= new THREE.IcosahedronGeometry(2.01, 4);
+			var hexgeometry	= new THREE.IcosahedronGeometry(size + 0.01, 3);
 
 			setHexUVs(hexgeometry);
 			var material	= new THREE.MeshLambertMaterial({
@@ -36,14 +27,8 @@
 				opacity: 0.4
 				});
 			var hexmesh	= new THREE.Mesh( hexgeometry, material ); 
-			hexmesh.scale.x = size + 0.05;
-			hexmesh.scale.y = size + 0.05;
-			hexmesh.scale.z = size + 0.05;
-			
-			
-			
 			scene.add( hexmesh );
-			
+			return mesh;
 		}
 		
 		function drawSkyBox()  {
@@ -63,8 +48,6 @@
 
 		
 		function lights() {
-// lens flares
-
 			var textureFlare0 = THREE.ImageUtils.loadTexture( "images/lensflare/lensflare0.png" );
 			var textureFlare2 = THREE.ImageUtils.loadTexture( "images/lensflare/lensflare2.png" );
 			var textureFlare3 = THREE.ImageUtils.loadTexture( "images/lensflare/lensflare3.png" );
