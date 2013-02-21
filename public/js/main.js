@@ -10,7 +10,6 @@
 			mesh.scale.y = size;
 			mesh.scale.z = size;
 						scene.add( mesh );
-			mesh.rotation.y += 0.02;
 
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(2.05 , 4);
 			var atmospherematerial	= new THREE.MeshLambertMaterial({
