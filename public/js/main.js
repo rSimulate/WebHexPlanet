@@ -6,6 +6,7 @@
 					{map: THREE.ImageUtils.loadTexture("images/TEWworld.jpg")});
 			var mesh	= new THREE.Mesh( planetgeometry, material ); 
 			scene.add( mesh );
+			mesh.rotation.y += 0.02;
 
 			var atmopheregeometry	= new THREE.IcosahedronGeometry(size + 0.05 , 3);
 			var atmospherematerial	= new THREE.MeshLambertMaterial({
@@ -24,7 +25,7 @@
 				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
 				color: 0xFFFFFF,
 				transparent: true,
-				opacity: 0.4
+				opacity: 0.25
 				});
 			var hexmesh	= new THREE.Mesh( hexgeometry, material ); 
 			scene.add( hexmesh );
