@@ -146,8 +146,15 @@
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
 			
-			//Planet Rotation
-			//mesh.rotation.y += 0.01;
+			var camangularvelocity = 0.02;//added camera rotation.
+			var camsemimajoraxis = 8; 
+			var camorbitphase = camangularvelocity * time;
+			var cameccentricity = 0.0549;
+			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+			
+			camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
+			camera.position.z = camradius * Math.sin(camorbitphase);
+			
 			
 
 
