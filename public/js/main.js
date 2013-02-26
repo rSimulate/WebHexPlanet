@@ -16,6 +16,10 @@
 				//opacity: 1.0
 				} );
 			var atmospheremesh	= new THREE.Mesh( atmopheregeometry, atmospherematerial ); 
+				atmospheremesh.position.x = mesh.position.x;
+				atmospheremesh.position.y = mesh.position.y;
+				atmospheremesh.position.z = mesh.position.z;
+
 			
 			scene.add( atmospheremesh );
 			var hexgeometry	= new THREE.IcosahedronGeometry(size + 0.01, 3);
@@ -28,6 +32,9 @@
 				opacity: 0.25
 				});
 			var hexmesh	= new THREE.Mesh( hexgeometry, material ); 
+				hexmesh.position.x = mesh.position.x;
+				hexmesh.position.y = mesh.position.y;
+				hexmesh.position.z = mesh.position.z;
 			scene.add( hexmesh );
 			return mesh;
 		}
