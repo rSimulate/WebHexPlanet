@@ -104,7 +104,7 @@
 			}
 
 			skymesh = drawSkyBox();
-			lights();
+			light = lights();
 			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			createMoon();
 		}
@@ -149,9 +149,6 @@
 			//Planet Rotation
 			//mesh.rotation.y += 0.01;
 			
-
-
-
 			// update camera controls
 			cameraControls.update();
 
@@ -159,6 +156,15 @@
 			// TODO
 
 			skymesh.position = camera.position;
+			var lightposition = light.position.clone().normalize();//THREE.Vector3(0, -1, -1);
+  			var cameraHeight = camera.position.length();
+  			planet.atmosphere.material.uniforms.v3LightPosition.value = lightposition;
+  			planet.atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
+  			planet.atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+  			planet.planet.material.uniforms.v3LightPosition.value = lightposition;
+  			planet.planet.material.uniforms.fCameraHeight.value = cameraHeight;
+  			planet.planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+
 
 			// actually render the scene
 			renderer.render( scene, camera );
