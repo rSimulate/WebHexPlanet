@@ -1,4 +1,4 @@
-<!doctype html>
+i<!doctype html>
 <html>
 	<head>
 		<title>MetaSim - Alpha 0.6</title>
@@ -28,9 +28,9 @@
 	<div id="info">
 		<div class="top">
 		Links:
-			<a href="https://github.com/rSimulate/WebHexPlanet" target="_blank">Github</a>
+			<a href="http://www.reddit.com/r/MetaSim/" target="_blank">Metasim Subreddit</a>
 			&
-			<a href="https://www.dropbox.com/home/rSIM" target="_blank">Dropbox</a>
+			<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
 			
 		</div>
 		
@@ -146,8 +146,15 @@
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
 			
-			//Planet Rotation
-			//mesh.rotation.y += 0.01;
+			var camangularvelocity = 0.02;//added camera rotation.
+			var camsemimajoraxis = 8; 
+			var camorbitphase = camangularvelocity * time;
+			var cameccentricity = 0.0549;
+			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+			
+			camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
+			camera.position.z = camradius * Math.sin(camorbitphase);
+			
 			
 			// update camera controls
 			cameraControls.update();
