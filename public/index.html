@@ -120,6 +120,28 @@
 			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			//planet.planet.translateX(93); // let's just say that this is 93 million km from the sun at (0,0,0).
 			createMoon();
+			
+			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
+				var radius = 195;
+					var i = 0;
+					while(i < 6.437) {
+					i += 0.01;
+					geometry.vertices.push( new THREE.Vector3( radius * Math.cos(i), 0 , radius * Math.sin(i) ) ); 
+					
+					}
+				
+				var material = new THREE.LineBasicMaterial({
+						color: 0x0000FF,
+						linewidth: 10});
+				
+				var line = new THREE.Line(geometry, material);
+				scene.add(line);
+
+			
+			
+			
+			
+			
 		}
 
 		// animation loop
@@ -167,7 +189,8 @@
 			
 			camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
 			camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
-			
+			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
+			//camera.position.z = camradius * Math.sin(camorbitphase);
 			
 			// update camera controls
 			cameraControls.update();
