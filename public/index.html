@@ -1,4 +1,4 @@
-i<!doctype html>
+<!doctype html>
 <html>
 	<head>
 		<title>MetaSim - Alpha 0.6</title>
@@ -11,15 +11,21 @@ i<!doctype html>
 		<script src="vendor/three.js/three-extras.min.js"></script>
 		<script src="vendor/three.js/OrbitControls.js"></script>
 		<script src="vendor/three.js/Detector.js"></script>
-		<script src="vendor/dat.gui.min.js"></script>
+		<!--<script src="vendor/dat.gui.min.js"></script>-->
 		<script src="vendor/three.js/Stats.js"></script>
 		<script src="vendor/threex/THREEx.screenshot.js"></script>
 		<script src="vendor/threex/THREEx.FullScreen.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="js/main.js"></script>
 
 		<link  href="css/main.css" rel="stylesheet"/>
+
+		<script src="shaders/vertexSky.vs" type="x-shader/x-vertex" id="vertexSky"></script>
+		<script src="shaders/fragmentSky.fs" type="x-shader/x-fragment" id="fragmentSky"></script>
+		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
+		<script src="shaders/fragmentGround.fs" type="x-shader/x-fragment" id="fragmentGround"></script>
 	</head>
 <body>
 	<!-- three.js container -->
@@ -46,12 +52,30 @@ i<!doctype html>
 		var mouse = { x: 0, y: 0};
 		var hexOutline;
 
+		shaders = {vertex: [], fragment: []};
 		scene = new THREE.Scene();
-		if( !init() )	animate();
+
+		$(function(){
+			var $shaderScripts = $("script[type='x-shader/x-vertex']").
+				add("script[type='x-shader/x-fragment']");
+			var latch = $shaderScripts.length;
+			var decLatch = function(){
+				console.log('Loaded.');
+				latch--;
+				if (latch <= 0){
+					// all scripts have been loaded, init Three.js and WebGL
+					if( !init() )	animate();
+				}
+			};
+			$shaderScripts.each(function(i, script){
+				var $script = $(script);
+				console.log('Loading shader from: ' + $script.attr('src') + ' ...');
+				$script.load($script.attr('src'), decLatch);
+			});
+		});
 
 		// init the scene
 		function init(){
-
 			if( Detector.webgl ){
 				renderer = new THREE.WebGLRenderer({
 					antialias		: true,	// to get smoother output
@@ -70,20 +94,8 @@ i<!doctype html>
 			stats.domElement.style.bottom	= '0px';
 			document.body.appendChild( stats.domElement );
 
-			// create a scene
-			
 			// Project and particle material for testing ray intersection (object picking)
 			projector = new THREE.Projector();	
-			particleMaterial = new THREE.ParticleCanvasMaterial( {
-					color: 0xFF0000,
-					program: function ( context ) {
-
-						context.beginPath();
-						context.arc( 0, 0, 1, 0, PI2, true );
-						context.closePath();
-						context.fill();
-					}
-				} );
 
 			// put a camera in the scene
 			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, .01, 50000);
@@ -106,6 +118,7 @@ i<!doctype html>
 			skymesh = drawSkyBox();
 			light = lights();
 			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			//planet.planet.translateX(93); // let's just say that this is 93 million km from the sun at (0,0,0).
 			createMoon();
 		}
 
@@ -127,8 +140,8 @@ i<!doctype html>
 		// render the scene
 		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
-			var PIseconds	= Date.now() * Math.PI;
-			var time = Date.now() / 50;
+			var PIseconds	= Date.now() / 1000 * Math.PI;
+			var time = PIseconds;
 			var semimajoraxis = 7;    		// Turn into parameter
 			var eccentricity = 0.0549; 		// Turn into parameter
 			var angularvelocity = 0.03;		// Turn into paratmeter
@@ -138,7 +151,7 @@ i<!doctype html>
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-			var rotationspeed = 0.02; //need to study up on this relation to orbit and mass. 
+			var rotationspeed = 0.00002; //need to study up on this relation to orbit and mass. 
 						
 			moonmesh.rotation.y += rotationspeed;	// Moon rotation
 			//Moon's orbit
@@ -146,25 +159,26 @@ i<!doctype html>
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
 			
-			var camangularvelocity = 0.02;//added camera rotation.
-			var camsemimajoraxis = 8; 
+			var camangularvelocity = 0.002;//added camera rotation.
+			var camsemimajoraxis = 5; 
 			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
 			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 			
-			camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
-			camera.position.z = camradius * Math.sin(camorbitphase);
+			camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
+			camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
 			
 			
 			// update camera controls
 			cameraControls.update();
+			camera.lookAt(planet.planet.position);
 
 			// animation of all objects
 			// TODO
 
 			skymesh.position = camera.position;
-			var lightposition = light.position.clone().normalize();//THREE.Vector3(0, -1, -1);
-  			var cameraHeight = camera.position.length();
+			var lightposition = light.position.clone().sub(planet.planet.position).normalize();
+			var cameraHeight = camera.position.clone().sub(planet.planet.position).length();
   			planet.atmosphere.material.uniforms.v3LightPosition.value = lightposition;
   			planet.atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
   			planet.atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
