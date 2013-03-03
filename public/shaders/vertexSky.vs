@@ -20,6 +20,7 @@ uniform float fKm4PI;                // Km * 4 * PI
 uniform float fScale;                // 1 / (fOuterRadius - fInnerRadius)
 uniform float fScaleDepth;           // The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 uniform float fScaleOverScaleDepth;  // fScale / fScaleDepth
+uniform mat4 m4ModelInverse;         // inverse of model matrix, used for transforming world space to model space
 
 const int nSamples = 3;
 const float fSamples = 3.0;
@@ -37,19 +38,20 @@ float scale(float fCos)
 
 void main(void)
 {
+  vec3 v3CameraModelPosition = vec3(m4ModelInverse * vec4(cameraPosition, 1.0));
   // Get the ray from the camera to the vertex and its length (which is the far point of the ray passing through the atmosphere)
- vec3 v3Ray = position - cameraPosition;
- float fFar = length(v3Ray);
- v3Ray /= fFar;
+  vec3 v3Ray = position - v3CameraModelPosition;
+  float fFar = length(v3Ray);
+  v3Ray /= fFar;
 
   // Calculate the closest intersection of the ray with the outer atmosphere (which is the near point of the ray passing through the atmosphere)
-  float B = 2.0 * dot(cameraPosition, v3Ray);
+  float B = 2.0 * dot(v3CameraModelPosition, v3Ray);
   float C = fCameraHeight2 - fOuterRadius2;
   float fDet = max(0.0, B*B - 4.0 * C);
   float fNear = 0.5 * (-B - sqrt(fDet));
 
   // Calculate the ray's starting position, then calculate its scattering offset
-  vec3 v3Start = cameraPosition + v3Ray * fNear;
+  vec3 v3Start = v3CameraModelPosition + v3Ray * fNear;
   fFar -= fNear;
   float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;
   float fStartDepth = exp(-1.0 / fScaleDepth);
@@ -83,5 +85,5 @@ void main(void)
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   c0 = v3FrontColor * (v3InvWavelength * fKrESun);
   c1 = v3FrontColor * fKmESun;
-  v3Direction = cameraPosition - position;
+  v3Direction = v3CameraModelPosition - position;
 }

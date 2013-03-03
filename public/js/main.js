@@ -25,6 +25,10 @@ function createPlanet(size) {
 	};
 
 	var uniforms = {
+	  v3CameraPosition: {
+	    type: "v3",
+	    value: new THREE.Vector3(0, 0, 15)
+	  },
 	  v3LightPosition: {
 	    type: "v3",
 	    value: new THREE.Vector3(1e8, 0, 1e8).normalize()
@@ -120,17 +124,20 @@ function createPlanet(size) {
 	  fNightScale: {
 	    type: "f",
 	    value: 1
+	  },
+	  m4ModelInverse: {
+		type: "m4",
+		value: THREE.Matrix4()
 	  }
 	};
 
-	var planetgeometry	= new THREE.SphereGeometry(size, 50, 50);
+	var planetgeometry	= new THREE.SphereGeometry(size, 50, 250);
 	var material = new THREE.ShaderMaterial({
 		uniforms: uniforms,
     	vertexShader: vertexGround,
     	fragmentShader: fragmentGround});
 	var planetmesh	= new THREE.Mesh(planetgeometry, material); 
 	scene.add(planetmesh);
-
 
 	var cloudgeometry	= new THREE.SphereGeometry(size + 0.02, 50, 50);
 	var cloudmaterial	= new THREE.MeshLambertMaterial({
@@ -139,20 +146,20 @@ function createPlanet(size) {
 		transparent: true,
 		opacity: 1.0});
 	var cloudmesh	= new THREE.Mesh(cloudgeometry, cloudmaterial); 
-	//planetmesh.add(cloudmesh);
+	planetmesh.add(cloudmesh);
 
 	var hexgeometry	= new THREE.IcosahedronGeometry(size + 0.01, 3);
 	setHexUVs(hexgeometry);
-	var material	= new THREE.MeshLambertMaterial({
+	var material	= new THREE.MeshBasicMaterial({
 		map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-		color: 0xFFFFFF,
+		color: 0xFFFF00,
 		transparent: true,
 		opacity: 0.25
 		});
 	var hexmesh	= new THREE.Mesh(hexgeometry, material); 
-	//planetmesh.add(hexmesh);
+	planetmesh.add(hexmesh);
 
-	var atmopheregeometry	= new THREE.SphereGeometry(atmosphere.outerRadius, 500, 500);
+	var atmopheregeometry	= new THREE.SphereGeometry(atmosphere.outerRadius, 50, 50);
 	var atmospherematerial	= new THREE.ShaderMaterial({
 		uniforms: uniforms,
     	vertexShader: vertexSky,
@@ -163,7 +170,7 @@ function createPlanet(size) {
 	var atmospheremesh	= new THREE.Mesh(atmopheregeometry, atmospherematerial); 
 	atmospheremesh.material.side = THREE.BackSide;
 	atmospheremesh.material.transparent = true;	
-	//planetmesh.add(atmospheremesh);
+	planetmesh.add(atmospheremesh);
 
 	return {planet: planetmesh,
 		atmosphere: atmospheremesh};
@@ -186,7 +193,7 @@ function lights() {
 	var textureFlare2 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare2.png");
 	var textureFlare3 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare3.png");
 
-	return addLight(0.995, 0.025, 0.99, -500, 0, -1000);
+	return addLight(0.995, 0.025, 0.99, 0, 0, 0);
 
 	function addLight(h, s, v, x, y, z) {
 
