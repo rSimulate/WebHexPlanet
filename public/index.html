@@ -79,7 +79,8 @@
 			if(Detector.webgl){
 				renderer = new THREE.WebGLRenderer({
 					antialias		: true,	// to get smoother output
-					preserveDrawingBuffer	: true	// to allow screenshot
+					preserveDrawingBuffer	: true,	// to allow screenshot
+					clearAlpha: 1
 				});
 				renderer.setClearColorHex(0xBBBBBB, 1);
 			}else{
@@ -377,7 +378,7 @@
 		}
 
 		function isPentagon(hex) {
-			return findNeighbors.length == 5;
+			return findNeighbors(hex).length == 5;
 		}
 	</script>
 </body>

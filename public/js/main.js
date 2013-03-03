@@ -186,8 +186,92 @@ function drawSkyBox()  {
 		side: THREE.BackSide,
 		});
 	var starmesh	= new THREE.Mesh(stargeometry, starmaterial); 
+
+	var starTexture = THREE.ImageUtils.loadTexture("images/star.png");
+	starTexture.needsUpdate = true;
+
+	// create a star material
+	var material = new THREE.ParticleBasicMaterial({
+		//map: starTexture,
+		vertexColors: true,
+		size: 1.2,
+		sizeAttenuation: false
+	});
+	var starParticles = new THREE.Geometry();
+	starParticles.colors = [];
+
+	// generate some stars
+	for (var i = 0; i < 1000; i++) {
+		// find the star temperature in Kelvin
+		var temp = Math.random() * 41000 + 3120;
+		var magnitude = 1.0 * Math.random() + 1.2;
+		// find the sequence color
+		var red, green, blue;
+		if (temp/100 <= 66) {
+			red = 255;
+		} else {
+			red = temp/100 - 60;
+			red = 329.698727446 * Math.pow(red, -0.1332047592);
+			if (red < 0) {
+				red = 0;
+			} else if (red > 255) {
+				red = 255;
+			}
+		}
+
+		if (temp/100 <= 66) {
+			green = temp/100;
+			green = 99.4708025861 * Math.log(green) - 161.1195681661;
+			if (green < 0) {
+				green = 0;
+			} else if (green > 255) {
+				green = 255;
+			}
+		}
+
+		if (temp/100 >= 66) {
+			blue = 255;
+		} else {
+			if (temp/100 <= 19) {
+				blue = 0;
+			} else {
+				blue = temp/100 - 10;
+				blue = 138.5117312231 * Math.log(blue) - 305.0447927307;
+				if (blue < 0) {
+					blue = 0;
+				} else if (blue > 255) {
+					blue = 255;
+				}
+			}
+		}
+		var starColor = new THREE.Color();
+		starColor.setRGB(red/magnitude/255.0, green/magnitude/255.0, blue/magnitude/255.0);
+
+		// randomly generate a spherical coordinate with r = start geometry radius - 1;
+		// phi [0, 2 PI]
+		var phi = Math.random() * Math.PI * 2;
+		// theta [0, PI]
+		var theta = Math.random() * Math.PI;
+		var r = 1000 * magnitude;
+		// convert to cartesian
+		var x = r * Math.sin(theta) * Math.cos(phi);
+		var y = r * Math.sin(theta) * Math.sin(phi);
+		var z = r * Math.cos(theta);
+
+		var pos = new THREE.Vector3(x, y, z);
+
+		starParticles.vertices.push(pos);
+		starParticles.colors.push(starColor);
+	}
+
+	var starParticleSystem = new THREE.ParticleSystem(starParticles, material);
+	//starParticleSystem.sortParticles = true;
+	//starParticleSystem.verticesNeedUpdate = true;
+	//starParticleSystem.sortParticles = true;
+
+	starmesh.add(starParticleSystem);
+
 	scene.add(starmesh);
-	
 	return starmesh;
 }
 
