@@ -50,7 +50,7 @@
 		var camera, cameraControl;
 		var gui;
 		var mouse = { x: 0, y: 0 };
-		var hexOutline;
+		var hexOutline, selectedHex;
 
 		shaders = {vertex: [], fragment: []};
 		scene = new THREE.Scene();
@@ -263,36 +263,35 @@
 				camera.position,
 				vector.sub(camera.position).normalize());
 
-			var intersects = raycaster.intersectObjects([planet]);	
+			var intersects = raycaster.intersectObjects([planet.hex]);	
 		    if (intersects.length > 0) {
 				var p = intersects[ 0 ].point;
-				var v0 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.a]
-				var v1 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.b]
-				var v2 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.c]
-				var d0 = p.sub(v0).lengthSq();
-				var d1 = p.sub(v1).lengthSq();
-				var d2 = p.sub(v2).lengthSq();
+				var v0 = intersects[ 0 ].face.a;
+				var v1 = intersects[ 0 ].face.b;
+				var v2 = intersects[ 0 ].face.c;
+				var d0 = p.sub(intersects[ 0 ].object.geometry.vertices[v0]).lengthSq();
+				var d1 = p.sub(intersects[ 0 ].object.geometry.vertices[v1]).lengthSq();
+				var d2 = p.sub(intersects[ 0 ].object.geometry.vertices[v2]).lengthSq();
 
 				// v is the vertex id closest to the intersection point and also
 				// the vertex id of the center of the hexagon
 				var v;
 				if (d0 < d1 && d0 < d2) {
-					v = intersects[0].face.a;
+					v = v0;
 				} else if (d1 < d0 && d1 < d2) {
-					v = intersects[0].face.b;
+					v = v1;
 				}  else if (d2 < d0 && d2 < d1) {
-					v = intersects[0].face.c;
+					v = v2;
 				}
+
+				// save selectedHex for later for use in getSelectedHex, findNeighbors, isPentagon.
+				selectedHex = { object: intersects[0].object, id: v };
 
 				// find all of the centers of faces that share the vertex id of the of the center of the hex
 				var hexVertices = [];
 				for (var i in intersects[0].object.geometry.faces) {
 					var face = intersects[0].object.geometry.faces[i];
-					if (face.a == v) {
-						hexVertices.push(face.centroid);
-					} else if (face.b == v) {
-						hexVertices.push(face.centroid);
-					} else if (face.c == v) {
+					if (face.a == v || face.b == v || face.c == v) {
 						hexVertices.push(face.centroid);
 					}
 				}
@@ -301,7 +300,8 @@
 				do {
 					var lastSortedVertex = sortedHexVertices[sortedHexVertices.length - 1];
 					// find vertex closest to last sorted vertex
-					var dSqMin = 10000000, idx;
+					var dSqMin = Infinity;
+					var idx;
 					for (var i in hexVertices) {
 						var dSq = lastSortedVertex.clone().sub(hexVertices[i]).lengthSq();
 						if (dSq < dSqMin) {
@@ -326,24 +326,59 @@
 				// wrap around a little more so that line joining works correctly between the start and end points
 				geometry.vertices.push(sortedHexVertices[1]);
 
-
 				var material = new THREE.LineBasicMaterial({
 					color: 0xFF0000,
-					linewidth: 10});
+					linewidth: 5});
 
 				// remove the outline if it already exists
 				if (hexOutline != null || hexOutline != undefined) {
-					scene.remove(hexOutline);
+					planet.planet.remove(hexOutline);
 				}
 				hexOutline = new THREE.Line(geometry, material);
 				hexOutline.scale.x = 1.01;
 				hexOutline.scale.y = 1.01;
 				hexOutline.scale.z = 1.01;
 				
-				scene.add(hexOutline);
+				planet.planet.add(hexOutline);
+				console.log("selected hex: " + getSelectedHex().object.name + " " + getSelectedHex().id);
+				console.log("neighbors: " + JSON.stringify($.map(findNeighbors(getSelectedHex()), function(e) {
+					return e.id})));
+				console.log("isPentagon?: " + JSON.stringify(isPentagon(getSelectedHex())));
 		    }
 		}		
-		
+		// Returns undefined if no hex has been selected or returns {mesh: Object, id: int}
+		function getSelectedHex() {
+			return selectedHex;
+		}
+
+		function findNeighbors(hex) {
+			// find all of the vertices of faces that share a vertex with the center of the hex 
+			var neighborVertices = [];
+			for (var i in hex.object.geometry.faces) {
+				var face = hex.object.geometry.faces[i];
+				if (face.a == hex.id) {
+					neighborVertices.push(face.b);
+					neighborVertices.push(face.c);
+				} else if (face.b == hex.id) {
+					neighborVertices.push(face.a);
+					neighborVertices.push(face.c);
+				} else if (face.c == hex.id) {
+					neighborVertices.push(face.a);
+					neighborVertices.push(face.b);
+				}
+			}
+
+			// remove duplicate entries
+			return $.map(neighborVertices.filter(function(elem, pos, self) {
+				return self.indexOf(elem) == pos;
+			}), function (elem) {
+				return { object: hex.object, id: elem };
+			});
+		}
+
+		function isPentagon(hex) {
+			return findNeighbors.length == 5;
+		}
 	</script>
 </body>
 </html>

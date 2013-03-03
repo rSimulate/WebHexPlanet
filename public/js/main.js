@@ -172,8 +172,11 @@ function createPlanet(size) {
 	atmospheremesh.material.transparent = true;	
 	planetmesh.add(atmospheremesh);
 
-	return {planet: planetmesh,
-		atmosphere: atmospheremesh};
+	return {
+		planet: planetmesh,
+		atmosphere: atmospheremesh,
+		hex: hexmesh
+	};
 }
 		
 function drawSkyBox()  {
