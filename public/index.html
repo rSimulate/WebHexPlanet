@@ -171,9 +171,9 @@
 						
 			moonmesh.rotation.y += rotationspeed;	// Moon rotation
 			//Moon's orbit
-			moonmesh.position.x = radius * Math.cos(orbitphase);
-			moonmesh.position.z = radius * Math.sin(orbitphase);
-			moonmesh.position.y = height;
+			moonmesh.position.x = radius * Math.cos(orbitphase) + planet.planet.position.x;
+			moonmesh.position.z = radius * Math.sin(orbitphase) + planet.planet.position.z;
+			moonmesh.position.y = height + planet.planet.position.y;
 			
 			var camangularvelocity = 0.002;//added camera rotation.
 			var camsemimajoraxis = 3; 
