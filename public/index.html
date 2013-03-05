@@ -18,10 +18,10 @@
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+		<!--Our library-->
 		<script src="js/main.js"></script>
-
 		<link  href="css/main.css" rel="stylesheet"/>
-
 		<script src="shaders/vertexSky.vs" type="x-shader/x-vertex" id="vertexSky"></script>
 		<script src="shaders/fragmentSky.fs" type="x-shader/x-fragment" id="fragmentSky"></script>
 		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
@@ -44,9 +44,13 @@
 			- <i>p</i> for screenshot
 		</div> 
 	</div> 
+
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
-		var moongeometry,moonmaterial,moonmesh;
+		
+		//Can we abstract this as an object? ' var Luna = new World("star01_03b" <identifier>, "star01_03" <parent id>, "terrestrial" <type>, 0.02 <EarthMass>, 0.3 <EarthRadius>, orbitParams[]
+		//with orbitParams = [27.321<period in days>, 0.116 <axial tilt in radians>, 2.57e-3<semi-major axis in AU>, 0.055 <eccentricity>, 0.089 <inclincation in rad>]
+		var moongeometry,moonmaterial,moonmesh; 
 		var camera, cameraControl;
 		var gui;
 		var mouse = { x: 0, y: 0 };
@@ -117,9 +121,12 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
+			
+			//Let's recycle the moon and planet object as the same thing ' var Terra = new World("star01_03" <identifier>, "star01_BARYCENTER" <parent id>, "terrestrial" <type>, 1.05 <EarthMass>, 0.97 <EarthRadius>, orbitParams[]
+			//with orbitParams = [367.2<period in days>, 0.45 <axial tilt in radians>, 3.84e5<semi-major axis>, 0.055 <eccentricity>, 0.089 <inclincation in rad>]
 			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
-			createMoon();
+			createMoon(); //Why does the moon object not take the moon 
 			
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
 			var radius = 149.6;
