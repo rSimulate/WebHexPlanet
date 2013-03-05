@@ -131,7 +131,7 @@
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
 			var radius = 149.6;
 			var i = 0;
-			while(i < 6.437) {
+			while(i < 2*Math.PI) {
 			i += 0.01;
 			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i), 0 , radius * Math.sin(i))); 
 			
