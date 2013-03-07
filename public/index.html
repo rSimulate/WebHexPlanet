@@ -18,6 +18,7 @@
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="vendor/random.js/random-0.26.js"></script>
 		<script src="js/main.js"></script>
 
 		<link  href="css/main.css" rel="stylesheet"/>
@@ -100,7 +101,7 @@
 
 			// put a camera in the scene
 			camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
-			camera.position.set(0, 0, 15);
+			camera.position.set(149, 0, 15);
 			scene.add(camera);
 
 			// create a camera contol
@@ -176,14 +177,14 @@
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
 			
-			var camangularvelocity = 0.002;//added camera rotation.
+			var camangularvelocity = 0.04;//added camera rotation.
 			var camsemimajoraxis = 3; 
 			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
 			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 			
-			camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
-			camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
+			//camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
+			//camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
 			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
 			//camera.position.z = camradius * Math.sin(camorbitphase);
 			

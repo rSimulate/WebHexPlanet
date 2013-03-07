@@ -194,14 +194,32 @@ function drawSkyBox()  {
 	var material = new THREE.ParticleBasicMaterial({
 		//map: starTexture,
 		vertexColors: true,
-		size: 1.2,
+		size: 1.6,
 		sizeAttenuation: false
 	});
-	var starParticles = new THREE.Geometry();
-	starParticles.colors = [];
 
+	var nStars = 10000;
+	var starParticles = new THREE.BufferGeometry();
+	starParticles.attributes = {
+		position: {
+			itemSize: 3,
+			array: new Float32Array(nStars * 3),
+			numItems: nStars * 3
+		},
+		color: {
+			itemSize: 3,
+			array: new Float32Array(nStars * 3),
+			numItems: nStars * 3
+		}
+	};
+
+	var positions = starParticles.attributes.position.array;
+	var colors = starParticles.attributes.color.array;
+
+	// new Random object with a seed of 1234
+	var randomStream = new Random(1234);
 	// generate some stars
-	for (var i = 0; i < 1000; i++) {
+	for (var i = 0; i < nStars; i++) {
 		// find the star temperature in Kelvin
 		var temp = Math.random() * 41000 + 3120;
 		var magnitude = 1.0 * Math.random() + 1.2;
@@ -245,29 +263,30 @@ function drawSkyBox()  {
 			}
 		}
 		var starColor = new THREE.Color();
-		starColor.setRGB(red/magnitude/255.0, green/magnitude/255.0, blue/magnitude/255.0);
+		starColor.setRGB(red/255.0, green/255.0, blue/255.0);
 
 		// randomly generate a spherical coordinate with r = start geometry radius - 1;
-		// phi [0, 2 PI]
-		var phi = Math.random() * Math.PI * 2;
-		// theta [0, PI]
-		var theta = Math.random() * Math.PI;
+		// phi ~[0, 2 PI] centered on PI
+		var phi = randomStream.normal(0.0, Math.PI * 2);
+		// theta ~[0, PI] centered on PI/2
+		var theta = randomStream.normal(0, Math.PI);
 		var r = 1000 * magnitude;
 		// convert to cartesian
 		var x = r * Math.sin(theta) * Math.cos(phi);
-		var y = r * Math.sin(theta) * Math.sin(phi);
-		var z = r * Math.cos(theta);
+		var y = r * Math.cos(theta);
+		var z = r * Math.sin(theta) * Math.sin(phi);
 
-		var pos = new THREE.Vector3(x, y, z);
-
-		starParticles.vertices.push(pos);
-		starParticles.colors.push(starColor);
+		positions[i] = x;
+		positions[i+1] = y;
+		positions[i+2] = z;
+		colors[i] = starColor.r;
+		colors[i+1] = starColor.g;
+		colors[i+2] = starColor.b;
 	}
 
+	starParticles.computeBoundingSphere();
+
 	var starParticleSystem = new THREE.ParticleSystem(starParticles, material);
-	//starParticleSystem.sortParticles = true;
-	//starParticleSystem.verticesNeedUpdate = true;
-	//starParticleSystem.sortParticles = true;
 
 	starmesh.add(starParticleSystem);
 
