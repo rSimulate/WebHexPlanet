@@ -53,10 +53,6 @@ Checkout the source and download dependencies
 
 `npm install`
 
-Set the mongodb URI as an environment variable
-
-`export MONGOLAB_URI="mongodb://localhost"`
-
 Serve up the web application
 
 `node web.js`
