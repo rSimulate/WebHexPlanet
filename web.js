@@ -6,7 +6,7 @@ var uuid = require('node-uuid');
 var mongo = require('mongodb');
 var ObjectID = mongo.ObjectID;
 
-var mongoUri = process.env.MONGOLAB_URI;
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost';
 
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
