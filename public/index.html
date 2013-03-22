@@ -19,8 +19,12 @@
 		<script src="vendor/threex.dragpancontrols.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="vendor/random.js/random-0.26.js"></script>
-		<script src="js/main.js"></script>
 
+		<!-- jquery-ui -->
+		<script src="vendor/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js"></script>
+		<link  href="vendor/jquery-ui-1.10.2.custom/css/cupertino/jquery-ui-1.10.2.custom.css" rel="stylesheet"/>
+
+		<script src="js/main.js"></script>
 		<link  href="css/main.css" rel="stylesheet"/>
 
 		<script src="shaders/vertexSky.vs" type="x-shader/x-vertex" id="vertexSky"></script>
@@ -40,6 +44,14 @@
 			<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
 			
 		</div>
+	
+		<div id="simulationsDialog"></div>
+		<div id="createSimulationDialog">
+			Name: <input name="name"/><br/>
+			Terrain Engine: <select name="terrainEngine"></select></br>
+			Agent Engine: <select name="agentEngine"></select></br>
+		</div>
+		<div id="simulationInfoDialog"></div>
 		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
@@ -56,7 +68,118 @@
 		shaders = {vertex: [], fragment: []};
 		scene = new THREE.Scene();
 
+		function getLinkByRel(links, rel, fn) {
+			for (var i in links) {
+				if (links[i].rel == rel) {
+					return fn(links[i].href);
+				}
+			}
+			console.log('Could not find rel: ' + rel);
+			return null;
+		}
+
 		$(function(){
+			// Get versions
+			$.getJSON('/metasim', function(response) {
+				if (response.versions != undefined) {
+					for (var i in response.versions) {
+						var version = response.versions[i];
+						if (version.id === '1.0') {
+							getLinkByRel(version.links, '/rel/entrypoint', function(entryPointUri) {
+								console.log('Got entrypoint 1.0: ' + entryPointUri);
+								// Get version 1.0
+								$.getJSON(entryPointUri, function(entryPointResponse) {
+									console.log('Got ' + JSON.stringify(response) + ' from entrypoint');
+									getLinkByRel(entryPointResponse.links, '/rel/engines', function(enginesUri) {
+										$.getJSON(enginesUri, function(response) {
+											var engines = response.engines;
+											getLinkByRel(entryPointResponse.links, '/rel/simulations', function(simulationsUri) {
+												// Get simulations
+												$.getJSON(simulationsUri, function(response) {
+													var simulations = response.active;
+													var $simulationsDialog = $('#simulationsDialog');
+													if (simulations.length > 0) {
+														// Add a <ul> to the dialog
+														var $dialogUl = $simulationsDialog.append('<ul></ul>');
+														for (var i in simulations) {
+															var simulation = simulations[i];
+															// Add all of the simulation names as <li>'s.
+															$dialogUl.append('<li>' + simulation.name || 'unknown' + '</li>');
+														}
+													} else {
+														// Simulation.length == 0; no simulations
+														$simulationsDialog.append('<i>none</i>');
+													}
+													$simulationsDialog.dialog({
+														dialogClass: "no-close",
+														draggable: false,
+														resizeable: false,
+														title: 'Simulations',
+														buttons: [
+															{
+																text: "Create",
+																click: function() {
+																	// Hide simulations dialog
+																	$simulationsDialog.hide();
+																	// Show create simulation dialog
+																	var $createSimulationDialog = $('#createSimulationDialog');
+																	var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
+																	var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
+																	for (var i in engines) {
+																		var engine = engines[i];
+																		if (engine.type == 'terrain') {
+																			$terrainEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+																		}
+																		else if (engine.type == 'agent') { 
+																			$agentEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+																		}
+																	}
+																	$createSimulationDialog.dialog({
+																		dialogClass: "no-close",
+																		draggable: false,
+																		resizeable: false,
+																		title: 'New Simulation',
+																		buttons: [
+																			{
+																				text: "Create",
+																				click: function() {
+																					// POST to simulations resource
+																					getLinkByRel(response.links, '/rel/add', function(addSimulationUri) {
+																						$.ajax({
+																							type: 'POST',
+																							url: addSimulationUri,
+																							data: JSON.stringify({
+																								name: $createSimulationDialog.find('input[name=name]').val(),
+																								terrain_engine_name: $terrainEngineSelect.find(':selected').val(),
+																								agent_engine_name: $agentEngineSelect.find(':selected').val()
+																							}),
+																							contentType: 'application/json; charset=utf-8',
+																							dataType: 'json',
+																							success: function(response) {
+																								console.log('created simulation: ' + JSON.stringify(response));
+																							}
+																						});			
+																					});
+																				}
+																			}
+																		]
+																	});
+																}
+															}
+														]
+													});
+												});
+											});
+										});
+									});
+								});
+							});
+							break;
+						}
+					}
+				}
+			});
+
 			var $shaderScripts = $("script[type='x-shader/x-vertex']").
 				add("script[type='x-shader/x-fragment']");
 			var latch = $shaderScripts.length;

@@ -1,4 +1,5 @@
 var http = require('http');
+var httpProxy = require('http-proxy');
 var express = require('express');
 var sys = require('sys');
 var fs = require('fs');
@@ -7,7 +8,7 @@ var uuid = require('node-uuid');
 var mongo = require('mongodb');
 var ObjectID = mongo.ObjectID;
 
-var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost';
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/metasim';
 
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
@@ -22,7 +23,40 @@ function getLinkByRel(links, rel) {
 	return undefined;
 }
 
+function traverseLinks(client, uri, rels, callback) {
+	console.log('GETting ' + uri);
+    client.get(uri, function(res) {
+        var body = ''; 
+        res.on('data', function(chunk) {
+            body += chunk;
+        }); 
+        res.on('end', function() {
+            var jsonBody = JSON.parse(body);
+            if (rels.length === 0) {
+                callback(jsonBody, res);
+            } else {
+                var rel = rels.shift();
+                var uriObj = url.parse(uri);
+                uriObj.pathname = getLinkByRel(jsonBody.links, rel).href;
+                traverseLinks(client, url.format(uriObj), rels, callback);
+            }
+        }); 
+    });
+}
+
+var proxy = new httpProxy.RoutingProxy();
+function createProxyForwarder(forwardUri) {
+	var uri = url.parse(forwardUri);
+	return function(request, response) {
+		console.log('Forwarding request to ' + uri.hostname + ':' + uri.port);
+		proxy.proxyRequest(request, response, {host: uri.hostname, port:uri.port});
+	};
+}
+
 var app = express();
+app.configure(function(){
+	app.use(express.bodyParser());
+});
 
 // Render a page and return a link to the data file
 app.get('/metasim', function(request, response) {
@@ -45,18 +79,20 @@ mongo.connect(mongoUri, {}, function(error, db) {
 	db.collection('engines').update({name: 'TerrainReferenceEngine'}, {
 		name: 'TerrainReferenceEngine',
 		type: 'terrain',
-		href: 'http://metasimTerrainReferenceEngine.herokuapp.com/metasim/1.0',
+		//href: 'http://metasimTerrainReferenceEngine.herokuapp.com/metasim/1.0',
+		href: 'http://localhost:5001/metasim/1.0',
 		version: '1.0'}, {upsert: true});
    	db.collection('engines').update({name: 'WeatherReferenceEngine'}, {
 		name: 'WeatherReferenceEngine',
 		type: 'weather',
-		href: 'http://metasimWeatherReferenceEngine.herokuapp.com/metasim/1.0',
+		//href: 'http://metasimWeatherReferenceEngine.herokuapp.com/metasim/1.0',
+		href: 'http://localhost:5002/metasim/1.0',
 		version: '1.0'}, {upsert: true});
 	db.collection('engines').update({name: 'AgentReferenceEngine'}, {
 		name: 'AgentReferenceEngine',
 		type: 'agent',
 		//href: 'http://metasimAgentReferenceEngine.herokuapp.com/metasim/1.0',
-		href: 'http://localhost:5001/metasim/1.0',
+		href: 'http://localhost:5003/metasim/1.0',
 		version: '1.0'}, {upsert: true});
 
 	// Endpoint resource
@@ -95,7 +131,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
 			db.collection('simulations').find({}).toArray(function(err, simulations) {
 				console.log('sending simulations' + JSON.stringify(simulations));
 				response.send({
-					simulations: simulations,
+					active: simulations,
 					links: [{
 						rel: '/rel/add',
 						href: '/metasim/' + request.params.version+ '/simulations',
@@ -109,103 +145,123 @@ mongo.connect(mongoUri, {}, function(error, db) {
 	// Create a new simulation
 	app.post('/metasim/:version/simulations', function(request, response) {
 		var simulationId = new ObjectID();
+		var simulationName = request.body.name;
 		var simulationUri = '/metasim/' + request.params.version + '/simulations/' + simulationId.toString();
 		// req body
 		var terrainEngineName = request.body.terrain_engine_name;
 		var agentEngineName = request.body.agent_engine_name;
-		var terrainEngine = db.collection('engines').findOne({name:terrainEngineName, version: request.params.version});
-		var agentEngine = db.collection('engines').findOne({name:agentEngineName, version: request.params.version});
-		if (terrainEngine == null) {
-			response.send(400, 'TerrainEngine: ' + terrainEngineName + ' not found.');
-		} else if (agentEngine == null) {
-			response.send(400, 'AgentEngine: ' + agentEngineName + ' not found.');
-		}
-		else {
-			// create the simulation on the engines..
-			// Get the terrain engine endpoint
-			http.get(terrainEngine.href, function(res) {
-				var simulationsHref = getLinkByRel(res.body.links, '/rel/simulations').href;
-				// Get the terrain engine simulations resource
-				http.get(simulationsHref, function(res) {
-					var simulationAddHref = url.parse(getLinkByRel(res.body.links, '/rel/add').href);
-					// Post a new simulation to the terrain engine
-					var req = http.request({
-						hostname: simulationAddHref.hostname,
-						port: simulationAddHref.port,
-						path: simulationAddHref.path,
-						method: 'POST'});
-					req.on('response', function (res) {
-						var terrainSimulationHref = res.headers.Location;
-						// Get the agent engine endpoint
-						http.get(agentEngine.href, function(res) {
-							var simulationsHref = getLinkByRel(res.body.links, '/rel/simulations').href;
-							// Get the agent engine simulations resource
-							http.get(simulationsHref, function(res) {
-								var simulationAddHref = url.parse(getLinkByRel(res.body.links, '/rel/add').href);
-								// Post a new simulation to the terrain engine
-								var req = http.request({
-									hostname: agentAddHref.hostname,
-									port: agentAddHref.port,
-									path: agentAddHref.path,
-									method: 'POST'});
-								req.on('response', function (res) {
-									var agentSimulationHref = res.headers.Location;
-									
-									// Setup some reverse proxies to forward calls from MetaSim to the engines
-									app.get(url.parse(terrainSimulationHref).path, function(request, response) {
-										var req = http.get(terrainSimuationHref, function (res) {
-											res.setEncoding('utf8');
-											res.on('data', function (chunk) {
-												response.write(chunk);
-											});
-											res.on('close', function() {
-												response.writeHead(res.statusCode);
-												response.end();
-											});
-										});
-									});
-									app.get(url.parse(agentSimulationHref).path, function(request, response) {
-										var req = http.get(agentSimuationHref, function (res) {
-											res.setEncoding('utf8');
-											res.on('data', function (chunk) {
-												response.write(chunk);
-											});
-											res.on('close', function() {
-												response.writeHead(res.statusCode);
-												response.end();
-											});
-										});
-									});
-
-									// Create the simulation object and return it.
-									var simulation = {
-										links: [{
-											rel: 'self',
-											href: simulationUri,
-											method: 'GET'}, {
-											rel: '/rel/delete',
-											href: simulationUri,
-											method: 'DELETE'}, {
-											rel: '/rel/world_texture',
-											href: terrainSimulationHref,
-											method: 'GET'}, {
-											rel: '/rel/agents',
-											href: agentSimulationHref,
-											method: 'GET'}]};
-									db.collection('simulations').insert(simulation);
-									response.header('Location', simulationUri);
-									response.send(201, null);
-								});
-								req.write({simulation_href: simulationUri});
-								req.end();
+		console.log('Searching for ' + JSON.stringify({name:terrainEngineName, version: request.params.version}));
+		db.collection('engines').findOne({name:terrainEngineName, version: request.params.version}, function(err, terrainEngine){
+			if (!terrainEngine) {
+				console.log('terrainEngine=' + terrainEngine);
+				response.send(400, 'TerrainEngine: ' + terrainEngineName + ' not found.');
+			} else {
+				console.log('Searching for ' + JSON.stringify({name:agentEngineName, version: request.params.version}));
+				db.collection('engines').findOne({name:agentEngineName, version: request.params.version}, function(err, agentEngine){
+					if (!agentEngine) {
+						response.send(400, 'AgentEngine: ' + agentEngineName + ' not found.');
+					} else {
+						// create the simulation on the engines..
+						// Get the terrain engine endpoint
+						console.log('Getting terrain engine endpoint: ' + terrainEngine.href);
+						var terrainEngineHostPart = url.parse(terrainEngine.href);
+						terrainEngineHostPart.pathname = '';
+						terrainEngineHostPart = url.format(terrainEngineHostPart);
+						console.log('terrain engine hostpart: ' + terrainEngineHostPart);
+						traverseLinks(http, terrainEngine.href, ['/rel/simulations'], function(body, res) {
+							var simulationAddHref = url.parse(terrainEngineHostPart + getLinkByRel(body.links, '/rel/add').href);
+							// Post a new simulation to the terrain engine
+							console.log('POSTing to ' + url.format(simulationAddHref));
+							console.log(JSON.stringify({
+								hostname: simulationAddHref.hostname,
+								port: simulationAddHref.port,
+								path: simulationAddHref.path,
+								headers: {'Content-Type': 'application/json'},
+								method: 'POST'}));
+							var req = http.request({
+								hostname: simulationAddHref.hostname,
+								port: simulationAddHref.port,
+								path: simulationAddHref.path,
+								headers: {'Content-Type': 'application/json'},
+								method: 'POST'});
+							req.on('error', function(e) {
+								console.log('problem with request: ' + e.message);
 							});
+							req.on('response', function (res) {
+								var terrainSimulationHref = res.headers.location;
+								console.log('response status: ' + res.status);
+								console.log('response headers: ' + JSON.stringify(res.headers));
+								console.log('Terrain simulation created at ' + terrainSimulationHref);
+								// Get the agent engine endpoint
+								console.log('Getting agent engine endpoint ' + agentEngine.href);
+								var agentEngineHostPart = url.parse(agentEngine.href);
+								agentEngineHostPart.pathname = '';
+								agentEngineHostPart = url.format(agentEngineHostPart);
+								console.log('agent engine hostpart: ' + agentEngineHostPart);
+								traverseLinks(http, agentEngine.href, ['/rel/simulations'], function(body, res) {
+									var simulationAddHref = url.parse(agentEngineHostPart + getLinkByRel(body.links, '/rel/add').href);
+									// Post a new simulation to the agent engine
+									console.log('POSTing to ' + url.format(simulationAddHref));
+									console.log(JSON.stringify({
+										hostname: simulationAddHref.hostname,
+										port: simulationAddHref.port,
+										path: simulationAddHref.path,
+										headers: {'Content-Type': 'application/json'},
+										method: 'POST'}));
+									var req = http.request({
+										hostname: simulationAddHref.hostname,
+										port: simulationAddHref.port,
+										path: simulationAddHref.path,
+										headers: {'Content-Type': 'application/json'},
+										method: 'POST'});
+									req.on('error', function(e) {
+										console.log('problem with request: ' + e.message);
+									});
+									req.on('response', function (res) {
+										var agentSimulationHref = res.headers.location;
+										console.log('Agent simulation created at ' + agentSimulationHref);
+										// Setup some reverse proxies to forward calls from MetaSim to the engines
+										var terrainSimulationPath = url.parse(terrainSimulationHref).path;
+										console.log('Forwarding requests from ' + terrainSimulationPath + ' to ' + terrainSimulationHref);
+										app.get(terrainSimulationPath, createProxyForwarder(terrainSimulationHref)); 
+										var agentSimulationPath = url.parse(agentSimulationHref).path;
+										console.log('Forwarding requests from ' + agentSimulationPath + ' to ' + agentSimulationHref);
+										app.get(agentSimulationPath, createProxyForwarder(agentSimulationHref)); 
+
+										// Create the simulation object and return it.
+										var simulation = {
+											name: simulationName,
+											date_created: new Date(),
+											links: [{
+												rel: 'self',
+												href: simulationUri,
+												method: 'GET'}, {
+												rel: '/rel/delete',
+												href: simulationUri,
+												method: 'DELETE'}, {
+												rel: '/rel/world_texture',
+												href: terrainSimulationPath,
+												method: 'GET'}, {
+												rel: '/rel/agents',
+												href: agentSimulationPath,
+												method: 'GET'}]};
+										console.log('Inserting simulation in db');
+										db.collection('simulations').insert(simulation);
+										console.log('Returning 201 created at ' + simulationUri);
+										response.header('Location', simulationUri);
+										response.send(201, null);
+									});
+									req.write(JSON.stringify({simulation_href: simulationUri}));
+									req.end();
+								});
+							});
+							req.write(JSON.stringify({simulation_href: simulationUri}));
+							req.end();
 						});
-					});
-					req.write({simulation_href: simulationUri});
-					req.end();
+					}
 				});
-			});
-		}
+			}
+		})
 	});
 
 	// Delete simulations
