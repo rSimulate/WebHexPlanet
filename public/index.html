@@ -42,6 +42,7 @@
 		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
+			 n and m for time accel/decel
 		</div> 
 	</div> 
 	<script type="text/javascript">
@@ -51,8 +52,9 @@
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline;
+		var timeAccel = 1;
 		
-		var camMODE = 0;
+		var camMODE = 1;
 		var camTARGET = 0;
 		
 		shaders = {vertex: [], fragment: []};
@@ -121,26 +123,13 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
-			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
-			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
+			planet = createPlanet(2,THREE.ImageUtils.loadTexture('images/TEWworld.jpg')); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			planet.planet.translateX(146.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			
-			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
-			var radius = 149.6;
-			var i = 0;
-			while(i < 6.437) {
-			i += 0.01;
-			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i), 0 , radius * Math.sin(i))); 
+	
 			
-			}
-			
-			var material = new THREE.LineBasicMaterial({
-				color: 0x0000FF,
-				linewidth: 10});
-			
-			var line = new THREE.Line(geometry, material);
-			scene.add(line);
-			
+
 			
 			var geometry = new THREE.Geometry();//moons orbital line
 			var radius = 15
@@ -157,8 +146,56 @@
 			
 			var line = new THREE.Line(geometry, material);
 			scene.add(line);
-		}
+			
+			
+			drawOrbit(146.6,0x0000FF);
+			drawOrbit(820,0xFE2E64);
+		    drawOrbit(86.45,0xFF0000);
+			
 
+		}
+		
+		function drawOrbit(size, color) {
+		
+			var geometry = new THREE.Geometry();
+			var radius = size;
+			var i = 0;
+			while(i < Math.PI * 2) {
+			i += 0.01;
+			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i), 0 , radius * Math.sin(i))); 
+			
+			}
+			
+			var material = new THREE.LineBasicMaterial({
+				color: color,
+				linewidth: 10});
+			
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+		
+		}
+		
+		function drawBodyOrbit(size, color, body) {
+		
+			var geometry = new THREE.Geometry();
+			var radius = size;
+			var i = 0;
+			while(i < Math.PI * 2) {
+			i += 0.01;
+			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + planet.planet.position.x, 0 , radius * Math.sin(i) + planet.planet.position.z)); 
+			
+			}
+			
+			var material = new THREE.LineBasicMaterial({
+				color: color,
+				linewidth: 10});
+			
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+		
+		
+		}
+		
 		// animation loop
 		function animate() {
 
@@ -177,18 +214,18 @@
 		// render the scene
 		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
-			var PIseconds	= Date.now() / 1000 * Math.PI;
-			var time = PIseconds;
+			var PIseconds	= Date.now() / 1000  * Math.PI;
+			var time = PIseconds * timeAccel;
 			var semimajoraxis = 7;    		// Turn into parameter
 			var eccentricity = 0.0549; 		// Turn into parameter
-			var angularvelocity = 0.03;		// Turn into paratmeter
+			var angularvelocity = 0.01;		// Turn into paratmeter
 			var orbitphase = angularvelocity * time;
 			var radius = semimajoraxis * ((1.0 - eccentricity^2)/(1.0 + eccentricity * Math.cos(orbitphase)));
 			var inclination = 6.0 ;
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-			var rotationspeed = 0.00002; //need to study up on this relation to orbit and mass. 
+			var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
 						
 			moonmesh.rotation.y += rotationspeed;	// Moon rotation
 			//Moon's orbit
@@ -212,6 +249,8 @@
 			if( keyboard.pressed("2") ) camTARGET = 2;
 			if( keyboard.pressed("3") ) camTARGET = 3;
 			
+			if( keyboard.pressed("n") ) timeAccel = timeAccel - 1;
+			if( keyboard.pressed("m") ) timeAccel = timeAccel + 1;
 
 			if (camMODE == 1)cameraControls.update();
 			
@@ -259,7 +298,13 @@
 			renderer.render(scene, camera);
 		}
 
+		function checkDistance(x1, x2, x3, xt, xy, xz) {
+		var output = 0;
+		output = Math.sqrt(Math.pow((x1 - xt), 2) + Math.pow((x2 - yt), 2) + Math.pow((x3 - zt), 2));
 		
+		return output;
+		
+		}
 		
 
 		function setHexUVs(geometry){

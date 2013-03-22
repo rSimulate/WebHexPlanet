@@ -1,10 +1,10 @@
-function createPlanet(size) {
+function createPlanet(size, texture) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();
 	var fragmentGround = $("#fragmentGround").text();
 
-	var diffuse = THREE.ImageUtils.loadTexture('images/TEWworld.jpg');
+	var diffuse = texture;
 	var diffuseNight = THREE.ImageUtils.loadTexture('images/TEWworld-night.jpg');
 	var maxAnisotropy = renderer.getMaxAnisotropy();
 	
