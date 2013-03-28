@@ -1,4 +1,4 @@
-function createPlanet(size, texture) {
+function createWorld(size, texture) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();
