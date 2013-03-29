@@ -28,6 +28,7 @@
 		
 		<!-- Our libraries -->
 		<script src="js/main.js"></script>
+		<script src="js/space_creator.js"></script>
 		<script src="js/physics/orbitlines.js"></script>
 		<link  href="css/main.css" rel="stylesheet"/>
 
@@ -128,14 +129,16 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
-			planet = createWorld(2,THREE.ImageUtils.loadTexture('images/TEWworld.jpg')); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			planet = createTerra(2,THREE.ImageUtils.loadTexture('images/TEWworld.jpg')); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			planet.planet.translateX(146.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
-			createMoon();
+			
+			//Creating the moon an alternative way
+			moonmesh = createRocky();//createWorld('rocky','','');
 
-			drawOrbit(146.6,0x0000FF, 0, 0);
-			drawOrbit(820,0xFE2E64, 0, 0);
-		    drawOrbit(86.45,0xFF0000, 0, 0);
-			drawOrbit(15.0,0xFFFF00, planet.planet.position.x, planet.planet.position.z);
+			drawOrbit(146.6,0x0000FF, 0, 0, 0);
+			drawOrbit(820,0xFE2E64, 0, 0, 0);
+		    drawOrbit(86.45,0xFF0000, 0, 0, 0);
+			drawOrbit(15.0,0xFFFF00, planet.planet.position.x, planet.planet.position.z, 0);
 
 
 		}
@@ -258,27 +261,6 @@
 			  	uvs[1] = new THREE.Vector2(0.51, 0.15);
 			  	uvs[2] = new THREE.Vector2(0.78, 0.70);
 			}
-		}
-
-
-		function createMoon() { // had to move back to index.html for now
-			var planetgeometry	= new THREE.IcosahedronGeometry(0.9, 4);
-			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
-			moonmesh	= new THREE.Mesh(planetgeometry, material); 
-			moonmesh.position.x = 15;
-			moonmesh.position.y = 0;
-			scene.add(moonmesh);
-
-			var hexgeometry	= new THREE.IcosahedronGeometry(0.91, 4);
-
-			setHexUVs(hexgeometry);
-			var material	= new THREE.MeshLambertMaterial({
-				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-				color: 0xFFFFFF,
-				transparent: true,
-				opacity: 0.2
-				});
 		}
 
 		document.addEventListener('mousemove', onDocumentMouseMove, false);

@@ -14,14 +14,20 @@
 			//var line = new THREE.Line(geometry, material);
 			//scene.add(line);
 
-function drawOrbit(size, color, originx, originz) {
+function drawOrbit(size, color, originx, originz, originy) {
 
 			var geometry = new THREE.Geometry();
 			var radius = size;
-			var i = 0;
-			while(i < Math.PI * 2) {
-			i += 0.01;
-			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + originx, 0 , radius * Math.sin(i) + originz)); 
+			var theta = 0;
+			while(theta < Math.PI * 2) {
+			theta += 0.01;
+			geometry.vertices.push(
+				new THREE.Vector3(
+					radius * Math.cos(theta) + originx,
+					0,//radius * Math.sin(), 
+					radius * Math.sin(theta) + originz
+					)
+				); 
 
 			}
 

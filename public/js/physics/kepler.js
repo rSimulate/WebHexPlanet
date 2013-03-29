@@ -1,5 +1,5 @@
 //Load orbit parameters and convert to useable path for SS bodies and orbit lines.
-		function OrbitSteering(t, a, b, ec, i, p, d, ax, pre) {
+		function OrbitPath(t, a, b, ec, i, p, d, ax, pre) {
 		// t = time in MJD
 		// a = semi-major axis
 		// b = semi-minor axis
