@@ -28,6 +28,8 @@ c = 2.99792458 * 10^8 // m/s
 //##### STANDARD UNITS #####
 
 //## Distance ##
+// Since let's say a size "2" unit in three.js is Earth's radius.
+// So 1 3js-unit = 3185.5 km (for solar system scale only)
 
 //## Time ##
 //Somebody help me incorporate something like Clock.js from Cesium?

@@ -4,6 +4,5 @@ function createWorld(type, size, texture) {
 	  }
 	else if (type == 'rocky'){
 	  createRocky();
-	  return moonmesh;
 	  }
 }
