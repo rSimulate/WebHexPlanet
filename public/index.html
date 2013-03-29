@@ -33,9 +33,9 @@
 		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
 		<script src="shaders/fragmentGround.fs" type="x-shader/x-fragment" id="fragmentGround"></script>
 		
-	<!--### Bootstrap sand Styles ###-->
-		<link href="vendor/css/bootstrap.css" rel="stylesheet">
+	<!--### 	Bootstrap sand Styles 	###-->
 		<link  href="css/main.css" rel="stylesheet">
+		<link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">
 		  body {
 			padding-top: 60px;
@@ -54,35 +54,58 @@
 			}
 		  }
 		</style>
-		<link href="vendor/css/bootstrap-responsive.css" rel="stylesheet">		
+		<link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">		
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="../assets/js/html5shiv.js"></script>
     <![endif]-->
-		
+		<!-- Le fav and touch icons -->
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+			
 	</head>
 <body>
-	
-		
-	<!-- info on screen display -->
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.rsimulate.com">rSimulate</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="#" class="navbar-link">Username</a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="#">About</a></li>
+              <li><a href="http://www.rsimulate.com/blog">Blog</a></li>
+			  <li><a href="http://www.rsimulate.com/forums">Forum</a></li>
+              <li><a href="#contact">Reddit</a></li>
+			  <li><a href="#contact">Github</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+		<!-- info on screen display -->
 	<div id="info">
 	<div class="top">
-	Links:
-		<a href="http://www.reddit.com/r/MetaSim/" target="_blank">Metasim Subreddit</a>
-		&
-		<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
 	</div>
-
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
 			 n and m for time accel/decel
 		</div> 
 	</div> 
-	
+
+		
 	<!-- three.js container -->
 <!--<div class="container-fluid"> -->
-	<div id="container"></div>
+	<div id="container">
 	
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
@@ -396,5 +419,6 @@
 		}		
 	
 	</script>
+	</div>
 </body>
 </html>
