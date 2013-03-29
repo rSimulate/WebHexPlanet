@@ -1,11 +1,42 @@
 //Load orbit parameters and convert to useable path for SS bodies and orbit lines.
-		function OrbitSteering(t, a, b, e, i, w) {
+		function OrbitSteering(t, a, b, ec, i, p, d, ax, pre) {
 		// t = time in MJD
 		// a = semi-major axis
 		// b = semi-minor axis
-		// e = eccentricty
+		// ec = eccentricty
 		// i = inclination
-		// w = orbital velocity
+		// l = longitude of ascending node
+		// p = period of revolution/orbit/natural-year, measured in MJD
+		// d = period of rotation/day, measured in MJD
+		// ax = axial tilt of object orbit, degrees
+		// pre = precesion of orbit, period
+		
+		//Local cartesian coords for easy reference.
+		//Needs Sph2Cart implemented
+		var x = Sph2Cart('x',r,theta,phi);
+		var y = Sph2Cart('y',r,theta,phi);
+		var z = Sph2Cart('z',r,theta,phi);
+			
+		//###### IMPORTANT, Return the following to the main render #####
+		//These are the global 'stationary' reference frame cartesian coordinates
+		[Object].stationary.x = x + getParentCoords('x');
+		[Object].stationary.y = y + getParentCoords('y');
+		[Object].stationary.z = z + getParentCoords('z');
+		[Object].stationary.day += 2 * pi * (1/d) * t; //rotation position
+		[Object].stationary.ax = 2 * pi * ax //Axial Tilt
+		
+		//For ease of reference, convert period to frequency
+		var f = (1/p);
+		
+		var theta = (2 * pi * f * t); //Angulary Displacement
+		
+		//Calculates radius r based on orbit parameters.
+		var r = a * ((1.0 - ec^2)/(1.0 + ec * Math.cos(theta)));
+		
+		//
+		var 
+		
+		
 		
 			var PIseconds	= Date.now() / 1000  * Math.PI;
 			var time = PIseconds * timeAccel;
