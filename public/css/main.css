@@ -1,4 +1,4 @@
-/* body {
+body {
 	overflow	: hidden;
 	padding		: 0;
 	margin		: 0;
@@ -7,7 +7,7 @@
 	background-color: #BBB;
 	font-family	: arial;
 	font-size	: 100%;
-} */
+}
 #info .top {
 	position	: absolute;
 	top		: 0px;
@@ -27,4 +27,5 @@
 	bottom		: 0px;
 	right		: 5px;
 	padding		: 5px;
+	color		: #FFF;
 }

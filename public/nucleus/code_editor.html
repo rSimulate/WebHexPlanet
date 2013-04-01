@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Code Editor - Stilearn Admin Bootstrap</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="stilearning">
+
+        <!-- google font -->
+        <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet" type="text/css" />
+
+        <!-- styles -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="css/stilearn.css" rel="stylesheet">
+        <link href="css/stilearn-responsive.css" rel="stylesheet">
+        <link href="css/stilearn-helper.css" rel="stylesheet">
+        <link href="css/stilearn-icon.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <link href="css/animate.css" rel="stylesheet">
+        <link href="css/uniform.default.css" rel="stylesheet">
+        
+        <link href="css/select2.css" rel="stylesheet">
+        
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <!-- section header -->
+        <header class="header" data-spy="affix" data-offset-top="0">
+            <!--nav bar helper-->
+            <div class="navbar-helper">
+                <div class="row-fluid">
+                    <!--panel site-name-->
+                    <div class="span2">
+                        <div class="panel-sitename">
+                            <h2><a href="index.html"><span class="color-teal">Sti</span>learn</a></h2>
+                        </div>
+                    </div>
+                    <!--/panel name-->
+
+                    <div class="span6">
+                        <!--panel search-->
+                        <div class="panel-search">
+                            <form>
+                                <div class="input-icon-append">
+                                    <button type="submit" rel="tooltip-bottom" title="search" class="icon"><i class="icofont-search"></i></button>
+                                    <input class="input-large search-query grd-white" maxlength="23" placeholder="Search here..." type="text">
+                                </div>
+                            </form>
+                        </div><!--/panel search-->
+                    </div>
+                    <div class="span4">
+                        <!--panel button ext-->
+                        <div class="panel-ext">
+                            <div class="btn-group">
+                                <!--notification-->
+                                <a class="btn btn-danger btn-small" data-toggle="dropdown" href="#" title="3 notification">3</a>
+                                <ul class="dropdown-menu dropdown-notification">
+                                    <li class="dropdown-header grd-white"><a href="#">View All Notifications</a></li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- <li class="dropdown-footer"><a href=""></a></li> -->
+                                </ul><!--notification-->
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Shortcut
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li><a tabindex="-1" href="calendar.html">Calendar</a></li>
+                                    <li><a tabindex="-1" href="invoice.html">Invoice</a></li>
+                                    <li><a tabindex="-1" href="message.html">Message</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Sample Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="pricing.html">Pricing</a></li>
+                                            <li><a tabindex="-1" href="bonus-page/resume/index.html">Resume</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Error Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="403.html">Error 403</a></li>
+                                            <li><a tabindex="-1" href="404.html">Error 404</a></li>
+                                            <li><a tabindex="-1" href="405.html">Error 405</a></li>
+                                            <li><a tabindex="-1" href="500.html">Error 500</a></li>
+                                            <li><a tabindex="-1" href="503.html">Error 503</a></li>
+                                            <li><a tabindex="-1" href="under-construction.html">Under Construction</a></li>
+                                            <li><a tabindex="-1" href="coming-son.html">Coming Son</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small" href="#">Other Action</a>
+                            </div>
+                            <div class="btn-group user-group">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <img class="corner-all" align="middle" src="img/user-thumb.jpg" title="John Doe" alt="john doe" /> <!--this for display on PC device-->
+                                    <button class="btn btn-small btn-inverse">John Doe</button> <!--this for display on tablet and phone device-->
+                                </a>
+                                <ul class="dropdown-menu dropdown-user" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <div class="media">
+                                            <a class="pull-left" href="#">
+                                                <img class="img-circle" src="img/user.jpg" title="profile" alt="profile" />
+                                            </a>
+                                            <div class="media-body description">
+                                                <p><strong>John Doe</strong></p>
+                                                <p class="muted">johndoe@mail.com</p>
+                                                <p class="action"><a class="link" href="#">Activity</a> - <a class="link" href="#">Setting</a></p>
+                                                <a class="btn btn-primary btn-small btn-block">View Profile</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="dropdown-footer">
+                                        <div>
+                                            <a class="btn btn-small pull-right" href="login.html">Logout</a>
+                                            <a class="btn btn-small" href="#">Add Account</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><!--panel button ext-->
+                    </div>
+                </div>
+            </div><!--/nav bar helper-->
+        </header>
+
+        <!-- section content -->
+        <section class="section">
+            <div class="row-fluid">
+                <!-- span side-left -->
+                <div class="span1">
+                    <!--side bar-->
+                    <aside class="side-left">
+                        <ul class="sidebar">
+                            <li>
+                                <a href="index.html" title="dashboard">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-dashboard"></i>
+                                    </div>
+                                    <span class="sidebar-text">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="interface.html" title="interface">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-magnet"></i>
+                                    </div>
+                                    <span class="sidebar-text">Interface</span>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="form.html" title="form">
+                                    <div class="badge badge-important">3</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-edit"></i>
+                                    </div>
+                                    <span class="sidebar-text">Form</span>
+                                </a>
+                                <ul class="sub-sidebar-form corner-top shadow-white">
+                                    <li class="title muted">Quick Upload</li>
+                                    <li>
+                                        <input type="file" data-form="uniform" onchange="alert('your progres uploading file...')" />
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="form.html" title="form element" class="corner-all">
+                                            <i class="icofont-file"></i>
+                                            <span class="sidebar-text">Form Element</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="active">
+                                        <a href="code_editor.html" title="code editor" class="corner-all">
+                                            <i class="icofont-book"></i>
+                                            <span class="sidebar-text">Code Editor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="gallery.html" title="gallery" class="corner-all">
+                                            <i class="icofont-picture"></i>
+                                            <span class="sidebar-text">Gallery</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="charts.html" title="charts">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-bar-chart"></i>
+                                    </div>
+                                    <span class="sidebar-text">charts</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tables.html" title="table">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-table"></i>
+                                    </div>
+                                    <span class="sidebar-text">Tables</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="grids.html" title="grids">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-columns"></i>
+                                    </div>
+                                    <span class="sidebar-text">Grids</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="icons.html" title="icons">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-star"></i>
+                                    </div>
+                                    <span class="sidebar-text">Icons</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="widgets.html" title="widgets">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-reorder"></i>
+                                    </div>
+                                    <span class="sidebar-text">Widgets</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" title="more">
+                                    <div class="badge badge-important">5</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-th-large"></i>
+                                    </div>
+                                    <span class="sidebar-text">More</span>
+                                </a>
+                                <ul class="sub-sidebar corner-top shadow-silver-dark">
+                                    <li>
+                                        <a href="404.html" title="not found">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-warning-sign"></i>
+                                            </div>
+                                            <span class="sidebar-text">404</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html" title="login">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-lock"></i>
+                                            </div>
+                                            <span class="sidebar-text">Login</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="invoice.html" title="invoice">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-barcode"></i>
+                                            </div>
+                                            <span class="sidebar-text">Invoice</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="pricing.html" title="pricing table">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-briefcase"></i>
+                                            </div>
+                                            <span class="sidebar-text">Pricing</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="bonus-page/resume/index.html" title="resume">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-user"></i>
+                                            </div>
+                                            <span class="sidebar-text">Resume</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </aside><!--/side bar -->
+                </div><!-- span side-left -->
+                
+                <!-- span content -->
+                <div class="span9">
+                    <!-- content -->
+                    <div class="content">
+                        <!-- content-header -->
+                        <div class="content-header">
+                            <ul class="content-header-action pull-right">
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-green color-white"><i class="icofont-plus-sign"></i></div>
+                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Visits</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-teal color-white"><i class="icofont-user-md"></i></div>
+                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-orange color-white">$</div>
+                                        <div class="action-text color-orange">4367 <span class="helper-font-small color-silver-dark">Orders</span></div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <h2><i class="icofont-paper-clip"></i> Code Editor</h2>
+                        </div><!-- /content-header -->
+                        
+                        <!-- content-breadcrumb -->
+                        <div class="content-breadcrumb">
+                            <!--breadcrumb-nav-->
+                            <ul class="breadcrumb-nav pull-right">
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icofont-tasks"></i> Tasks
+                                        <i class="icofont-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Some Action</a></li>
+                                        <li><a href="#">Other Action</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Something Else</a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-money"></i> Orders <span class="color-red">(+12)</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-user"></i> Users <span class="color-red">(+34)</span>
+                                    </a>
+                                </li>
+                            </ul><!--/breadcrumb-nav-->
+                            
+                            <!--breadcrumb-->
+                            <ul class="breadcrumb">
+                                <li><a href="index.html"><i class="icofont-home"></i> Dashboard</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="form.html">Form</a> <span class="divider">&rsaquo;</span></li>
+                                <li class="active">Code editor</li>
+                            </ul><!--/breadcrumb-->
+                        </div><!-- /content-breadcrumb -->
+                        
+                        <!-- content-body -->
+                        <div class="content-body">
+                            <!-- ace editor -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <!-- box -->
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <select id="data-files" data-form="select2" style="width:200px" data-placeholder="select file">
+                                                    <option></option>
+                                                    <optgroup label="HTML">
+                                                        <option value="html5.html">html5.html</option>
+                                                        <option value="geolocation.html">geolocation.html</option>
+                                                    </optgroup>
+                                                    <optgroup label="CSS">
+                                                        <option value="custom.css">custom.css</option>
+                                                        <option value="reset.css">reset.css</option>
+                                                    </optgroup>
+                                                    <optgroup label="Javascript">
+                                                        <option value="validate.js">validate.js</option>
+                                                        <option value="prototype.js">prototype.js</option>
+                                                    </optgroup>
+                                                    <optgroup label="PHP">
+                                                        <option value="array.php">array.php</option>
+                                                        <option value="switch.php">switch.php</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                            <span>Select a file you want to change</span>
+                                        </div><!-- /box-heade -->
+                                        <!-- box-body -->
+                                        <div class="box-body">
+                                            <form>
+                                                <!--the editor-->
+                                                <div id="aceEditor" class="ace-editor">// sample editor
+var x=document.getElementById("demo");
+function getLocation()
+{
+    if (navigator.geolocation)
+    {
+        navigator.geolocation.getCurrentPosition(showPosition,showError);
+    }
+    else{x.innerHTML="Geolocation is not supported by this browser.";}
+}
+function showPosition(position)
+{
+    x.innerHTML="Latitude: " + position.coords.latitude + 
+        "<br>Longitude: " + position.coords.longitude;	
+}
+function showError(error)
+{
+    switch(error.code) 
+    {
+        case error.PERMISSION_DENIED:
+            x.innerHTML="User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML="Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML="The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML="An unknown error occurred."
+            break;
+    }
+}
+                                                </div><!--/the editor-->
+                                                
+                                                <!--form-actions-->
+                                                <div class="form-actions" style="margin-top: 10px">
+                                                    <div class="row-fluid">
+                                                        <div class="span6">
+                                                            <div class="control-group">
+                                                                <button class="btn btn-primary" id="update">Update File</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="span6">
+                                                            <select id="mode" data-form="select2" style="width:200px" data-placeholder="select mode">
+                                                                <option></option>
+                                                            </select>
+
+                                                            <select id="theme" data-form="select2" style="width:200px" data-placeholder="select theme">
+                                                                <option></option>
+                                                                <optgroup label="Bright">
+                                                                    <option value="ace/theme/chrome">Chrome</option>
+                                                                    <option value="ace/theme/clouds">Clouds</option>
+                                                                    <option value="ace/theme/crimson_editor">Crimson Editor</option>
+                                                                    <option value="ace/theme/dawn">Dawn</option>
+                                                                    <option value="ace/theme/dreamweaver">Dreamweaver</option>
+                                                                    <option value="ace/theme/eclipse">Eclipse</option>
+                                                                    <option value="ace/theme/github">GitHub</option>
+                                                                    <option value="ace/theme/solarized_light">Solarized Light</option>
+                                                                    <option value="ace/theme/textmate">TextMate</option>
+                                                                    <option value="ace/theme/tomorrow">Tomorrow</option>
+                                                                    <option value="ace/theme/xcode">XCode</option>
+                                                                </optgroup>
+                                                                <optgroup label="Dark">
+                                                                    <option value="ace/theme/ambiance">Ambiance</option>
+                                                                    <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+                                                                    <option value="ace/theme/cobalt">Cobalt</option>
+                                                                    <option value="ace/theme/idle_fingers">idleFingers</option>
+                                                                    <option value="ace/theme/kr_theme">krTheme</option>
+                                                                    <option value="ace/theme/merbivore">Merbivore</option>
+                                                                    <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+                                                                    <option value="ace/theme/mono_industrial">Mono Industrial</option>
+                                                                    <option value="ace/theme/monokai">Monokai</option>
+                                                                    <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+                                                                    <option value="ace/theme/solarized_dark">Solarized Dark</option>
+                                                                    <option value="ace/theme/twilight">Twilight</option>
+                                                                    <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
+                                                                    <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
+                                                                    <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
+                                                                    <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+                                                                    <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+                                                                </optgroup>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div><!--form-actions-->
+                                            </form>
+                                        </div><!-- /box-body -->
+                                    </div><!-- /box -->
+                                </div><!-- /span -->
+                            </div><!-- /row-fluid -->
+                            <!--/ace editor-->
+                        </div><!--/content-body -->
+                    </div><!-- /content -->
+                </div><!-- /span content -->
+                
+                <!-- span side-right -->
+                <div class="span2">
+                    <!-- side-right -->
+                    <aside class="side-right">
+                        <!-- sidebar-right -->
+                        <div class="sidebar-right">
+                            <!--sidebar-right-header-->
+                            <div class="sidebar-right-header">
+                                <div class="sr-header-right">
+                                    <h2><span class="label label-info">$26,875</span></h2>
+                                </div>
+                                <div class="sr-header-left">
+                                    <p class="bold">Balance</p>
+                                    <small class="muted">Dec 30 2012</small>
+                                </div>
+                            </div><!--/sidebar-right-header-->
+                            <!--sidebar-right-control-->
+                            <div class="sidebar-right-control">
+                                <ul class="sr-control-item">
+                                    <li class="active"><a href="#alt1" data-toggle="tab" title="alternative 2"><i class="icofont-th-large"></i></a></li>
+                                    <li><a href="#alt2" data-toggle="tab" title="alternative 1"><i class="icofont-tags"></i></a></li>
+                                    <li rel="tooltip-bottom" title="view site"><a href="index.html" target="_BLANK"><i class="icofont-external-link"></i></a></li>
+                                </ul>
+                            </div><!-- /sidebar-right-control-->
+                            <!-- sidebar-right-content -->
+                            <div class="sidebar-right-content">
+                                <div class="tab-content">
+                                    <!--alternate 1-->
+                                    <div class="tab-pane fade active in" id="alt1">
+                                        <div class="divider-content"><span></span></div>
+                                        
+                                        <div class="side-nav">
+                                            <ul class="nav-side">
+                                                <li class="active">
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="icofont-file"></i>
+                                                        <span>File Name</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="divider-content"><span></span></div>
+                                        
+                                    </div><!--/alternative 1-->
+                                    
+                                    <!--alternative 2-->
+                                    <div class="tab-pane fade" id="alt2">
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <button class="btn btn-block btn-mini btn-primary">Add Action</button>
+                                        <button class="btn btn-block btn-mini">Add Action</button>
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <!-- side-task -->
+                                        <div class="side-task">
+                                            <div class="task active">
+                                                <span class="task-header">
+                                                    <img src="img/loader_16.gif" /> 
+                                                    <strong>Portofolio_W34GF.zip</strong>
+                                                </span>
+                                                <span class="task-desc">9.1 of 17MB - 243KB/sec - 1 min</span>
+                                                <div class="progress progress-striped active" rel="tooltip" title="40%">
+                                                    <div class="bar bar-success" style="width: 40%;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Paralax_bg_5448.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Icons_bg_I98GH.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Dashboard_3805.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                        </div><!-- /side-task -->
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                    </div><!--/alternative 2-->
+                                    
+                                </div>
+                            </div><!-- /sidebar-right-content -->
+                        </div><!-- /sidebar-right -->
+                    </aside><!-- /side-right -->
+                </div><!-- /span side-right -->
+            </div>
+        </section>
+
+        <!-- section footer -->
+        <footer>
+            <a rel="to-top" href="#top"><i class="icofont-circle-arrow-up"></i></a>
+        </footer>
+
+        <!-- javascript
+        ================================================== -->
+        <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/uniform/jquery.uniform.js"></script>
+        
+        <script src="js/select2/select2.js"></script>
+        <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        
+        <!-- required stilearn template js, for full feature-->
+        <script src="js/holder.js"></script>
+        <script src="js/stilearn-base.js"></script>
+
+        <script type="text/javascript">
+            
+            $(document).ready(function() {
+                // try your js
+                
+                // uniform
+                $('[data-form=uniform]').uniform()
+                
+                // select2
+                $('[data-form=select2]').select2();
+                
+                // ace editor
+                // mode name list
+                var modesByName = {
+                    asciidoc:   ["AsciiDoc"     , "asciidoc"],
+                    c9search:   ["C9Search"     , "c9search_results"],
+                    coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
+                    coldfusion: ["ColdFusion"   , "cfm"],
+                    csharp:     ["C#"           , "cs"],
+                    css:        ["CSS"          , "css"],
+                    diff:       ["Diff"         , "diff|patch"],
+                    glsl:       ["Glsl"         , "glsl|frag|vert"],
+                    golang:     ["Go"           , "go"],
+                    groovy:     ["Groovy"       , "groovy"],
+                    haxe:       ["haXe"         , "hx"],
+                    html:       ["HTML"         , "htm|html|xhtml"],
+                    c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
+                    clojure:    ["Clojure"      , "clj"],
+                    jade:       ["Jade"         , "jade"],
+                    java:       ["Java"         , "java"],
+                    jsp:        ["JSP"                , "jsp"],
+                    javascript: ["JavaScript"   , "js"],
+                    json:       ["JSON"         , "json"],
+                    jsx:        ["JSX"          , "jsx"],
+                    latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
+                    less:       ["LESS"         , "less"],
+                    liquid:     ["Liquid"       , "liquid"],
+                    lua:        ["Lua"          , "lua"],
+                    luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
+                    markdown:   ["Markdown"     , "md|markdown"],
+                    ocaml:      ["OCaml"        , "ml|mli"],
+                    perl:       ["Perl"         , "pl|pm"],
+                    pgsql:      ["pgSQL"        , "pgsql"],
+                    php:        ["PHP"          , "php|phtml"],
+                    powershell: ["Powershell"   , "ps1"],
+                    python:     ["Python"       , "py"],
+                    ruby:       ["Ruby"         , "ru|gemspec|rake|rb"],
+                    scad:       ["OpenSCAD"     , "scad"],
+                    scala:      ["Scala"        , "scala"],
+                    scss:       ["SCSS"         , "scss|sass"],
+                    sh:         ["SH"           , "sh|bash|bat"],
+                    sql:        ["SQL"          , "sql"],
+                    svg:        ["SVG"          , "svg"],
+                    tcl:        ["Tcl"          , "tcl"],
+                    text:       ["Text"         , "txt"],
+                    textile:    ["Textile"      , "textile"],
+                    typescript: ["Typescript"   , "typescript|ts|str"],
+                    xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+                    xquery:     ["XQuery"       , "xq"],
+                    yaml:       ["YAML"         , "yaml"]
+                };
+                
+                var editor = ace.edit("aceEditor");
+                editor.getSession().setMode("ace/mode/javascript");
+                
+                // append mode
+                $.each(modesByName, function(k, v){
+                    $('#mode').append('<option value="'+k+'">'+v[0]+'</option>'); // if you use chosen you need update list .trigger("liszt:updated");
+                })
+                
+                $('#data-files').change(function(){
+                    var url = 'js/ace-editor/file-changer.php',
+                    value = $(this).val();
+                    $.post(url, {data:value}, function(o){
+                        if(o == '0'){
+                            alert('file not found, may be broken.')
+                        }
+                        else{
+                            editor.setValue(o, 0);
+                        }
+                    })
+                    
+                })
+                $('#mode').change(function(){
+                    mode = $(this).val();
+                    editor.getSession().setMode("ace/mode/"+mode+"");
+                })
+                $('#theme').change(function(){
+                    theme = $(this).val();
+                    editor.setTheme(theme);
+                })
+                $('#update').click(function(){
+                    alert('action update here... :)')
+                    return false;
+                })
+            });
+            
+        </script>
+    </body>
+</html>

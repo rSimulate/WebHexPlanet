@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Dashboard - Stilearn Admin Bootstrap</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="stilearning">
+
+        <!-- google font -->
+        <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet" type="text/css" />
+
+        <!-- styles -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="css/stilearn.css" rel="stylesheet">
+        <link href="css/stilearn-responsive.css" rel="stylesheet">
+        <link href="css/stilearn-helper.css" rel="stylesheet">
+        <link href="css/stilearn-icon.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <link href="css/animate.css" rel="stylesheet">
+        <link href="css/uniform.default.css" rel="stylesheet">
+        
+        <link href="css/select2.css" rel="stylesheet">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <!-- section header -->
+        <header class="header">
+            <!--nav bar helper-->
+            <div class="navbar-helper">
+                <div class="row-fluid">
+                    <!--panel site-name-->
+                    <div class="span2">
+                        <div class="panel-sitename">
+                            <h2><a href="index.html"><span class="color-teal">Sti</span>learn</a></h2>
+                        </div>
+                    </div>
+                    <!--/panel name-->
+
+                    <div class="span6">
+                        <!--panel search-->
+                        <div class="panel-search">
+                            <form class="form-search">
+                                <div class="input-icon-append">
+                                    <button type="submit" rel="tooltip-bottom" title="search" class="icon"><i class="icofont-search"></i></button>
+                                    <input class="input-large search-query grd-white" maxlength="23" placeholder="Search here..." type="text">
+                                </div>
+                            </form>
+                        </div><!--/panel search-->
+                    </div>
+                    <div class="span4">
+                        <!--panel button ext-->
+                        <div class="panel-ext">
+                            <div class="btn-group">
+                                <!--notification-->
+                                <a class="btn btn-danger btn-small" data-toggle="dropdown" href="#" title="3 notification">3</a>
+                                <ul class="dropdown-menu dropdown-notification">
+                                    <li class="dropdown-header grd-white"><a href="#">View All Notifications</a></li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- <li class="dropdown-footer"><a href=""></a></li> -->
+                                </ul><!--notification-->
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small dropdown-toggle active" data-toggle="dropdown" href="#">
+                                    Shortcut
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li><a tabindex="-1" href="calendar.html">Calendar</a></li>
+                                    <li><a tabindex="-1" href="invoice.html">Invoice</a></li>
+                                    <li class="active"><a tabindex="-1" href="message.html">Message</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Sample Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="pricing.html">Pricing</a></li>
+                                            <li><a tabindex="-1" href="bonus-page/resume/index.html">Resume</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Error Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="403.html">Error 403</a></li>
+                                            <li><a tabindex="-1" href="404.html">Error 404</a></li>
+                                            <li><a tabindex="-1" href="405.html">Error 405</a></li>
+                                            <li><a tabindex="-1" href="500.html">Error 500</a></li>
+                                            <li><a tabindex="-1" href="503.html">Error 503</a></li>
+                                            <li><a tabindex="-1" href="under-construction.html">Under Construction</a></li>
+                                            <li><a tabindex="-1" href="coming-son.html">Coming Son</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small" href="#">Other Action</a>
+                            </div>
+                            <div class="btn-group user-group">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <img class="corner-all" align="middle" src="img/user-thumb.jpg" title="John Doe" alt="john doe" /> <!--this for display on PC device-->
+                                    <button class="btn btn-small btn-inverse">John Doe</button> <!--this for display on tablet and phone device-->
+                                </a>
+                                <ul class="dropdown-menu dropdown-user" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <div class="media">
+                                            <a class="pull-left" href="#">
+                                                <img class="img-circle" src="img/user.jpg" title="profile" alt="profile" />
+                                            </a>
+                                            <div class="media-body description">
+                                                <p><strong>John Doe</strong></p>
+                                                <p class="muted">johndoe@mail.com</p>
+                                                <p class="action"><a class="link" href="#">Activity</a> - <a class="link" href="#">Setting</a></p>
+                                                <a href="bonus-page/resume/index.html" class="btn btn-primary btn-small btn-block">View Profile</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="dropdown-footer">
+                                        <div>
+                                            <a class="btn btn-small pull-right" href="login.html">Logout</a>
+                                            <a class="btn btn-small" href="#">Add Account</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><!--panel button ext-->
+                    </div>
+                </div>
+            </div><!--/nav bar helper-->
+        </header>
+
+        <!-- section content -->
+        <section class="section">
+            <div class="row-fluid">
+                <!-- span side-left -->
+                <div class="span1">
+                    <!--side bar-->
+                    <aside class="side-left">
+                        <ul class="sidebar">
+                            <li>
+                                <a href="index.html" title="dashboard">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-dashboard"></i>
+                                    </div>
+                                    <span class="sidebar-text">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="interface.html" title="interface">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-magnet"></i>
+                                    </div>
+                                    <span class="sidebar-text">Interface</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="form.html" title="form">
+                                    <div class="badge badge-important">3</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-edit"></i>
+                                    </div>
+                                    <span class="sidebar-text">Form</span>
+                                </a>
+                                <ul class="sub-sidebar-form corner-top shadow-white">
+                                    <li class="title muted">Quick Upload</li>
+                                    <li>
+                                        <input type="file" data-form="uniform" onchange="alert('your progres uploading file...')" />
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="form.html" title="form element" class="corner-all">
+                                            <i class="icofont-file"></i>
+                                            <span class="sidebar-text">Form Element</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="code_editor.html" title="code editor" class="corner-all">
+                                            <i class="icofont-book"></i>
+                                            <span class="sidebar-text">Code Editor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="gallery.html" title="gallery" class="corner-all">
+                                            <i class="icofont-picture"></i>
+                                            <span class="sidebar-text">Gallery</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="charts.html" title="charts">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-bar-chart"></i>
+                                    </div>
+                                    <span class="sidebar-text">charts</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tables.html" title="table">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-table"></i>
+                                    </div>
+                                    <span class="sidebar-text">Tables</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="grids.html" title="grids">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-columns"></i>
+                                    </div>
+                                    <span class="sidebar-text">Grids</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="icons.html" title="icons">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-star"></i>
+                                    </div>
+                                    <span class="sidebar-text">Icons</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="widgets.html" title="widgets">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-reorder"></i>
+                                    </div>
+                                    <span class="sidebar-text">Widgets</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" title="more">
+                                    <div class="badge badge-important">5</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-th-large"></i>
+                                    </div>
+                                    <span class="sidebar-text">More</span>
+                                </a>
+                                <ul class="sub-sidebar corner-top shadow-silver-dark">
+                                    <li>
+                                        <a href="404.html" title="not found">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-warning-sign"></i>
+                                            </div>
+                                            <span class="sidebar-text">404</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html" title="login">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-lock"></i>
+                                            </div>
+                                            <span class="sidebar-text">Login</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="invoice.html" title="invoice">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-barcode"></i>
+                                            </div>
+                                            <span class="sidebar-text">Invoice</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="pricing.html" title="pricing table">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-briefcase"></i>
+                                            </div>
+                                            <span class="sidebar-text">Pricing</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="bonus-page/resume/index.html" title="resume">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-user"></i>
+                                            </div>
+                                            <span class="sidebar-text">Resume</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </aside><!--/side bar -->
+                </div><!-- span side-left -->
+                
+                <!-- span content -->
+                <div class="span9">
+                    <!-- content -->
+                    <div class="content">
+                        <!-- content-header -->
+                        <div class="content-header">
+                            <ul class="content-header-action pull-right">
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-green color-white"><i class="icofont-plus-sign"></i></div>
+                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Visits</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-teal color-white"><i class="icofont-user-md"></i></div>
+                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <div class="badge-circle grd-red color-white">$</div>
+                                        <div class="action-text color-red">4367 <span class="helper-font-small color-silver-dark">Orders</span></div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <h2><i class="icofont-envelope-alt"></i> Messages</h2>
+                        </div><!-- /content-header -->
+                        
+                        <!-- content-breadcrumb -->
+                        <div class="content-breadcrumb">
+                            <!--breadcrumb-nav-->
+                            <ul class="breadcrumb-nav pull-right">
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-user"></i> New User
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icofont-cogs"></i> Actions
+                                        <i class="icofont-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" class="all-message">All Message</a></li>
+                                        <li><a href="#" class="read-message">Read Message</a></li>
+                                        <li><a href="#" class="unread-message">Unread Message</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="select-all">Select All</a></li>
+                                        <li><a href="#" class="unselect-all">Unselect All</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="get-selected">Get Selected</a></li>
+                                        <li><a href="#" class="delete-message">Delete Message</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Something Else</a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-fire"></i> Other Action
+                                    </a>
+                                </li>
+                            </ul><!--/breadcrumb-nav-->
+                            
+                            <!--breadcrumb-->
+                            <ul class="breadcrumb">
+                                <li><a href="index.html"><i class="icofont-home"></i> Dashboard</a> <span class="divider">&rsaquo;</span></li>
+                                <li class="active">Messages</li>
+                            </ul><!--/breadcrumb-->
+                        </div><!-- /content-breadcrumb -->
+                        
+                        <!-- content-body -->
+                        <div class="content-body">
+                            <!-- message -->
+                            <!-- message-a -->
+                            <!-- toolbar controller -->
+                            <div id="toolbar-control" class="message-control btn-toolbar pull-right">
+                                <div class="btn-group">
+                                    <a href="#new-message" class="btn btn-small" data-toggle="tab"><i class="icofont-edit"></i> New Message</a>
+                                    <a href="#" class="btn btn-small" data-toggle="tab"><i class="icofont-hdd"></i> Archives</a>
+                                    <a href="#" class="btn btn-small" data-toggle="tab"><i class="icofont-star-empty"></i> Other</a>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icofont-cogs"></i> Actions
+                                        <i class="icofont-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu helper-font-small">
+                                        <li><a href="#" class="all-message">All Message</a></li>
+                                        <li><a href="#" class="read-message">Read Message</a></li>
+                                        <li><a href="#" class="unread-message">Unread Message</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="select-all">Select All</a></li>
+                                        <li><a href="#" class="unselect-all">Unselect All</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="get-selected">Get Selected</a></li>
+                                        <li><a href="#" class="delete-message">Delete Message</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Something Else</a></li>
+                                    </ul>
+                                </div>
+                            </div><!-- toolbar controller -->
+                            
+                            <div class="message-a">
+                                <!-- message contact, this on left side -->
+                                <div class="message-contact">
+                                    <!-- message contact header -->
+                                    <div class="mc-header">
+                                        <div class="input-icon-prepend">
+                                            <span class="icon"><i class="icofont-search"></i></span>
+                                            <input id="search-contact" type="text" class="input-block-level" placeholder="search" />
+                                        </div>
+                                    </div><!-- /message contact header -->
+                                    <!-- message contact content -->
+                                    <div class="mc-content">
+                                        <!-- list content -->
+                                        <ul class="contact-list">
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-1" data-toggle="tab" data-id="iin@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">08:18pm</div>
+                                                            <p class="contact-item-heading bold">Iin T.</p>
+                                                            <p class="help-block"><small class="muted">Quisque convallis justo...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="janesmith@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">06:37pm</div>
+                                                            <p class="contact-item-heading bold">Jane Smith</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="johnsmith@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">04:20pm</div>
+                                                            <p class="contact-item-heading bold">John Smith</p>
+                                                            <p class="help-block"><small class="muted">Accumsan condimentum...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="janedoe@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Jane Doe</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt unread">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="sungep@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Sungep</p>
+                                                            <p class="help-block"><small class="muted">unread messages...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="harab@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Harab</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="pathoel@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Pathoel</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="opytama@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Opytama</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="mahardika@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Mahardika</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="contact-alt">
+                                                <!--we use data toggle tab for navigate this action-->
+                                                <a href="#user-blah" data-toggle="tab" data-id="bent@mail.com">
+                                                    <!--we use contact-item structure like the component media in bootstrap-->
+                                                    <div class="contact-item">
+                                                        <div class="pull-left">
+                                                            <img class="contact-item-object" style="width: 48px;height: 48px;" src="img/user-thumb.jpg">
+                                                        </div>
+                                                        <div class="contact-item-body">
+                                                            <div class="status">12 Dec</div>
+                                                            <p class="contact-item-heading bold">Bent</p>
+                                                            <p class="help-block"><small class="muted">Lorem ipsum dolor...</small></p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul><!-- /list contact -->
+                                    </div><!-- /message contact content -->
+                                </div><!-- /message contact-->
+                                
+                                <!-- message body, this on right side -->
+                                <div class="message-body">
+                                    <div class="mb-content">
+                                        <div class="tab-content">
+                                            <!--new message-->
+                                            <div class="tab-pane fade active in" id="new-message">
+                                                <div class="new-message">
+                                                    <div class="msg-new-head">
+                                                        <label class="control-label help-inline">To: </label>
+                                                        <input type="hidden" style="width:70%" name="receiver" data-form="select2" value="janesmith" />
+                                                    </div>
+                                                    <div class="msg-body">
+                                                        <!--you can fill this column with the following format examples. or with your own style.-->
+                                                        <!--
+                                                        <div class="msg-in">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-3" />
+                                                            <span class="msg-time">10:50am</span>
+                                                            <strong class="msg-user">Jane doe: </strong>
+                                                            <div class="msg-text">Et sagittis ut vel dolor nullam proin</div>
+                                                        </div>
+                                                        <div class="msg-out">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-4" />
+                                                            <span class="msg-time">10:52am</span>
+                                                            <strong class="msg-user">me: </strong>
+                                                            <div class="msg-text">massa quisque sodales id dictumst.</div>
+                                                        </div>-->
+                                                    </div>
+                                                    <!--status typed part-->
+                                                    <div class="msg-typed"><i class="typicn-chat"></i> Jane smith is typing...</div>
+                                                </div>
+                                            </div><!--new message-->
+                                            
+                                            <!--user message-->
+                                            <div class="tab-pane fade" id="user-1">
+                                                <div class="message-content">
+                                                    <!--content part-->
+                                                    <div class="msg-body">
+                                                        <div class="msg-in">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-1" />
+                                                            <span class="msg-time">10:45am</span>
+                                                            <strong class="msg-user">Iin: </strong>
+                                                            <div class="msg-text">Lorem ipsum dolor</div>
+                                                        </div>
+                                                        <div class="msg-out">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-2" />
+                                                            <span class="msg-time">10:47am</span>
+                                                            <strong class="msg-user">me: </strong>
+                                                            <div class="msg-text">Erat duis lectus vel wisi, quibusdam aliquam vehicula eleifend ut</div>
+                                                        </div>
+                                                        <div class="msg-in">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-3" />
+                                                            <span class="msg-time">10:50am</span>
+                                                            <strong class="msg-user">Iin: </strong>
+                                                            <div class="msg-text">Et sagittis ut vel dolor nullam proin</div>
+                                                        </div>
+                                                        <div class="msg-out">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-4" />
+                                                            <span class="msg-time">10:52am</span>
+                                                            <strong class="msg-user">me: </strong>
+                                                            <div class="msg-text">massa quisque sodales id dictumst.</div>
+                                                        </div>
+                                                    </div>
+                                                    <!--status typed part-->
+                                                    <div class="msg-typed"><i class="typicn-chat"></i> Iin is typing...</div>
+                                                </div>
+                                            </div><!--/user message-->
+                                            
+                                            <!--user message-->
+                                            <div class="tab-pane fade" id="user-blah">
+                                                <div class="message-content">
+                                                    <!--content part-->
+                                                    <div class="msg-body">
+                                                        <div class="msg-in">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-1" />
+                                                            <span class="msg-time">10:45am</span>
+                                                            <strong class="msg-user">Jane smith: </strong>
+                                                            <div class="msg-text">Lorem ipsum dolor</div>
+                                                        </div>
+                                                        <div class="msg-out">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-2" />
+                                                            <span class="msg-time">10:47am</span>
+                                                            <strong class="msg-user">me: </strong>
+                                                            <div class="msg-text">Erat duis lectus vel wisi, quibusdam aliquam vehicula eleifend ut</div>
+                                                        </div>
+                                                        <div class="msg-in">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-3" />
+                                                            <span class="msg-time">10:50am</span>
+                                                            <strong class="msg-user">Jane smith: </strong>
+                                                            <div class="msg-text">Et sagittis ut vel dolor nullam proin</div>
+                                                        </div>
+                                                        <div class="msg-out">
+                                                            <input class="hide" type="checkbox" name="message-id" value="id-4" />
+                                                            <span class="msg-time">10:52am</span>
+                                                            <strong class="msg-user">me: </strong>
+                                                            <div class="msg-text">massa quisque sodales id dictumst.</div>
+                                                        </div>
+                                                    </div>
+                                                    <!--status typed part-->
+                                                    <div class="msg-typed"><i class="typicn-chat"></i> Jane smith is typing...</div>
+                                                </div>
+                                            </div><!--/user message-->
+                                        </div>
+                                        
+                                        <!--input part-->
+                                        <div class="msg-input">
+                                            <form enctype="multipart/form-data">
+                                                <div class="msg-desc muted">Lorem ipsum dolor sit amet.</div>
+                                                <textarea name="message-writer" class="input-block-level" placeholder="write message here..."></textarea>
+                                                <div class="pull-right">
+                                                    <label class="checkbox helper-font-small">
+                                                        <input type="checkbox" data-form="uniform" id="sendEnter" name="sendEnter" checked />Press Enter to send
+                                                    </label>
+                                                </div>
+                                                <!--this upload button, we improve it with jquery, see js code below-->
+                                                <input data-form="upload-helper" type="file" name="attach-file" />
+                                                <button data-form="upload-helper" data-target="attach-file" class="btn btn-small btn-link"><i class="icofont-paper-clip"></i> attach file</button>
+
+                                                <input data-form="upload-helper" type="file" name="attach-alt" />
+                                                <button data-form="upload-helper" data-target="attach-alt" class="btn btn-small btn-link"><i class="icofont-upload-alt"></i> add something</button>
+                                            </form>
+                                        </div><!--/input part-->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/message-->
+                        </div><!--/content-body -->
+                    </div><!-- /content -->
+                </div><!-- /span content -->
+                
+                <!-- span side-right -->
+                <div class="span2">
+                    <!-- side-right -->
+                    <aside class="side-right">
+                        <!-- sidebar-right -->
+                        <div class="sidebar-right">
+                            <!--sidebar-right-header-->
+                            <div class="sidebar-right-header">
+                                <div class="sr-header-right">
+                                    <h2><span class="label label-info">$26,875</span></h2>
+                                </div>
+                                <div class="sr-header-left">
+                                    <p class="bold">Balance</p>
+                                    <small class="muted">Dec 30 2012</small>
+                                </div>
+                            </div><!--/sidebar-right-header-->
+                            <!--sidebar-right-control-->
+                            <div class="sidebar-right-control">
+                                <ul class="sr-control-item">
+                                    <li class="active"><a href="#alt1" data-toggle="tab" title="alternative 1"><i class="icofont-flag"></i></a></li>
+                                    <li rel="tooltip-bottom" title="view site"><a href="index.html" target="_BLANK"><i class="icofont-external-link"></i></a></li>
+                                </ul>
+                            </div><!-- /sidebar-right-control-->
+                            <!-- sidebar-right-content -->
+                            <div class="sidebar-right-content">
+                                <div class="tab-content">
+                                    
+                                    <!--alternative 1-->
+                                    <div class="tab-pane fade active in" id="alt1">
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <button class="btn btn-block btn-mini btn-primary">Add Action</button>
+                                        <button class="btn btn-block btn-mini">Add Action</button>
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <!-- side-task -->
+                                        <div class="side-task">
+                                            <div class="task active">
+                                                <span class="task-header">
+                                                    <img src="img/loader_16.gif" /> 
+                                                    <strong>Portofolio_W34GF.zip</strong>
+                                                </span>
+                                                <span class="task-desc">9.1 of 17MB - 243KB/sec - 1 min</span>
+                                                <div class="progress progress-striped active" rel="tooltip" title="40%">
+                                                    <div class="bar bar-success" style="width: 40%;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Paralax_bg_5448.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Icons_bg_I98GH.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Dashboard_3805.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                        </div><!-- /side-task -->
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                    </div><!--/alternative 1-->
+                                    
+                                </div>
+                            </div><!-- /sidebar-right-content -->
+                        </div><!-- /sidebar-right -->
+                    </aside><!-- /side-right -->
+                </div><!-- /span side-right -->
+            </div>
+        </section>
+
+        <!-- section footer -->
+        <footer>
+            <a rel="to-top" href="#top"><i class="icofont-circle-arrow-up"></i></a>
+        </footer>
+
+        <!-- javascript
+        ================================================== -->
+        <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/uniform/jquery.uniform.js"></script>
+        
+        <script src="js/select2/select2.js"></script>
+
+        <!-- required stilearn template js, for full feature-->
+        <script src="js/holder.js"></script>
+        <script src="js/stilearn-base.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // try your js
+                
+                // uniform
+                $('[data-form=uniform]').uniform();
+                
+                //seect2
+                $('[data-form=select2]').select2({
+                    tags:['iin', 'jonesmith', 'janesmith', 'sungep', 'pathoel', 'opytama', 'harab']
+                });
+                
+                // helper upload (input=file) style
+                $('[data-form=upload-helper][type=file]').hide();
+                $('.btn[data-form=upload-helper]').click(function(){
+                    $this = $(this);
+                    targetFile = $this.attr('data-target');
+                    
+                    $('[name='+targetFile+']').click().change(function(){
+                        alert("you'll be upload "+$(this).val());
+                    });
+                    return false;
+                });
+                
+                // simulation uses a message-a
+                $('[name=message-writer]').keydown(function(e){
+                    if( e.which == 13 ){
+                        autoSend = $('#sendEnter').attr('checked');
+                        var d = new Date(), // demo date obj
+                        h = d.getHours(), // get hours
+                        m = d.getMinutes(), // get minutes
+                        a_p = '';
+                        
+                        // get am/pm
+                        if (h < 12){
+                            a_p = "am";
+                        }
+                        else{
+                            a_p = "pm";
+                            h = h - 12;
+                        }
+                        if(autoSend == 'checked' && $(this).val() != '' && $(this).val() != ' '){
+                            msg = '<div class="msg-out">'
+                               +'     <span class="msg-time">'+h+':'+m+a_p+'</span>'
+                               +'     <strong class="msg-user">me: </strong>'
+                               +'     <div class="msg-text">'+$(this).val()+'</div>'
+                               +' </div>';
+                            
+                            $msg_body = $('.message-body .tab-pane.active .msg-body'); // select active tab
+                            
+                            $msg_body.append(msg).animate({ scrollTop: $msg_body.get(0).scrollHeight });;
+                            $(this).val('');
+                            return false;
+                        }
+                        else{
+                            return false;
+                        }
+                        
+                        // server side action here....
+                        
+                    }
+                    else{
+                        return true;
+                    }
+                });
+                
+                // searching contact list
+                $('#search-contact').keydown(function(){
+                    // Retrieve the input field text and reset the count to zero
+                    var filter = $(this).val();
+
+                    // Loop through the comment list
+                    $(".contact-list > .contact-alt").each(function(){
+
+                        // If the list item does not contain the text phrase fade it out
+                        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                            $(this).fadeOut();
+
+                        // Show the list item if the phrase matches and increase the count by 1
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+                
+                // selected message
+                $('.msg-body .msg-in, .msg-body .msg-out').click(function(){
+                    $this = $(this);
+                    checkbox = $this.find('[name=message-id]');
+                    checked = checkbox.attr('checked');
+                    msg_id = checkbox.val();
+                    
+                    $this.toggleClass('selected');
+                    if(checked == undefined){
+                        checkbox.attr('checked', true)
+                    }
+                    else{
+                        checkbox.attr('checked', false)
+                    }
+                });
+                // tab event control to help selected message
+                $('#toolbar-control a[data-toggle="tab"], .contact-list a[data-toggle="tab"]').on('shown', function(){
+                    msg = $('.msg-body .msg-in, .msg-body .msg-out');
+                    msg.removeClass('selected'); // remove all selected msg
+                    
+                    checkbox = msg.find('[name=message-id]');
+                    checkbox.attr('checked', false); // remove all checked msg
+                });
+                
+                // action part demo
+                $('.all-message').click(function(e){
+                    $('.contact-list > .contact-alt').show('slow');
+                    e.preventDefault();
+                });
+                $('.read-message').click(function(e){
+                    $('.contact-list > .contact-alt').show('slow');
+                    $('.contact-list > .contact-alt.unread').hide('slow');
+                    e.preventDefault();
+                });
+                $('.unread-message').click(function(e){
+                    $('.contact-list > .contact-alt').hide('slow');
+                    $('.contact-list > .contact-alt.unread').show('slow');
+                    e.preventDefault();
+                });
+                $('.select-all').click(function(e){
+                    msg = $('.tab-pane.active .msg-body .msg-in, .tab-pane.active .msg-body .msg-out'); // get only active tab
+                    msg.addClass('selected');
+                    msg.find('[name=message-id]').attr('checked', true);
+                    e.preventDefault();
+                })
+                $('.unselect-all').click(function(e){
+                    msg = $('.tab-pane.active .msg-body .msg-in, .tab-pane.active .msg-body .msg-out');
+                    msg.removeClass('selected');
+                    msg.find('[name=message-id]').attr('checked', false);
+                    e.preventDefault();
+                })
+                $('.get-selected').click(function(e){
+                    selected = $('.tab-pane.active .msg-body .msg-in, .tab-pane.active .msg-body .msg-out').find('[name=message-id][checked=checked]');
+                    data = selected.serialize();
+                    alert(data);
+                    e.preventDefault();
+                });
+                $('.delete-message').click(function(e){
+                    $('.tab-pane.active .msg-body .msg-in.selected, .tab-pane.active .msg-body .msg-out.selected').remove();
+                    e.preventDefault();
+                });
+            });
+      
+        </script>
+    </body>
+</html>
