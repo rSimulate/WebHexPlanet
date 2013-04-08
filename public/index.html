@@ -298,13 +298,9 @@
 			renderer.render(scene, camera);
 		}
 
-		function checkDistance(x1, x2, x3, xt, xy, xz) {
-		var output = 0;
-		output = Math.sqrt(Math.pow((x1 - xt), 2) + Math.pow((x2 - yt), 2) + Math.pow((x3 - zt), 2));
-		
-		return output;
-		
-		}
+			function checkDistance(x1, x2, x3, xt, yt, zt) {
+				return Math.sqrt(Math.pow((x1 - xt), 2) + Math.pow((x2 - yt), 2) + Math.pow((x3 - zt), 2));
+			} 
 		
 
 		function setHexUVs(geometry){
