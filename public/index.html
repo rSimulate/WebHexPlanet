@@ -78,7 +78,147 @@
 			return null;
 		}
 
-		$(function(){
+		function showSimulationInfoDialog(simulation, $parentDialog) {
+			// Show simulation info dialog
+			var $simulationInfoDialog = $('#simulationInfoDialog');
+			var $name = $simulationInfoDialog.find('.name');
+			var $dateCreated = $simulationInfoDialog.find('.dateCreated');
+
+			$name.text(simulation.name);
+			$dateCreated.text(simulation.date_created);
+			$simulationInfoDialog.dialog({
+				draggable: false,
+				resizeable: false,
+				title: simulation.name,
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Resume",
+						click: function() {
+							// Change scene to new simulation
+						}
+					}, {
+						text: "Delete",
+						click: function() {
+							// DELETE to simulations resource
+							getLinkByRel(simulation.links, '/rel/delete', function(deleteSimulationUri) {
+								$.ajax({
+									type: 'DELETE',
+									url: deleteSimulationUri,
+									success: function(response, status, jqXHR) {
+										// go back to simulations dialog box
+										$simulationInfoDialog.dialog('close');
+										initMetaSimAPI('1.0', function(engines, simulations) {
+											$simulationInfoDialog.dialog('close');
+											showSimulationDialog(engines, simulations);
+										});
+									}
+								});			
+							});
+						}
+					}	
+				]
+			});
+		}
+
+		function showCreateSimulationDialog(engines, simulations, $parentDialog) {
+			// Show create simulation dialog
+			var $createSimulationDialog = $('#createSimulationDialog');
+			var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
+			var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
+			for (var i in engines) {
+				var engine = engines[i];
+				if (engine.type == 'terrain') {
+					$terrainEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+				else if (engine.type == 'agent') { 
+					$agentEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+			}
+			$createSimulationDialog.dialog({
+				draggable: false,
+				resizeable: false,
+				title: 'New Simulation',
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Create",
+						click: function() {
+							// POST to simulations resource
+							getLinkByRel(simulations.links, '/rel/add', function(addSimulationUri) {
+								$.ajax({
+									type: 'POST',
+									url: addSimulationUri,
+									data: JSON.stringify({
+										name: $createSimulationDialog.find('input[name=name]').val(),
+										terrain_engine_name: $terrainEngineSelect.find(':selected').val(),
+										agent_engine_name: $agentEngineSelect.find(':selected').val()
+									}),
+									contentType: 'application/json; charset=utf-8',
+									success: function(response, status, jqXHR) {
+										var simulationUri = jqXHR.getResponseHeader('location');
+										console.log('created simulation @ ' + simulationUri);
+										$.getJSON(simulationUri, function(response) {
+											$createSimulationsDialog.dialog('close');
+											showSimulationInfoDialog(response, $parentDialog);
+										});
+									}
+								});			
+							});
+						}
+					}
+				]
+			});
+		}
+
+		function showSimulationsDialog(engines, simulations) {
+			var $simulationsDialog = $('#simulationsDialog');
+			if (simulations.active.length > 0) {
+				// Add a <ul> to the dialog
+				var $dialogUl = $simulationsDialog.empty().append('<ul></ul>');
+				for (var i in simulations.active) {
+					var simulation = simulations.active[i];
+					// Add all of the simulation names as <li>'s.
+					var $link = $('<a>' + (simulation.name || 'unknown') + '</a>');
+					$link.click(function() {
+						getLinkByRel(simulation.links, 'self', function(simulationUri) {
+							$.getJSON(simulationUri, function(response) {
+								$simulationsDialog.dialog('close');
+								showSimulationInfoDialog(response, $simulationsDialog);
+							});
+						});
+					});
+					$dialogUl.append($('<li></li>').append($link));
+				}
+			} else {
+				// Simulation.length == 0; no simulations
+				$simulationsDialog.empty().append('<i>none</i>');
+			}
+			$simulationsDialog.dialog({
+				dialogClass: "no-close",
+				draggable: false,
+				resizeable: false,
+				title: 'Simulations',
+				buttons: [
+					{
+						text: "Create",
+						click: function() {
+							// Hide simulations dialog
+							$simulationsDialog.dialog('close');
+							showCreateSimulationDialog(engines, simulations, $simulationsDialog);
+						}
+					}
+
+				]
+			});
+
+		}
+
+		function initMetaSimAPI(requestedVersion/*string*/, fn/*(engines, simulations)*/) {
 			// Get versions
 			$.getJSON('/metasim', function(response) {
 				if (response.versions != undefined) {
@@ -96,78 +236,7 @@
 											getLinkByRel(entryPointResponse.links, '/rel/simulations', function(simulationsUri) {
 												// Get simulations
 												$.getJSON(simulationsUri, function(response) {
-													var simulations = response.active;
-													var $simulationsDialog = $('#simulationsDialog');
-													if (simulations.length > 0) {
-														// Add a <ul> to the dialog
-														var $dialogUl = $simulationsDialog.append('<ul></ul>');
-														for (var i in simulations) {
-															var simulation = simulations[i];
-															// Add all of the simulation names as <li>'s.
-															$dialogUl.append('<li>' + simulation.name || 'unknown' + '</li>');
-														}
-													} else {
-														// Simulation.length == 0; no simulations
-														$simulationsDialog.append('<i>none</i>');
-													}
-													$simulationsDialog.dialog({
-														dialogClass: "no-close",
-														draggable: false,
-														resizeable: false,
-														title: 'Simulations',
-														buttons: [
-															{
-																text: "Create",
-																click: function() {
-																	// Hide simulations dialog
-																	$simulationsDialog.hide();
-																	// Show create simulation dialog
-																	var $createSimulationDialog = $('#createSimulationDialog');
-																	var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
-																	var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
-																	for (var i in engines) {
-																		var engine = engines[i];
-																		if (engine.type == 'terrain') {
-																			$terrainEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
-																		}
-																		else if (engine.type == 'agent') { 
-																			$agentEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
-																		}
-																	}
-																	$createSimulationDialog.dialog({
-																		dialogClass: "no-close",
-																		draggable: false,
-																		resizeable: false,
-																		title: 'New Simulation',
-																		buttons: [
-																			{
-																				text: "Create",
-																				click: function() {
-																					// POST to simulations resource
-																					getLinkByRel(response.links, '/rel/add', function(addSimulationUri) {
-																						$.ajax({
-																							type: 'POST',
-																							url: addSimulationUri,
-																							data: JSON.stringify({
-																								name: $createSimulationDialog.find('input[name=name]').val(),
-																								terrain_engine_name: $terrainEngineSelect.find(':selected').val(),
-																								agent_engine_name: $agentEngineSelect.find(':selected').val()
-																							}),
-																							contentType: 'application/json; charset=utf-8',
-																							dataType: 'json',
-																							success: function(response) {
-																								console.log('created simulation: ' + JSON.stringify(response));
-																							}
-																						});			
-																					});
-																				}
-																			}
-																		]
-																	});
-																}
-															}
-														]
-													});
+													fn(engines, response);
 												});
 											});
 										});
@@ -180,6 +249,11 @@
 				}
 			});
 
+		}
+		$(function(){
+			initMetaSimAPI('1.0', function(engines, simulations) {
+				showSimulationsDialog(engines, simulations);
+			});
 			var $shaderScripts = $("script[type='x-shader/x-vertex']").
 				add("script[type='x-shader/x-fragment']");
 			var latch = $shaderScripts.length;

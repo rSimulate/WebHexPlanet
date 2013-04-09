@@ -7,6 +7,7 @@ var url = require('url');
 var uuid = require('node-uuid');
 var mongo = require('mongodb');
 var ObjectID = mongo.ObjectID;
+var BSON = require('mongodb').BSONPure;
 
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/metasim';
 
@@ -44,15 +45,6 @@ function traverseLinks(client, uri, rels, callback) {
     });
 }
 
-var proxy = new httpProxy.RoutingProxy();
-function createProxyForwarder(forwardUri) {
-	var uri = url.parse(forwardUri);
-	return function(request, response) {
-		console.log('Forwarding request to ' + uri.hostname + ':' + uri.port);
-		proxy.proxyRequest(request, response, {host: uri.hostname, port:uri.port});
-	};
-}
-
 var app = express();
 app.configure(function(){
 	app.use(express.bodyParser());
@@ -71,6 +63,11 @@ app.get('/metasim', function(request, response) {
 });
 
 mongo.connect(mongoUri, {}, function(error, db) {
+	if (db == null) {
+		console.log('Error: db == null');
+		console.log(error);
+		return;
+	}
 	db.addListener('error', function(error) {
 		console.log(error);
 	});
@@ -128,7 +125,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
 	// Simulations resource
 	app.get('/metasim/:version/simulations', function(request, response) {
 		if (request.params.version == '1.0') {
-			db.collection('simulations').find({}).toArray(function(err, simulations) {
+			db.collection('simulations').find({}, {name:1, date_created:1, links:1}).toArray(function(err, simulations) {
 				console.log('sending simulations' + JSON.stringify(simulations));
 				response.send({
 					active: simulations,
@@ -223,15 +220,17 @@ mongo.connect(mongoUri, {}, function(error, db) {
 										// Setup some reverse proxies to forward calls from MetaSim to the engines
 										var terrainSimulationPath = url.parse(terrainSimulationHref).path;
 										console.log('Forwarding requests from ' + terrainSimulationPath + ' to ' + terrainSimulationHref);
-										app.get(terrainSimulationPath, createProxyForwarder(terrainSimulationHref)); 
 										var agentSimulationPath = url.parse(agentSimulationHref).path;
 										console.log('Forwarding requests from ' + agentSimulationPath + ' to ' + agentSimulationHref);
-										app.get(agentSimulationPath, createProxyForwarder(agentSimulationHref)); 
 
 										// Create the simulation object and return it.
 										var simulation = {
+											_id: simulationId,
 											name: simulationName,
 											date_created: new Date(),
+											forwardedPaths: [{
+												path: terrainSimulationPath, dest: terrainSimulationHref}, {
+											    path: agentSimulationPath, dest: agentSimulationHref}],      
 											links: [{
 												rel: 'self',
 												href: simulationUri,
@@ -264,22 +263,66 @@ mongo.connect(mongoUri, {}, function(error, db) {
 		})
 	});
 
-	// Delete simulations
-	app.delete('/metasim/:version/simulations/:id', function(request, response) {
+	app.get('/metasim/:version/simulations/:id', function(request, response) {
 		var version = request.params.version;
 		if (version == '1.0') {
-			var simulationId = request.params.id;
-			if (db.collection('simulations').find({_id:simulationId}).count() > 0) {	
-				db.collection('simulations').remove({_id:simulationId});
-				response.send(204, null);
-			} else {
-				console.log('simulation ' + simulationId + ' not found');
-				response.send(404, 'simulation ' + simulationId + ' not found');
-			}
+			var simulationId = BSON.ObjectID.createFromHexString(request.params.id);
+			db.collection('simulations').findOne({_id: simulationId}, function(err, simulation) {
+				if (!simulation) {
+					console.log(err);
+					console.log('simulation ' + simulationId + ' not found');
+					response.send(404, 'simulation ' + simulationId + ' not found');
+				} else {
+					console.log('err: ' + JSON.stringify(err));
+					console.log('found simulation: ' + request.params.id);
+					console.log('sending : ' + JSON.stringify(simulation));
+					response.send(simulation);
+				}
+			});
 		} else {
 			console.log('version ' + version + ' not found');
 			response.send(404, 'version ' + version + ' not found');
 		}
+	});
+	// Delete simulations
+	app.delete('/metasim/:version/simulations/:id', function(request, response) {
+		var version = request.params.version;
+		if (version == '1.0') {
+			var simulationId = new BSON.ObjectID.createFromHexString(request.params.id);
+			console.log('searching for simulation ' + simulationId);
+			db.collection('simulations').find({_id: simulationId}).count(function(err, number) {	
+				if (number > 0) {
+					console.log('deleting simulation ' + request.params.id);
+					db.collection('simulations').remove({_id: simulationId});
+					response.send(204, null);
+				} else {
+					console.log('simulation ' + simulationId + ' not found');
+					response.send(404, 'simulation ' + simulationId + ' not found');
+				}
+			});
+		} else {
+			console.log('version ' + version + ' not found');
+			response.send(404, 'version ' + version + ' not found');
+		}
+	});
+
+	// Create a default route to pass unknown uris to engines (if they exist)
+	var proxy = new httpProxy.RoutingProxy();
+	app.use(function(request, response) {
+		// find a simulation (if any) that contains the requested url
+		console.log('Trying to forward to engine...');
+		console.log('Finding simulation with path: ' + request.originalUrl);
+		db.collection('simulations').findOne({forwardedPaths: {'$elemMatch': {path: request.originalUrl}}}, {'forwardedPaths.$':1}, function(err, path) {
+			if (err) {
+				console.log(err);
+				response.send(404);
+			} else {
+				// construct the destination url
+				var uri = url.parse(path.dest);
+				console.log('Forwarding request to ' + uri.hostname + ':' + uri.port);
+				proxy.proxyRequest(request, response, {host: uri.hostname, port:uri.port});
+			}
+		});
 	});
 });
 
@@ -288,7 +331,7 @@ app.get('/', function(req, res) {
     res.redirect('/index.html');
 });
 // Serve up static content
-app.get('/index.html|/js/*|/images/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
+app.get('/index.html|/favicon.ico|/js/*|/images/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
     fs.readFile('./public' + request.path, function(err, data) {
 	    if (err) {
 		    console.log(err);
