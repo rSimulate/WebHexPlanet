@@ -47,7 +47,10 @@ function drawOrbit(size, color, originx, originz, originy) {
 			var i = 0;
 			while(i < Math.PI * 2) {
 			i += 0.01;
-			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + planet.planet.position.x, 0 , radius * Math.sin(i) + planet.planet.position.z)); 
+			geometry.vertices.push(
+				new THREE.Vector3(radius * Math.cos(i) + planet.planet.position.x,
+				0, 
+				radius * Math.sin(i) + planet.planet.position.z)); 
 
 			}
 

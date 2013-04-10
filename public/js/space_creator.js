@@ -1,3 +1,24 @@
+function createRocky(size, polycount) { // had to move back to index.html for now
+		var planetgeometry	= new THREE.IcosahedronGeometry(size, polycount);
+		var material	= new THREE.MeshLambertMaterial(
+						{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
+		moonmesh	= new THREE.Mesh(planetgeometry, material); 
+		moonmesh.position.x = 15;
+		moonmesh.position.y = 0;
+		scene.add(moonmesh);
+
+		var hexgeometry	= new THREE.IcosahedronGeometry(size+0.01, polycount);
+
+		setHexUVs(hexgeometry);
+		var material	= new THREE.MeshLambertMaterial({
+			map: THREE.ImageUtils.loadTexture("images/hex02.png"),
+			color: 0xFFFFFF,
+			transparent: true,
+			opacity: 0.2
+		});
+		return moonmesh;
+}
+
 function createTerra(size, texture) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
@@ -244,25 +265,4 @@ function lights() {
 		scene.add(lensFlare);
 		return lensFlare;
 	}		
-}
-
-function createRocky() { // had to move back to index.html for now
-		var planetgeometry	= new THREE.IcosahedronGeometry(0.9, 4);
-		var material	= new THREE.MeshLambertMaterial(
-						{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
-		moonmesh	= new THREE.Mesh(planetgeometry, material); 
-		moonmesh.position.x = 15;
-		moonmesh.position.y = 0;
-		scene.add(moonmesh);
-
-		var hexgeometry	= new THREE.IcosahedronGeometry(0.91, 4);
-
-		setHexUVs(hexgeometry);
-		var material	= new THREE.MeshLambertMaterial({
-			map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-			color: 0xFFFFFF,
-			transparent: true,
-			opacity: 0.2
-		});
-		return moonmesh;
 }
