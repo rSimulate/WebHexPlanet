@@ -6,3 +6,4 @@ function createWorld(type, size, texture) {
 	  createRocky();
 	  }
 }
+
