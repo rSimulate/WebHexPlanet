@@ -32,3 +32,7 @@ body {
 .no-close .ui-dialog-titlebar-close {
 	display: none;
 }
+
+#simulationsDialog > ul > li > a {
+    cursor: pointer;
+}
