@@ -51,7 +51,9 @@
 			Terrain Engine: <select name="terrainEngine"></select></br>
 			Agent Engine: <select name="agentEngine"></select></br>
 		</div>
-		<div id="simulationInfoDialog"></div>
+        <div id="simulationInfoDialog">
+            Created: <span class="dateCreated"></span>
+        </div>
 		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
@@ -85,7 +87,8 @@
 			var $dateCreated = $simulationInfoDialog.find('.dateCreated');
 
 			$name.text(simulation.name);
-			$dateCreated.text(simulation.date_created);
+            console.log(simulation.date_created);
+			$dateCreated.text((new Date(simulation.date_created).toDateString()));
 			$simulationInfoDialog.dialog({
 				draggable: false,
 				resizeable: false,
@@ -98,6 +101,7 @@
 						text: "Resume",
 						click: function() {
 							// Change scene to new simulation
+                            loadScene(simulation);
 						}
 					}, {
 						text: "Delete",
@@ -163,7 +167,7 @@
 										var simulationUri = jqXHR.getResponseHeader('location');
 										console.log('created simulation @ ' + simulationUri);
 										$.getJSON(simulationUri, function(response) {
-											$createSimulationsDialog.dialog('close');
+											$createSimulationDialog.dialog('close');
 											showSimulationInfoDialog(response, $parentDialog);
 										});
 									}
@@ -179,19 +183,23 @@
 			var $simulationsDialog = $('#simulationsDialog');
 			if (simulations.active.length > 0) {
 				// Add a <ul> to the dialog
-				var $dialogUl = $simulationsDialog.empty().append('<ul></ul>');
+                var $dialogUl = $('<ul></ul>');
+                $simulationsDialog.empty().append($dialogUl);
 				for (var i in simulations.active) {
 					var simulation = simulations.active[i];
 					// Add all of the simulation names as <li>'s.
 					var $link = $('<a>' + (simulation.name || 'unknown') + '</a>');
-					$link.click(function() {
-						getLinkByRel(simulation.links, 'self', function(simulationUri) {
-							$.getJSON(simulationUri, function(response) {
-								$simulationsDialog.dialog('close');
-								showSimulationInfoDialog(response, $simulationsDialog);
-							});
-						});
-					});
+                    // properly create a closure of simulation. see http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example
+                    $link.click(function(simulation) {
+                        return function() {
+						    getLinkByRel(simulation.links, 'self', function(simulationUri) {
+						    	$.getJSON(simulationUri, function(response) {
+						    		$simulationsDialog.dialog('close');
+						    		showSimulationInfoDialog(response, $simulationsDialog);
+						    	});
+						    });
+                        };
+					}(simulation));
 					$dialogUl.append($('<li></li>').append($link));
 				}
 			} else {
