@@ -48,6 +48,7 @@
 		<div id="simulationsDialog"></div>
 		<div id="createSimulationDialog">
 			Name: <input name="name"/><br/>
+			Bodies Engine: <select name="bodiesEngine"></select></br>
 			Terrain Engine: <select name="terrainEngine"></select></br>
 			Agent Engine: <select name="agentEngine"></select></br>
 		</div>
@@ -100,8 +101,9 @@
 					{
 						text: "Resume",
 						click: function() {
+                            $simulationInfoDialog.dialog('close');
 							// Change scene to new simulation
-                            loadScene(simulation);
+                            scene = loadScene(simulation);
 						}
 					}, {
 						text: "Delete",
@@ -116,7 +118,7 @@
 										$simulationInfoDialog.dialog('close');
 										initMetaSimAPI('1.0', function(engines, simulations) {
 											$simulationInfoDialog.dialog('close');
-											showSimulationDialog(engines, simulations);
+											showSimulationsDialog(engines, simulations);
 										});
 									}
 								});			
@@ -130,11 +132,15 @@
 		function showCreateSimulationDialog(engines, simulations, $parentDialog) {
 			// Show create simulation dialog
 			var $createSimulationDialog = $('#createSimulationDialog');
+			var $bodiesEngineSelect = $createSimulationDialog.find('select[name=bodiesEngine]');
 			var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
 			var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
 			for (var i in engines) {
 				var engine = engines[i];
-				if (engine.type == 'terrain') {
+				if (engine.type == 'bodies') {
+					$bodiesEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+				else if (engine.type == 'terrain') {
 					$terrainEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
 				}
 				else if (engine.type == 'agent') { 
@@ -159,6 +165,7 @@
 									url: addSimulationUri,
 									data: JSON.stringify({
 										name: $createSimulationDialog.find('input[name=name]').val(),
+										bodies_engine_name: $bodiesEngineSelect.find(':selected').val(),
 										terrain_engine_name: $terrainEngineSelect.find(':selected').val(),
 										agent_engine_name: $agentEngineSelect.find(':selected').val()
 									}),
@@ -324,7 +331,7 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
-			planet = createPlanet(2); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			planet = createPlanet(2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg'); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			

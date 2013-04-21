@@ -1,32 +1,28 @@
 function loadScene(simulation) {
     var scene = new THREE.Scene();
-    getLinkByRel(simulation.links, '/rel/skybox', function(skyboxUri) {
-        // create skybox using texture at skybox uri
-    });
-    getLinkByRel(simulation.links, '/rel/bodies', function(bodiesUri) {
-        $.getJSON(bodiesUri, function(response) {
-            for (var i in response.bodies) {
-                var body = response.bodies[i];
-                // TODO create geometry, and texture it using link relation values
-                getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
-                    getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
-                        scene.add(createPlanet(2), worldTextureUri, worldTextureNightUri);
-                    });
-                });
-            }
+    //getLinkByRel(simulation.links, '/rel/skybox', function(skyboxUri) {
+    //    // create skybox using texture at skybox uri
+    //});
+    for (var i in simulation.bodies) {
+        var body = simulation.bodies[i];
+        // TODO create geometry, and texture it using link relation values
+        getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
+            getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
+                scene.add(createPlanet(2), worldTextureUri, worldTextureNightUri);
+            });
         });
-    });
+    }
     return scene;
 }
 
-function createPlanet(size) {
+function createPlanet(size, worldTextureUri, worldTextureNightUri) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();
 	var fragmentGround = $("#fragmentGround").text();
 
-	var diffuse = THREE.ImageUtils.loadTexture('images/TEWworld.jpg');
-	var diffuseNight = THREE.ImageUtils.loadTexture('images/TEWworld-night.jpg');
+	var diffuse = THREE.ImageUtils.loadTexture(worldTextureUri);
+	var diffuseNight = THREE.ImageUtils.loadTexture(worldTextureNightUri);
 	var maxAnisotropy = renderer.getMaxAnisotropy();
 	
 	diffuse.anisotropy = maxAnisotropy;

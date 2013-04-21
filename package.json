@@ -6,7 +6,9 @@
     "node-uuid": "1.4.0",
     "aws-sdk": "0.9.1-pre.2",
     "mongodb": "1.2.13",
-	"http-proxy": "0.10.0"
+	"http-proxy": "0.10.0",
+	"xtend": "2.0.3",
+	"async": "0.2.7"
   },
   "engines": {
     "node": "0.8.x",
