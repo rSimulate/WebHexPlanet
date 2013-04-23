@@ -151,7 +151,12 @@ mongo.connect(mongoUri, {}, function(error, db) {
     app.post('/metasim/:version/simulations', function(request, response) {
         var simulationId = new ObjectID();
         var simulationName = request.body.name;
-        var simulationUri = '/metasim/' + request.params.version + '/simulations/' + simulationId.toString();
+        var simulationPathname = '/metasim/' + request.params.version + '/simulations/' + simulationId.toString();
+        var simulationUrl = url.format({
+            protocol: 'http',
+            hostname: request.host,
+            port: port,
+            pathname: simulationPathname});
         var simulation = {
             _id: simulationId,
             name: simulationName,
@@ -159,10 +164,10 @@ mongo.connect(mongoUri, {}, function(error, db) {
             forwardedPaths: [],
             links: [{
                 rel: 'self',
-                href: simulationUri,
+                href: simulationPathname,
                 method: 'GET'}, {
                 rel: '/rel/delete',
-                href: simulationUri,
+                href: simulationPathname,
                 method: 'DELETE'}]};
 
         db.collection('simulations').insert(simulation, function(err, docs) {
@@ -229,23 +234,25 @@ mongo.connect(mongoUri, {}, function(error, db) {
                                         console.log('simulation: ' + JSON.stringify(simulation));
                                         simulation = extend(simulation, jsonBody);
                                     }
+                                    // _id field needs to be an objectId not a string
+                                    simulation._id = simulationId;
                                     console.log('Updating simulation in db ' + JSON.stringify(simulation));
-                                    db.collection('simulations').update({_id: simulationId}, simulation, {upsert:true});
+                                    db.collection('simulations').save(simulation);
                                 } else {
                                     console.log('No response body from engine. No merge performed.');
                                 }
                                 callback();
                             });
                         });    
-                        req.write(JSON.stringify({simulation_href: simulationUri}));
+                        req.write(JSON.stringify({simulation_href: simulationUrl}));
                         req.end();
                     });
                });
            },
            // afterwards, return the location of the simulation Uri back to the client
            function(err, results) {
-              console.log('Returning 201 created at ' + simulationUri);
-              response.header('Location', simulationUri);
+              console.log('Returning 201 created at ' + simulationUrl);
+              response.header('Location', simulationPathname);
               response.send(201, null);
            });
         });
