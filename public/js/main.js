@@ -8,7 +8,7 @@ function loadScene(simulation) {
         // TODO create geometry, and texture it using link relation values
         getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
             getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
-                scene.add(createPlanet(2), worldTextureUri, worldTextureNightUri);
+                scene.add(createPlanet(2, worldTextureUri, worldTextureNightUri));
             });
         });
     }

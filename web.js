@@ -48,9 +48,6 @@ function traverseLinks(client, uri, rels, callback) {
 }
 
 var app = express();
-app.configure(function(){
-    app.use(express.bodyParser());
-});
 
 // Render a page and return a link to the data file
 app.get('/metasim', function(request, response) {
@@ -100,6 +97,37 @@ mongo.connect(mongoUri, {}, function(error, db) {
         href: 'http://localhost:5003/metasim/1.0',
         version: '1.0'}, {upsert: true});
 
+    // Create a default route to pass unknown uris to engines (if they exist)
+    var proxy = new httpProxy.RoutingProxy();
+    app.all('/*', function(request, response, next) {
+        // find a simulation (if any) that contains the requested url
+        console.log('Trying to forward to engine...');
+        console.log('Finding simulation with forwarding path: ' + request.originalUrl);
+        var buffer = httpProxy.buffer(request);
+        db.collection('simulations').find({
+            forwardedPaths: {'$elemMatch': {originalUrl: request.originalUrl}}}, {
+            'forwardedPaths.$':1}).toArray(function(err, simulations) {
+            if (err) {
+                console.log(err);
+                response.send(500);
+            } else if (simulations.length == 0) {
+                next();
+            } else {
+                var simulation = simulations[0];
+                console.log(simulation);
+                // parse the destination url
+                var destUrl = url.parse(simulation.forwardedPaths[0].dest);
+                // perform any url substitution
+                request.path = destUrl.path;
+                console.log('Forwarding request to ' + destUrl.hostname + ':' + destUrl.port);
+                proxy.proxyRequest(request, response, {host: destUrl.hostname, port: destUrl.port, buffer: buffer});
+            }
+        });
+    });
+    // bodyParser goes after proxy route otherwise proxying will hang.
+    app.configure(function(){
+        app.use(express.bodyParser());
+    });
     // Endpoint resource
     app.get('/metasim/:version', function(request, response) {
         if (request.params.version == '1.0') {
@@ -301,24 +329,6 @@ mongo.connect(mongoUri, {}, function(error, db) {
         }
     });
 
-    // Create a default route to pass unknown uris to engines (if they exist)
-    var proxy = new httpProxy.RoutingProxy();
-    app.use(function(request, response) {
-        // find a simulation (if any) that contains the requested url
-        console.log('Trying to forward to engine...');
-        console.log('Finding simulation with path: ' + request.originalUrl);
-        db.collection('simulations').findOne({forwardedPaths: {'$elemMatch': {path: request.originalUrl}}}, {'forwardedPaths.$':1}, function(err, path) {
-            if (err) {
-                console.log(err);
-                response.send(404);
-            } else {
-                // construct the destination url
-                var uri = url.parse(path.dest);
-                console.log('Forwarding request to ' + uri.hostname + ':' + uri.port);
-                proxy.proxyRequest(request, response, {host: uri.hostname, port:uri.port});
-            }
-        });
-    });
 });
 
 // Redirect / to /index.html
