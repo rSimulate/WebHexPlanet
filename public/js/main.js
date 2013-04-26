@@ -8,14 +8,22 @@ function loadScene(simulation) {
         // TODO create geometry, and texture it using link relation values
         getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
             getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
-                scene.add(createPlanet(2, worldTextureUri, worldTextureNightUri));
+                createPlanet(scene, 2, worldTextureUri, worldTextureNightUri);
             });
         });
     }
     return scene;
 }
 
-function createPlanet(size, worldTextureUri, worldTextureNightUri) {
+function addCamera(scene) {
+    // put a camera in the scene
+    var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
+    camera.position.set(149, 0, 15);
+    scene.add(camera); 
+    return camera;
+}
+
+function createPlanet(scene, size, worldTextureUri, worldTextureNightUri) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();

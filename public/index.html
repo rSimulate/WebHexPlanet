@@ -104,6 +104,12 @@
                             $simulationInfoDialog.dialog('close');
 							// Change scene to new simulation
                             scene = loadScene(simulation);
+
+			                // put a camera in the scene
+                            camera = addCamera(scene);
+
+			                // create a camera contol
+			                cameraControls	= new THREE.OrbitControls(camera)
 						}
 					}, {
 						text: "Delete",
@@ -287,7 +293,7 @@
 			});
 		});
 
-		// init the scene
+		// init three.js
 		function init(){
 			if(Detector.webgl){
 				renderer = new THREE.WebGLRenderer({
@@ -312,9 +318,7 @@
 			projector = new THREE.Projector();	
 
 			// put a camera in the scene
-			camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
-			camera.position.set(149, 0, 15);
-			scene.add(camera);
+            camera = addCamera(scene);
 
 			// create a camera contol
 			cameraControls	= new THREE.OrbitControls(camera)
@@ -331,7 +335,7 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
-			planet = createPlanet(2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg'); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			planet = createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg'); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			
