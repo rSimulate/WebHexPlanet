@@ -3,16 +3,17 @@ function loadScene(simulation) {
     //getLinkByRel(simulation.links, '/rel/skybox', function(skyboxUri) {
     //    // create skybox using texture at skybox uri
     //});
+    var bodies = [];
     for (var i in simulation.bodies) {
         var body = simulation.bodies[i];
         // TODO create geometry, and texture it using link relation values
         getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
             getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
-                createPlanet(scene, 2, worldTextureUri, worldTextureNightUri);
+                bodies.push(createPlanet(scene, 2, worldTextureUri, worldTextureNightUri));
             });
         });
     }
-    return scene;
+    return {scene: scene, bodies: bodies};
 }
 
 function addCamera(scene) {

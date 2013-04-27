@@ -67,6 +67,7 @@
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline, selectedHex;
+        var bodies = [];
 
 		shaders = {vertex: [], fragment: []};
 		scene = new THREE.Scene();
@@ -102,14 +103,18 @@
 						text: "Resume",
 						click: function() {
                             $simulationInfoDialog.dialog('close');
+                            $parentDialog.dialog('close');
 							// Change scene to new simulation
-                            scene = loadScene(simulation);
+                            var loadSceneResult = loadScene(simulation);
+                            scene = loadSceneResult.scene;
+                            bodies = loadSceneResult.bodies;
 
 			                // put a camera in the scene
                             camera = addCamera(scene);
 
 			                // create a camera contol
 			                cameraControls	= new THREE.OrbitControls(camera)
+			                skymesh = drawSkyBox();
 						}
 					}, {
 						text: "Delete",
@@ -335,8 +340,8 @@
 
 			skymesh = drawSkyBox();
 			light = lights();
-			planet = createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg'); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
-			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
+			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg')]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			bodies[0].planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
@@ -406,26 +411,26 @@
 			
 			// update camera controls
 			cameraControls.update();
-			camera.lookAt(planet.planet.position);
+			camera.lookAt(bodies[0].planet.position);
 
 			// animation of all objects
 			// TODO
 
 			skymesh.position = camera.position;
-			var lightposition = light.position.clone().sub(planet.planet.position).normalize();
-			var cameraHeight = camera.position.clone().sub(planet.planet.position).length();
+			var lightposition = light.position.clone().sub(bodies[0].planet.position).normalize();
+			var cameraHeight = camera.position.clone().sub(bodies[0].planet.position).length();
 			var planetInverse = new THREE.Matrix4();
-			planetInverse.getInverse(planet.planet.matrixWorld.clone());
+			planetInverse.getInverse(bodies[0].planet.matrixWorld.clone());
 
-  			planet.atmosphere.material.uniforms.v3LightPosition.value = lightposition;
-  			planet.atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
-  			planet.atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
-  			planet.atmosphere.material.uniforms.m4ModelInverse.value = planetInverse;
-  			planet.planet.material.uniforms.v3CameraPosition.value = camera.position.clone();
-  			planet.planet.material.uniforms.v3LightPosition.value = lightposition;
-  			planet.planet.material.uniforms.fCameraHeight.value = cameraHeight;
-			planet.planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
-  			planet.planet.material.uniforms.m4ModelInverse.value = planetInverse;
+  			bodies[0].atmosphere.material.uniforms.v3LightPosition.value = lightposition;
+  			bodies[0].atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
+  			bodies[0].atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+  			bodies[0].atmosphere.material.uniforms.m4ModelInverse.value = planetInverse;
+  			bodies[0].planet.material.uniforms.v3CameraPosition.value = camera.position.clone();
+  			bodies[0].planet.material.uniforms.v3LightPosition.value = lightposition;
+  			bodies[0].planet.material.uniforms.fCameraHeight.value = cameraHeight;
+			bodies[0].planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+  			bodies[0].planet.material.uniforms.m4ModelInverse.value = planetInverse;
 
 
 			// actually render the scene
@@ -481,7 +486,7 @@
 				camera.position,
 				vector.sub(camera.position).normalize());
 
-			var intersects = raycaster.intersectObjects([planet.hex]);	
+			var intersects = raycaster.intersectObjects([bodies[0].hex]);	
 		    if (intersects.length > 0) {
 				var p = intersects[ 0 ].point;
 				var v0 = intersects[ 0 ].face.a;
@@ -550,14 +555,14 @@
 
 				// remove the outline if it already exists
 				if (hexOutline != null || hexOutline != undefined) {
-					planet.planet.remove(hexOutline);
+					bodies[0].planet.remove(hexOutline);
 				}
 				hexOutline = new THREE.Line(geometry, material);
 				hexOutline.scale.x = 1.01;
 				hexOutline.scale.y = 1.01;
 				hexOutline.scale.z = 1.01;
 				
-				planet.planet.add(hexOutline);
+				bodies[0].planet.add(hexOutline);
 				console.log("selected hex: " + getSelectedHex().object.name + " " + getSelectedHex().id);
 				console.log("neighbors: " + JSON.stringify($.map(findNeighbors(getSelectedHex()), function(e) {
 					return e.id})));
