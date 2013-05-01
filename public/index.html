@@ -55,7 +55,7 @@
                 data-clientid="740285172805.apps.googleusercontent.com"
                 data-cookiepolicy="single_host_origin"
                 data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                data-scope="https://www.googleapis.com/auth/plus.login">
+                data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.me">
               </span>
             </span>
         </div>
@@ -292,9 +292,9 @@
 
 		}
 
-		function initMetaSimAPI(requestedVersion/*string*/, authToken/*string*/, fn/*(engines, simulations, me)*/) {
+		function initMetaSimAPI(requestedVersion/*string*/, accessToken/*string*/, fn/*(engines, simulations, me)*/) {
 			// Get versions
-			$.getJSON('/metasim?authToken=' + authToken, function(response) {
+			$.getJSON('/metasim?accessToken=' + accessToken, function(response) {
 				if (response.versions != undefined) {
 					for (var i in response.versions) {
 						var version = response.versions[i];

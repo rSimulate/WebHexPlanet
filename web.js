@@ -48,19 +48,33 @@ function traverseLinks(client, uri, rels, callback) {
     });
 }
 
+function getUser(client, accessToken, callback) {
+    https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + accessToken, function(res){
+        var body = ''; 
+        res.on('data', function(chunk) {
+            body += chunk;
+        }); 
+        res.on('end', function() {
+            var jsonBody = JSON.parse(body);
+            console.log('got me results: ' + body);
+            callback(body);
+        });
+    });
+}
+
 var app = express();
 
 // bodyParser goes after proxy route otherwise proxying will hang.
 app.use(express.json());
 // Render a page and return a link to the data file
 app.get('/metasim', function(request, response) {
-    var authToken = request.query.authToken;
+    var accessToken = request.query.accessToken;
     var versions = {
         versions: [{
             id: '1.0',
                links: [{
                 rel: '/rel/entrypoint',
-                href: '/metasim/1.0?authToken=' + authToken,
+                href: '/metasim/1.0?accessToken=' + accessToken,
                 method: 'GET'}]}]};
     response.send(versions);
 });
@@ -132,17 +146,17 @@ mongo.connect(mongoUri, {}, function(error, db) {
     // Endpoint resource
     app.get('/metasim/:version', function(request, response) {
         if (request.params.version == '1.0') {
-            var authToken = request.query.authToken;
+            var accessToken = request.query.accessToken;
             response.send({
                 links: [{
                     rel: '/rel/user/me',
-                    href: '/metasim/' + request.params.version + '/me?authToken=' + authToken,
+                    href: '/metasim/' + request.params.version + '/me?accessToken=' + accessToken,
                     method: 'GET'}, {
                     rel: '/rel/simulations',
-                    href: '/metasim/' + request.params.version + '/simulations?authToken=' + authToken,
+                    href: '/metasim/' + request.params.version + '/simulations?accessToken=' + accessToken,
                     method: 'GET'}, {
                     rel: '/rel/engines',
-                    href: '/metasim/' + request.params.version + '/engines?authToken=' + authToken,
+                    href: '/metasim/' + request.params.version + '/engines?accessToken=' + accessToken,
                     method: 'GET'}]});
             
         } else {
@@ -153,17 +167,10 @@ mongo.connect(mongoUri, {}, function(error, db) {
     // User resource
     app.get('/metasim/:version/me', function(request, response){
         if (request.params.version == '1.0') {
-            var authToken = request.query.authToken;
-            https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + authToken, function(res){
-                var body = ''; 
-                res.on('data', function(chunk) {
-                    body += chunk;
-                }); 
-                res.on('end', function() {
-                    //var jsonBody = JSON.parse(body);
-                    console.log('got me results: ' + body);
-                    response.send(body);
-                });
+            var accessToken = request.query.accessToken;
+            getUser(https, accessToken, function(me) {
+                    console.log('got me results: ' + JSON.stringify(me));
+                    response.send(me);
             });
         }
     });
@@ -171,7 +178,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
     // Engines resource
     app.get('/metasim/:version/engines', function(request, response) {
         if (request.params.version == '1.0') {
-            var authToken = request.query.authToken;
+            var accessToken = request.query.accessToken;
 
             db.collection('engines').find({version: request.params.version}).toArray(function(err, engines) {
                 console.log('sending engines' + JSON.stringify(engines));
@@ -186,14 +193,18 @@ mongo.connect(mongoUri, {}, function(error, db) {
     // Simulations resource
     app.get('/metasim/:version/simulations', function(request, response) {
         if (request.params.version == '1.0') {
-            db.collection('simulations').find({}, {name:1, date_created:1, links:1}).toArray(function(err, simulations) {
-                console.log('sending simulations' + JSON.stringify(simulations));
-                response.send({
-                    active: simulations,
-                    links: [{
-                        rel: '/rel/add',
-                        href: '/metasim/' + request.params.version+ '/simulations',
-                        method: 'POST'}]});
+            var accessToken = request.query.accessToken;
+            getUser(https, accessToken, function(me) {
+                db.collection('simulations').find({userId:me.id},
+                    {name:1, date_created:1, links:1}).toArray(function(err, simulations) {
+                    console.log('sending simulations' + JSON.stringify(simulations));
+                    response.send({
+                        active: simulations,
+                        links: [{
+                            rel: '/rel/add',
+                            href: '/metasim/' + request.params.version+ '/simulations',
+                            method: 'POST'}]});
+                });
             });
         } else {
             response.send(404, null);
@@ -212,104 +223,107 @@ mongo.connect(mongoUri, {}, function(error, db) {
             hostname: request.host,
             port: port,
             pathname: simulationPathname});
-        var simulation = {
-            _id: simulationId,
-            name: simulationName,
-            date_created: new Date(),
-            forwardedPaths: [],
-            links: [{
-                rel: 'self',
-                href: simulationPathname,
-                method: 'GET'}, {
-                rel: '/rel/delete',
-                href: simulationPathname,
-                method: 'DELETE'}]};
+        getUser(https, request.query.accessToken, function(me) {
+            var simulation = {
+                _id: simulationId,
+                name: simulationName,
+                date_created: new Date(),
+                userId: me.id,
+                forwardedPaths: [],
+                links: [{
+                    rel: 'self',
+                    href: simulationPathname,
+                    method: 'GET'}, {
+                    rel: '/rel/delete',
+                    href: simulationPathname,
+                    method: 'DELETE'}]};
 
-        db.collection('simulations').insert(simulation, function(err, docs) {
-            // req body
-            var bodiesEngineName = simulationRequest.bodies_engine_name;
-            var terrainEngineName = simulationRequest.terrain_engine_name;
-            var agentEngineName = simulationRequest.agent_engine_name;
-            console.log('Created simulation locally ' + simulationId);
-            console.log('Creating on simulation on engines');
+            db.collection('simulations').insert(simulation, function(err, docs) {
+                // req body
+                var bodiesEngineName = simulationRequest.bodies_engine_name;
+                var terrainEngineName = simulationRequest.terrain_engine_name;
+                var agentEngineName = simulationRequest.agent_engine_name;
+                console.log('Created simulation locally ' + simulationId);
+                console.log('Creating on simulation on engines');
 
-            // transform the engineName, version list into a sequence of functions that when invoked,
-            // call a callback with the retrieved engine
-            async.eachSeries([
-                {name:bodiesEngineName, version:request.params.version},
-                {name:terrainEngineName, version:request.params.version},
-                {name:agentEngineName, version:request.params.version}], function(item, callback) {
-                console.log('Looking up engine ' + item.name + ' ' + item.version);
-                // find the matching engine
-                db.collection('engines').findOne(item, function(err, engine) {
-                    // Get the engine endpoint
-                    console.log('Getting engine endpoint: ' + engine.href);
-                    var engineHostPart = url.parse(engine.href);
-                    engineHostPart.pathname = '';
-                    engineHostPart = url.format(engineHostPart);
-                    console.log('Engine hostpart: ' + engineHostPart);
-                    traverseLinks(http, engine.href, ['/rel/simulations'], function(body, res) {
-                        var simulationAddHref = url.parse(engineHostPart + getLinkByRel(body.links, '/rel/add').href);
-                        // Post a new simulation to the engine
-                        console.log('POSTing to ' + url.format(simulationAddHref));
-                        console.log(JSON.stringify({
-                            hostname: simulationAddHref.hostname,
-                            port: simulationAddHref.port,
-                            path: simulationAddHref.path,
-                            headers: {'Content-Type': 'application/json'},
-                            method: 'POST'}));
-                        var req = http.request({
-                            hostname: simulationAddHref.hostname,
-                            port: simulationAddHref.port,
-                            path: simulationAddHref.path,
-                            headers: {'Content-Type': 'application/json'},
-                            method: 'POST'});
-                        req.on('error', function(e) {
-                            console.log('problem with request: ' + e.message);
-                            callback('problem with request: ' + e.message);
-                        });
-                        req.on('response', function (res) {
-                            var simulationHref = res.headers.location;
-                            console.log('response status: ' + res.status);
-                            console.log('response headers: ' + JSON.stringify(res.headers));
-                            console.log('Engine simulation created at ' + simulationHref);
-                            var body = ''; 
-                            res.on('data', function(chunk) {
-                                body += chunk;
-                            }); 
-                            res.on('end', function() {
-                                // only merge in body if an response was returned
-                                if (body != '') {
-                                    var jsonBody = JSON.parse(body);
-
-                                    // if the engine returned anything, merge it into the simulation object
-                                    if (jsonBody != null) {
-                                        console.log('merging engine response into simulation ');
-                                        console.log('engine response: ' + JSON.stringify(jsonBody));
-                                        console.log('simulation: ' + JSON.stringify(simulation));
-                                        simulation = extend(simulation, jsonBody);
-                                    }
-                                    // _id field needs to be an objectId not a string
-                                    simulation._id = simulationId;
-                                    console.log('Updating simulation in db ' + JSON.stringify(simulation));
-                                    db.collection('simulations').save(simulation);
-                                } else {
-                                    console.log('No response body from engine. No merge performed.');
-                                }
-                                callback();
+                // transform the engineName, version list into a sequence of functions that when invoked,
+                // call a callback with the retrieved engine
+                async.eachSeries([
+                    {name:bodiesEngineName, version:request.params.version},
+                    {name:terrainEngineName, version:request.params.version},
+                    {name:agentEngineName, version:request.params.version}], function(item, callback) {
+                    console.log('Looking up engine ' + item.name + ' ' + item.version);
+                    // find the matching engine
+                    db.collection('engines').findOne(item, function(err, engine) {
+                        // Get the engine endpoint
+                        console.log('Getting engine endpoint: ' + engine.href);
+                        var engineHostPart = url.parse(engine.href);
+                        engineHostPart.pathname = '';
+                        engineHostPart = url.format(engineHostPart);
+                        console.log('Engine hostpart: ' + engineHostPart);
+                        traverseLinks(http, engine.href, ['/rel/simulations'], function(body, res) {
+                            var simulationAddHref = url.parse(engineHostPart + getLinkByRel(body.links, '/rel/add').href);
+                            // Post a new simulation to the engine
+                            console.log('POSTing to ' + url.format(simulationAddHref));
+                            console.log(JSON.stringify({
+                                hostname: simulationAddHref.hostname,
+                                port: simulationAddHref.port,
+                                path: simulationAddHref.path,
+                                headers: {'Content-Type': 'application/json'},
+                                method: 'POST'}));
+                            var req = http.request({
+                                hostname: simulationAddHref.hostname,
+                                port: simulationAddHref.port,
+                                path: simulationAddHref.path,
+                                headers: {'Content-Type': 'application/json'},
+                                method: 'POST'});
+                            req.on('error', function(e) {
+                                console.log('problem with request: ' + e.message);
+                                callback('problem with request: ' + e.message);
                             });
-                        });    
-                        req.write(JSON.stringify({simulation_href: simulationUrl}));
-                        req.end();
-                    });
+                            req.on('response', function (res) {
+                                var simulationHref = res.headers.location;
+                                console.log('response status: ' + res.status);
+                                console.log('response headers: ' + JSON.stringify(res.headers));
+                                console.log('Engine simulation created at ' + simulationHref);
+                                var body = ''; 
+                                res.on('data', function(chunk) {
+                                    body += chunk;
+                                }); 
+                                res.on('end', function() {
+                                    // only merge in body if an response was returned
+                                    if (body != '') {
+                                        var jsonBody = JSON.parse(body);
+
+                                        // if the engine returned anything, merge it into the simulation object
+                                        if (jsonBody != null) {
+                                            console.log('merging engine response into simulation ');
+                                            console.log('engine response: ' + JSON.stringify(jsonBody));
+                                            console.log('simulation: ' + JSON.stringify(simulation));
+                                            simulation = extend(simulation, jsonBody);
+                                        }
+                                        // _id field needs to be an objectId not a string
+                                        simulation._id = simulationId;
+                                        console.log('Updating simulation in db ' + JSON.stringify(simulation));
+                                        db.collection('simulations').save(simulation);
+                                    } else {
+                                        console.log('No response body from engine. No merge performed.');
+                                    }
+                                    callback();
+                                });
+                            });    
+                            req.write(JSON.stringify({simulation_href: simulationUrl}));
+                            req.end();
+                        });
+                   });
+               },
+               // afterwards, return the location of the simulation Uri back to the client
+               function(err, results) {
+                  console.log('Returning 201 created at ' + simulationUrl);
+                  response.header('Location', simulationPathname);
+                  response.send(201, null);
                });
-           },
-           // afterwards, return the location of the simulation Uri back to the client
-           function(err, results) {
-              console.log('Returning 201 created at ' + simulationUrl);
-              response.header('Location', simulationPathname);
-              response.send(201, null);
-           });
+            });
         });
     });
 
