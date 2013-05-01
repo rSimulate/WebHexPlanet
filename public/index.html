@@ -42,9 +42,23 @@
 			<a href="http://www.reddit.com/r/MetaSim/" target="_blank">Metasim Subreddit</a>
 			&
 			<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
-			
+            &nbsp;
+            <span id="username"></span>
+            <span id="userImage"></span>
 		</div>
 	
+        <div id="loginDialog">
+            <span id="signinButton">
+              <span
+                class="g-signin"
+                data-callback="signinCallback"
+                data-clientid="740285172805.apps.googleusercontent.com"
+                data-cookiepolicy="single_host_origin"
+                data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                data-scope="https://www.googleapis.com/auth/plus.login">
+              </span>
+            </span>
+        </div>
 		<div id="simulationsDialog"></div>
 		<div id="createSimulationDialog">
 			Name: <input name="name"/><br/>
@@ -81,6 +95,40 @@
 			console.log('Could not find rel: ' + rel);
 			return null;
 		}
+
+        function signinCallback(authResult) {
+          if (authResult['access_token']) {
+            // Successfully authorized
+            // Hide the sign-in button now that the user is authorized, for example:
+            document.getElementById('signinButton').setAttribute('style', 'display: none');
+            var $loginDialog = $('#loginDialog');
+            $loginDialog.dialog('close');
+			initMetaSimAPI('1.0', authResult['access_token'], function(engines, simulations, me) {
+				showSimulationsDialog(engines, simulations);
+                displayUserInformation(me);
+			});
+          } else if (authResult['error']) {
+            // There was an error.
+            // Possible error codes:
+            //   "access_denied" - User denied access to your app
+            //   "immediate_failed" - Could not automatically log in the user
+            console.log('There was an error: ' + authResult['error']);
+          }
+        }
+
+        function showLoginDialog() {
+            var $loginDialog = $('#loginDialog');
+            $loginDialog.dialog({
+                draggable: false,
+                resizeable: false,
+                title: 'Login'
+            }); 
+        }
+
+        function displayUserInformation(me) {
+            $('#username').text(me.displayName);
+            $('#userImage').append('<img src="' + me.image.url + '" height="18" width="18" />');
+        }
 
 		function showSimulationInfoDialog(simulation, $parentDialog) {
 			// Show simulation info dialog
@@ -244,9 +292,9 @@
 
 		}
 
-		function initMetaSimAPI(requestedVersion/*string*/, fn/*(engines, simulations)*/) {
+		function initMetaSimAPI(requestedVersion/*string*/, authToken/*string*/, fn/*(engines, simulations, me)*/) {
 			// Get versions
-			$.getJSON('/metasim', function(response) {
+			$.getJSON('/metasim?authToken=' + authToken, function(response) {
 				if (response.versions != undefined) {
 					for (var i in response.versions) {
 						var version = response.versions[i];
@@ -261,8 +309,14 @@
 											var engines = response.engines;
 											getLinkByRel(entryPointResponse.links, '/rel/simulations', function(simulationsUri) {
 												// Get simulations
-												$.getJSON(simulationsUri, function(response) {
-													fn(engines, response);
+                                                $.getJSON(simulationsUri, function(response) {
+                                                    var simulations = response;
+                                                    getLinkByRel(entryPointResponse.links, '/rel/user/me', function(userUri) {
+                                                        $.getJSON(userUri, function (response) {
+                                                            var me = response;
+													        fn(engines, simulations, me);
+                                                        });
+                                                    });
 												});
 											});
 										});
@@ -277,9 +331,7 @@
 
 		}
 		$(function(){
-			initMetaSimAPI('1.0', function(engines, simulations) {
-				showSimulationsDialog(engines, simulations);
-			});
+            showLoginDialog();
 			var $shaderScripts = $("script[type='x-shader/x-vertex']").
 				add("script[type='x-shader/x-fragment']");
 			var latch = $shaderScripts.length;
@@ -603,5 +655,12 @@
 			return findNeighbors(hex).length == 5;
 		}
 	</script>
+    <script type="text/javascript">
+      (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/client:plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+    </script> 
 </body>
 </html>

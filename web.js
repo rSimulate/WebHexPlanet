@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 var httpProxy = require('http-proxy');
 var express = require('express');
 var sys = require('sys');
@@ -49,14 +50,17 @@ function traverseLinks(client, uri, rels, callback) {
 
 var app = express();
 
+// bodyParser goes after proxy route otherwise proxying will hang.
+app.use(express.json());
 // Render a page and return a link to the data file
 app.get('/metasim', function(request, response) {
+    var authToken = request.query.authToken;
     var versions = {
         versions: [{
             id: '1.0',
                links: [{
                 rel: '/rel/entrypoint',
-                href: '/metasim/1.0',
+                href: '/metasim/1.0?authToken=' + authToken,
                 method: 'GET'}]}]};
     response.send(versions);
 });
@@ -124,20 +128,21 @@ mongo.connect(mongoUri, {}, function(error, db) {
             }
         });
     });
-    // bodyParser goes after proxy route otherwise proxying will hang.
-    app.configure(function(){
-        app.use(express.bodyParser());
-    });
+ 
     // Endpoint resource
     app.get('/metasim/:version', function(request, response) {
         if (request.params.version == '1.0') {
+            var authToken = request.query.authToken;
             response.send({
                 links: [{
+                    rel: '/rel/user/me',
+                    href: '/metasim/' + request.params.version + '/me?authToken=' + authToken,
+                    method: 'GET'}, {
                     rel: '/rel/simulations',
-                    href: '/metasim/' + request.params.version+ '/simulations',
+                    href: '/metasim/' + request.params.version + '/simulations?authToken=' + authToken,
                     method: 'GET'}, {
                     rel: '/rel/engines',
-                    href: '/metasim/' + request.params.version+ '/engines',
+                    href: '/metasim/' + request.params.version + '/engines?authToken=' + authToken,
                     method: 'GET'}]});
             
         } else {
@@ -145,9 +150,29 @@ mongo.connect(mongoUri, {}, function(error, db) {
         }
     });
 
+    // User resource
+    app.get('/metasim/:version/me', function(request, response){
+        if (request.params.version == '1.0') {
+            var authToken = request.query.authToken;
+            https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + authToken, function(res){
+                var body = ''; 
+                res.on('data', function(chunk) {
+                    body += chunk;
+                }); 
+                res.on('end', function() {
+                    //var jsonBody = JSON.parse(body);
+                    console.log('got me results: ' + body);
+                    response.send(body);
+                });
+            });
+        }
+    });
+
     // Engines resource
     app.get('/metasim/:version/engines', function(request, response) {
         if (request.params.version == '1.0') {
+            var authToken = request.query.authToken;
+
             db.collection('engines').find({version: request.params.version}).toArray(function(err, engines) {
                 console.log('sending engines' + JSON.stringify(engines));
                 response.send({
@@ -178,7 +203,9 @@ mongo.connect(mongoUri, {}, function(error, db) {
     // Create a new simulation
     app.post('/metasim/:version/simulations', function(request, response) {
         var simulationId = new ObjectID();
-        var simulationName = request.body.name;
+        console.log('Got add simulation request: ' + JSON.stringify(request.body));
+        var simulationRequest = request.body;
+        var simulationName = simulationRequest.name;
         var simulationPathname = '/metasim/' + request.params.version + '/simulations/' + simulationId.toString();
         var simulationUrl = url.format({
             protocol: 'http',
@@ -200,9 +227,9 @@ mongo.connect(mongoUri, {}, function(error, db) {
 
         db.collection('simulations').insert(simulation, function(err, docs) {
             // req body
-            var bodiesEngineName = request.body.bodies_engine_name;
-            var terrainEngineName = request.body.terrain_engine_name;
-            var agentEngineName = request.body.agent_engine_name;
+            var bodiesEngineName = simulationRequest.bodies_engine_name;
+            var terrainEngineName = simulationRequest.terrain_engine_name;
+            var agentEngineName = simulationRequest.agent_engine_name;
             console.log('Created simulation locally ' + simulationId);
             console.log('Creating on simulation on engines');
 
