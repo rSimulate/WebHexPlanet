@@ -28,3 +28,15 @@ body {
 	right		: 5px;
 	padding		: 5px;
 }
+
+#username {
+    color:#cccccc;
+}
+
+.no-close .ui-dialog-titlebar-close {
+	display: none;
+}
+
+#simulationsDialog > ul > li > a {
+    cursor: pointer;
+}

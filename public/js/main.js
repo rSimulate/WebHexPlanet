@@ -1,11 +1,37 @@
-function createPlanet(size) {
+function loadScene(simulation) {
+    var scene = new THREE.Scene();
+    //getLinkByRel(simulation.links, '/rel/skybox', function(skyboxUri) {
+    //    // create skybox using texture at skybox uri
+    //});
+    var bodies = [];
+    for (var i in simulation.bodies) {
+        var body = simulation.bodies[i];
+        // TODO create geometry, and texture it using link relation values
+        getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
+            getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
+                bodies.push(createPlanet(scene, 2, worldTextureUri, worldTextureNightUri));
+            });
+        });
+    }
+    return {scene: scene, bodies: bodies};
+}
+
+function addCamera(scene) {
+    // put a camera in the scene
+    var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
+    camera.position.set(149, 0, 15);
+    scene.add(camera); 
+    return camera;
+}
+
+function createPlanet(scene, size, worldTextureUri, worldTextureNightUri) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();
 	var fragmentGround = $("#fragmentGround").text();
 
-	var diffuse = THREE.ImageUtils.loadTexture('images/TEWworld.jpg');
-	var diffuseNight = THREE.ImageUtils.loadTexture('images/TEWworld-night.jpg');
+	var diffuse = THREE.ImageUtils.loadTexture(worldTextureUri);
+	var diffuseNight = THREE.ImageUtils.loadTexture(worldTextureNightUri);
 	var maxAnisotropy = renderer.getMaxAnisotropy();
 	
 	diffuse.anisotropy = maxAnisotropy;
@@ -172,8 +198,11 @@ function createPlanet(size) {
 	atmospheremesh.material.transparent = true;	
 	planetmesh.add(atmospheremesh);
 
-	return {planet: planetmesh,
-		atmosphere: atmospheremesh};
+	return {
+		planet: planetmesh,
+		atmosphere: atmospheremesh,
+		hex: hexmesh
+	};
 }
 		
 function drawSkyBox()  {
@@ -183,8 +212,111 @@ function drawSkyBox()  {
 		side: THREE.BackSide,
 		});
 	var starmesh	= new THREE.Mesh(stargeometry, starmaterial); 
+
+	var starTexture = THREE.ImageUtils.loadTexture("images/star.png");
+	starTexture.needsUpdate = true;
+
+	// create a star material
+	var material = new THREE.ParticleBasicMaterial({
+		//map: starTexture,
+		vertexColors: true,
+		size: 1.6,
+		sizeAttenuation: false
+	});
+
+	var nStars = 10000;
+	var starParticles = new THREE.BufferGeometry();
+	starParticles.attributes = {
+		position: {
+			itemSize: 3,
+			array: new Float32Array(nStars * 3),
+			numItems: nStars * 3
+		},
+		color: {
+			itemSize: 3,
+			array: new Float32Array(nStars * 3),
+			numItems: nStars * 3
+		}
+	};
+
+	var positions = starParticles.attributes.position.array;
+	var colors = starParticles.attributes.color.array;
+
+	// new Random object with a seed of 1234
+	var randomStream = new Random(1234);
+	// generate some stars
+	for (var i = 0; i < nStars; i++) {
+		// find the star temperature in Kelvin
+		var temp = Math.random() * 41000 + 3120;
+		var magnitude = 1.0 * Math.random() + 1.2;
+		// find the sequence color
+		var red, green, blue;
+		if (temp/100 <= 66) {
+			red = 255;
+		} else {
+			red = temp/100 - 60;
+			red = 329.698727446 * Math.pow(red, -0.1332047592);
+			if (red < 0) {
+				red = 0;
+			} else if (red > 255) {
+				red = 255;
+			}
+		}
+
+		if (temp/100 <= 66) {
+			green = temp/100;
+			green = 99.4708025861 * Math.log(green) - 161.1195681661;
+			if (green < 0) {
+				green = 0;
+			} else if (green > 255) {
+				green = 255;
+			}
+		}
+
+		if (temp/100 >= 66) {
+			blue = 255;
+		} else {
+			if (temp/100 <= 19) {
+				blue = 0;
+			} else {
+				blue = temp/100 - 10;
+				blue = 138.5117312231 * Math.log(blue) - 305.0447927307;
+				if (blue < 0) {
+					blue = 0;
+				} else if (blue > 255) {
+					blue = 255;
+				}
+			}
+		}
+		var starColor = new THREE.Color();
+		starColor.setRGB(red/255.0, green/255.0, blue/255.0);
+
+		// randomly generate a spherical coordinate with r = start geometry radius - 1;
+		// phi ~[0, 2 PI] centered on PI
+		var phi = randomStream.normal(0.0, Math.PI * 2);
+		// theta ~[0, PI] centered on PI/2
+		var theta = randomStream.normal(0, Math.PI);
+		var r = 1000 * magnitude;
+		// convert to cartesian
+		var x = r * Math.sin(theta) * Math.cos(phi);
+		var y = r * Math.cos(theta);
+		var z = r * Math.sin(theta) * Math.sin(phi);
+
+		positions[i] = x;
+		positions[i+1] = y;
+		positions[i+2] = z;
+		colors[i] = starColor.r;
+		colors[i+1] = starColor.g;
+		colors[i+2] = starColor.b;
+	}
+
+	starParticles.computeBoundingSphere();
+
+	var starParticleSystem = new THREE.ParticleSystem(starParticles, material);
+
+	starmesh.add(starParticleSystem);
+
 	scene.add(starmesh);
-	
 	return starmesh;
 }
 
