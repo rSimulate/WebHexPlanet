@@ -43,8 +43,11 @@
 			&
 			<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
             &nbsp;
-            <span id="username"></span>
-            <span id="userImage"></span>
+            <span id="userinfo">
+                <span id="username"></span>
+                <span id="userImage"></span>
+                <a id="logout">Logout</a>
+            </span>
 		</div>
 	
         <div id="loginDialog">
@@ -82,6 +85,7 @@
 		var mouse = { x: 0, y: 0 };
 		var hexOutline, selectedHex;
         var bodies = [];
+        var accessToken;
 
 		shaders = {vertex: [], fragment: []};
 		scene = new THREE.Scene();
@@ -102,8 +106,9 @@
             // Hide the sign-in button now that the user is authorized, for example:
             document.getElementById('signinButton').setAttribute('style', 'display: none');
             var $loginDialog = $('#loginDialog');
+            accessToken = authResult['access_token'];
             $loginDialog.dialog('close');
-			initMetaSimAPI('1.0', authResult['access_token'], function(engines, simulations, me) {
+			initMetaSimAPI('1.0', accessToken, function(engines, simulations, me) {
 				showSimulationsDialog(engines, simulations);
                 displayUserInformation(me);
 			});
@@ -116,7 +121,33 @@
           }
         }
 
+        function disconnectUser(access_token) {
+            var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + accessToken;
+
+            // Perform an asynchronous GET request.
+            $.ajax({
+              type: 'GET',
+              url: revokeUrl,
+              async: false,
+              contentType: "application/json",
+              dataType: 'jsonp',
+              success: function(nullResponse) {
+                // Do something now that user is disconnected
+                // The response is always undefined.
+                showLoginDialog();
+              },
+              error: function(e) {
+                // Handle the error
+                console.log(e);
+                // You could point users to manually disconnect if unsuccessful
+                // https://plus.google.com/apps
+              }
+            });
+        }
+
         function showLoginDialog() {
+            $('#userinfo').hide();
+            $('#signinButton').show();
             var $loginDialog = $('#loginDialog');
             $loginDialog.dialog({
                 draggable: false,
@@ -127,7 +158,8 @@
 
         function displayUserInformation(me) {
             $('#username').text(me.displayName);
-            $('#userImage').append('<img src="' + me.image.url + '" height="18" width="18" />');
+            $('#userImage').empty().append('<img src="' + me.image.url + '" height="18" width="18" />');
+            $('#userinfo').show();
         }
 
 		function showSimulationInfoDialog(simulation, $parentDialog) {
@@ -175,7 +207,7 @@
 									success: function(response, status, jqXHR) {
 										// go back to simulations dialog box
 										$simulationInfoDialog.dialog('close');
-										initMetaSimAPI('1.0', function(engines, simulations) {
+										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
 											$simulationInfoDialog.dialog('close');
 											showSimulationsDialog(engines, simulations);
 										});
@@ -332,6 +364,9 @@
 		}
 		$(function(){
             showLoginDialog();
+            $('#logout').click(function() {
+                disconnectUser();
+            });
 			var $shaderScripts = $("script[type='x-shader/x-vertex']").
 				add("script[type='x-shader/x-fragment']");
 			var latch = $shaderScripts.length;

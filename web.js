@@ -165,7 +165,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
     });
 
     // User resource
-    app.get('/metasim/:version/me', function(request, response){
+    app.get('/metasim/:version/me', function(request, response) {
         if (request.params.version == '1.0') {
             var accessToken = request.query.accessToken;
             getUser(https, accessToken, function(me) {
@@ -195,14 +195,14 @@ mongo.connect(mongoUri, {}, function(error, db) {
         if (request.params.version == '1.0') {
             var accessToken = request.query.accessToken;
             getUser(https, accessToken, function(me) {
-                db.collection('simulations').find({userId:me.id},
+                db.collection('simulations').find({user_id:me.id},
                     {name:1, date_created:1, links:1}).toArray(function(err, simulations) {
                     console.log('sending simulations' + JSON.stringify(simulations));
                     response.send({
                         active: simulations,
                         links: [{
                             rel: '/rel/add',
-                            href: '/metasim/' + request.params.version+ '/simulations',
+                            href: '/metasim/' + request.params.version+ '/simulations?accessToken=' + accessToken,
                             method: 'POST'}]});
                 });
             });
@@ -223,12 +223,13 @@ mongo.connect(mongoUri, {}, function(error, db) {
             hostname: request.host,
             port: port,
             pathname: simulationPathname});
-        getUser(https, request.query.accessToken, function(me) {
+        var accessToken = request.query.accessToken;
+        getUser(https, accessToken, function(me) {
             var simulation = {
                 _id: simulationId,
                 name: simulationName,
                 date_created: new Date(),
-                userId: me.id,
+                user_id: me.id,
                 forwardedPaths: [],
                 links: [{
                     rel: 'self',
