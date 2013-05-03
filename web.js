@@ -378,7 +378,7 @@ app.get('/', function(req, res) {
     res.redirect('/index.html');
 });
 // Serve up static content
-app.get('/index.html|/favicon.ico|/js/*|/images/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
+app.get('/index.html|/favicon.ico|/js/*|/images/*|/audio/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
     fs.readFile('./public' + request.path, function(err, data) {
         if (err) {
             console.log(err);
@@ -393,6 +393,8 @@ app.get('/index.html|/favicon.ico|/js/*|/images/*|/vendor/*|/css/*|/shaders/*', 
                 contentType = 'image/jpeg';
             } else if (request.path.endsWith('.css')) {
                 contentType = 'text/css';
+            } else if (request.path.endsWith('.mp3')) {
+                contentType = 'audio/mpeg';
             }
             response.header('Content-Type', contentType);
             response.send(data);

@@ -31,6 +31,7 @@
 		<script src="shaders/fragmentSky.fs" type="x-shader/x-fragment" id="fragmentSky"></script>
 		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
 		<script src="shaders/fragmentGround.fs" type="x-shader/x-fragment" id="fragmentGround"></script>
+
 	</head>
 <body>
 	<!-- three.js container -->
@@ -363,6 +364,15 @@
 
 		}
 		$(function(){
+            // With Stars For Eyes” (by h+) http://freemusicarchive.org/music/h_1657/Giga/Wood__Wire_-_GIGA_-_04_With_Stars_For_Eyes
+            // With Stars For Eyes by h+ is licensed under a Attribution-NonCommercial-NoDerivatives (aka Music Sharing) License.
+            var audio = new Audio('audio/78caa984d4ead66a2cdf1e7216b6f2677fdbd791.mp3'); 
+            audio.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                        this.play();
+                        }, false);
+            audio.play();
+
             showLoginDialog();
             $('#logout').click(function() {
                 disconnectUser();
@@ -486,14 +496,14 @@
 			moonmesh.position.z = radius * Math.sin(orbitphase);
 			moonmesh.position.y = height;
 			
-			var camangularvelocity = 0.04;//added camera rotation.
+			var camangularvelocity = 0.001;//added camera rotation.
 			var camsemimajoraxis = 3; 
 			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
 			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 			
-			//camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
-			//camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
+			camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
+			camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
 			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
 			//camera.position.z = camradius * Math.sin(camorbitphase);
 			
