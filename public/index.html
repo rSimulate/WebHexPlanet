@@ -80,7 +80,7 @@
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var moongeometry,moonmaterial,moonmesh;
-		var camera, cameraControl;
+		var camera, cameraControls;
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline, selectedHex;
@@ -413,7 +413,8 @@
             camera = addCamera(scene);
 
 			// create a camera contol
-			cameraControls	= new THREE.OrbitControls(camera)
+            // no camera controls for menu
+			//cameraControls	= new THREE.OrbitControls(camera)
 
 			// transparently support window resize
 			THREEx.WindowResize.bind(renderer, camera);
@@ -428,7 +429,7 @@
 			skymesh = drawSkyBox();
 			light = lights();
 			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg')]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
-			bodies[0].planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
+			bodies[0].planet.translateX(1.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
@@ -445,7 +446,7 @@
 				linewidth: 10});
 			
 			var line = new THREE.Line(geometry, material);
-			scene.add(line);
+			//scene.add(line);
 		}
 
 		// animation loop
@@ -470,7 +471,7 @@
 			var time = PIseconds;
 			var semimajoraxis = 7;    		// Turn into parameter
 			var eccentricity = 0.0549; 		// Turn into parameter
-			var angularvelocity = 0.03;		// Turn into paratmeter
+			var angularvelocity = 0.003;		// Turn into paratmeter
 			var orbitphase = angularvelocity * time;
 			var radius = semimajoraxis * ((1.0 - eccentricity^2)/(1.0 + eccentricity * Math.cos(orbitphase)));
 			var inclination = 6.0 ;
@@ -497,7 +498,9 @@
 			//camera.position.z = camradius * Math.sin(camorbitphase);
 			
 			// update camera controls
-			cameraControls.update();
+            if (cameraControls != null) {
+                cameraControls.update();
+            }
 			camera.lookAt(bodies[0].planet.position);
 
 			// animation of all objects

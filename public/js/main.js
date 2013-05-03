@@ -19,7 +19,7 @@ function loadScene(simulation) {
 function addCamera(scene) {
     // put a camera in the scene
     var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
-    camera.position.set(149, 0, 15);
+    camera.position.set(4, 0, 5);
     scene.add(camera); 
     return camera;
 }
