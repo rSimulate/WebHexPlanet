@@ -11,6 +11,7 @@ var ObjectID = mongo.ObjectID;
 var BSON = require('mongodb').BSONPure;
 var async = require('async');
 var extend = require('xtend');
+var util = require('util');
 
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/metasim';
 
@@ -341,6 +342,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
                     console.log('err: ' + JSON.stringify(err));
                     console.log('found simulation: ' + request.params.id);
                     console.log('sending : ' + JSON.stringify(simulation));
+                    // TODO: Get new bodies data, merge it and save to db
                     response.send(simulation);
                 }
             });
@@ -378,7 +380,7 @@ app.get('/', function(req, res) {
     res.redirect('/index.html');
 });
 // Serve up static content
-app.get('/index.html|/favicon.ico|/js/*|/images/*|/audio/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
+app.get('/index.html|/favicon.ico|/js/*|/images/*|/vendor/*|/css/*|/shaders/*', function(request, response) {
     fs.readFile('./public' + request.path, function(err, data) {
         if (err) {
             console.log(err);
@@ -393,13 +395,18 @@ app.get('/index.html|/favicon.ico|/js/*|/images/*|/audio/*|/vendor/*|/css/*|/sha
                 contentType = 'image/jpeg';
             } else if (request.path.endsWith('.css')) {
                 contentType = 'text/css';
-            } else if (request.path.endsWith('.mp3')) {
-                contentType = 'audio/mpeg';
             }
             response.header('Content-Type', contentType);
             response.send(data);
          }
     });
+});
+app.get('/audio/*', function(request, response) {
+    var path = './public' + request.path;
+    var stat = fs.statSync(path);
+ 
+    var stream = fs.createReadStream(path);
+    stream.pipe(response);
 });
 
 var port = process.env.PORT || 9292;
