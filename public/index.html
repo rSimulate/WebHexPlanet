@@ -48,6 +48,15 @@
 		var stats, scene, renderer, composer;
 		var moongeometry,moonmaterial,moonmesh;
 		var camera, cameraControl;
+
+
+		var cameraTarget;	// must be some object with a .position attribute,
+							// initialized to planet.planet by default
+		var isCameraRotatingAutomatically = true;
+		var timeOfLastRender = 0;
+		var camorbitphase = 0;
+		var camsemimajoraxis = 3.0; 
+
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline;
@@ -103,7 +112,7 @@
 			scene.add(camera);
 
 			// create a camera contol
-			cameraControls	= new THREE.OrbitControls(camera)
+			cameraControls	= new THREE.OrbitControls(camera);
 
 			// transparently support window resize
 			THREEx.WindowResize.bind(renderer, camera);
@@ -121,6 +130,9 @@
 			planet.planet.translateX(149.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			
+			cameraTarget = planet.planet;	// set the target to the planet by default
+											// try "cameraTarget = moonmesh;"
+
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
 			var radius = 149.6;
 			var i = 0;
@@ -164,6 +176,9 @@
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame(animate);
 			
+			// update camera controls
+			cameraControls.update();
+
 			// do the render
 			render();
 
@@ -193,21 +208,43 @@
 			moonmesh.position.z = radius * Math.sin(orbitphase) + planet.planet.position.z;
 			moonmesh.position.y = height + planet.planet.position.y;
 			
-			var camangularvelocity = 0.002;//added camera rotation.
-			var camsemimajoraxis = 3; 
-			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
-			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
-			
-			camera.position.x = camradius * Math.cos(camorbitphase) + planet.planet.position.x;//act on camera rotation.
-			camera.position.z = camradius * Math.sin(camorbitphase) + planet.planet.position.z;
-			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
-			//camera.position.z = camradius * Math.sin(camorbitphase);
-			
-			// update camera controls
-			cameraControls.update();
-			camera.lookAt(planet.planet.position);
 
+			var cameraOffset = camera.position.clone().sub(cameraTarget.position);
+
+			if (isCameraRotatingAutomatically) {
+				var camangularvelocity = 0.100; //added camera rotation.
+				
+
+				// keep the cam orbit phase within 2*pi radians
+				camorbitphase += camangularvelocity * (time - timeOfLastRender);
+				camorbitphase %= 2.0 * Math.PI;
+			} else {
+				// we need to know where in the phase we've been dragged to,
+				// so when rotation starts again it can be seamless
+				camorbitphase = Math.atan2(cameraOffset.z,cameraOffset.x);
+			}
+				
+			// zoom can change the radius of our camera orbit
+			// knowing what the camorbitphase is, and what our current X-Z distance is from our target, we need to simulate winding the orbit to camorbitphase=0
+			// because that's where the distance will be the semimajor axis that we need to update to
+			// (note: this is all still in 2d, assuming orbits are on the X-Z plane)
+			var currentCamRadius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+
+			var xzCameraTargetDistance = Math.sqrt(Math.pow(cameraOffset.x,2) + Math.pow(cameraOffset.z,2));
+
+			camsemimajoraxis *= (xzCameraTargetDistance / currentCamRadius);
+
+			if (isCameraRotatingAutomatically) {	
+				var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+				
+				camera.position.x = camradius * Math.cos(camorbitphase) + cameraTarget.position.x;//act on camera rotation.
+				camera.position.z = camradius * Math.sin(camorbitphase) + cameraTarget.position.z;
+			}
+
+			cameraControls.center = cameraTarget.position.clone();
+			camera.lookAt(cameraTarget.position);
+			
 			// animation of all objects
 			// TODO
 
@@ -227,6 +264,7 @@
 			planet.planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
   			planet.planet.material.uniforms.m4ModelInverse.value = planetInverse;
 
+  			timeOfLastRender = time;
 
 			// actually render the scene
 			renderer.render(scene, camera);
@@ -270,10 +308,19 @@
 			mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 		}
 
+		document.addEventListener('mouseup', onDocumentMouseUp, false);
+		function onDocumentMouseUp(event) {
+		    event.preventDefault();
+
+		    isCameraRotatingAutomatically = true;
+		}
+
 		document.addEventListener('mousedown', onDocumentMouseDown, false);
 		function onDocumentMouseDown(event) {
 		    event.preventDefault();
 		
+		    isCameraRotatingAutomatically = false;
+
 		    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
 		    projector.unprojectVector(vector, camera);
 		
