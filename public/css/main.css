@@ -28,3 +28,34 @@ body {
 	right		: 5px;
 	padding		: 5px;
 }
+
+#username {
+    color:#cccccc;
+}
+
+.no-close .ui-dialog-titlebar-close {
+	display: none;
+}
+
+#simulationsDialog > ul > li > a {
+    cursor: pointer;
+}
+
+.ui-dialog-titlebar {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.ui-widget-header {
+    border: 1px solid #555;
+}
+    
+.ui-widget-content {
+    border: 1px solid #333333;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+.ui-widget-content a {
+    color: #ffffff;
+}
+

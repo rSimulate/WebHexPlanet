@@ -10,29 +10,27 @@ https://github.com/rSimulate/WebHexPlanet/wiki/Cloud-9-Environment
 
 If you're using this for seperate purposes, or want to test your own fork of the code, follow the below procedures:
 
-Downloading and Running
-=======================
+Running with Node+MongoDB
+=========================
 
-Setup Ruby if you haven't yet
-http://www.ruby-lang.org/en/downloads/
+Setup node.js
+http://nodejs.org/download/
 
-Setup RubyGems if you haven't yet.
-http://docs.rubygems.org/read/chapter/3
+Setup mongodb
+http://www.mongodb.org/downloads
 
-Setup GemBundler if you haven't yet.
-http://gembundler.com/
-
-`gem install bundler`
-
-Checkout the source, setup, and run.
+Checkout the source and download dependencies
 
 `git clone https://github.com/rSimulate/WebHexPlanet.git`
 
 `cd WebHexPlanet`
 
-`bundle install`
+`npm install`
 
-`rackup`
+Serve up the web application
+
+`node web.js`
+
+Setup and run https://github.com/rSimulate/terrainReferenceEngine and https://github.com/rSimulate/agentReferenceEngine
 
 Navigate to localhost:9292
-
