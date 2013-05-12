@@ -368,9 +368,10 @@
             // With Stars For Eyes by h+ is licensed under a Attribution-NonCommercial-NoDerivatives (aka Music Sharing) License.
             var audio = new Audio('audio/78caa984d4ead66a2cdf1e7216b6f2677fdbd791.mp3'); 
             audio.addEventListener('ended', function() {
-                    this.currentTime = 0;
-                        this.play();
-                        }, false);
+                audio.currentTime = 0;
+                audio.play();
+            }, false);
+            audio.loop = true;
             audio.play();
 
             showLoginDialog();
@@ -437,8 +438,8 @@
 			}
 
 			skymesh = drawSkyBox();
-			light = lights();
-			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg')]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			light = lights(scene);
+			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg', false)]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			bodies[0].planet.translateX(1.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			createMoon();
 			

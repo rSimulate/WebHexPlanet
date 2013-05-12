@@ -9,7 +9,7 @@ function loadScene(simulation) {
         // TODO create geometry, and texture it using link relation values
         getLinkByRel(body.links, '/rel/world_texture', function(worldTextureUri) {
             getLinkByRel(body.links, '/rel/world_texture_night', function(worldTextureNightUri) {
-                bodies.push(createPlanet(scene, 2, worldTextureUri, worldTextureNightUri));
+                bodies.push(createPlanet(scene, 2, worldTextureUri, worldTextureNightUri, true));
             });
         });
     }
@@ -24,7 +24,7 @@ function addCamera(scene) {
     return camera;
 }
 
-function createPlanet(scene, size, worldTextureUri, worldTextureNightUri) {
+function createPlanet(scene, size, worldTextureUri, worldTextureNightUri, showHexes) {
 	var vertexSky = $("#vertexSky").text();
 	var fragmentSky = $("#fragmentSky").text();
 	var vertexGround = $("#vertexGround").text();
@@ -174,16 +174,18 @@ function createPlanet(scene, size, worldTextureUri, worldTextureNightUri) {
 	var cloudmesh	= new THREE.Mesh(cloudgeometry, cloudmaterial); 
 	planetmesh.add(cloudmesh);
 
-	var hexgeometry	= new THREE.IcosahedronGeometry(size + 0.01, 3);
-	setHexUVs(hexgeometry);
-	var material	= new THREE.MeshBasicMaterial({
-		map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-		color: 0xFFFF00,
-		transparent: true,
-		opacity: 0.25
-		});
-	var hexmesh	= new THREE.Mesh(hexgeometry, material); 
-	planetmesh.add(hexmesh);
+    if (showHexes) {
+	    var hexgeometry	= new THREE.IcosahedronGeometry(size + 0.01, 3);
+	    setHexUVs(hexgeometry);
+	    var material	= new THREE.MeshBasicMaterial({
+	    	map: THREE.ImageUtils.loadTexture("images/hex02.png"),
+	    	color: 0xFFFF00,
+	    	transparent: true,
+	    	opacity: 0.25
+	    	});
+	    var hexmesh	= new THREE.Mesh(hexgeometry, material); 
+	    planetmesh.add(hexmesh);
+    }
 
 	var atmopheregeometry	= new THREE.SphereGeometry(atmosphere.outerRadius, 50, 50);
 	var atmospherematerial	= new THREE.ShaderMaterial({
@@ -320,14 +322,14 @@ function drawSkyBox()  {
 	return starmesh;
 }
 
-function lights() {
+function lights(scene) {
 	var textureFlare0 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare0.png");
 	var textureFlare2 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare2.png");
 	var textureFlare3 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare3.png");
 
-	return addLight(0.995, 0.025, 0.99, 0, 0, 0);
+	return addLight(scene, 0.995, 0.025, 0.99, 0, 0, 0);
 
-	function addLight(h, s, v, x, y, z) {
+	function addLight(scene, h, s, v, x, y, z) {
 
 		var light = new THREE.PointLight(0xffffff, 1.5, 4500);
 		light.color.setHSL(h, s, v);
