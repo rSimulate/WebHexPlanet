@@ -1,11 +1,19 @@
 <!doctype html>
 <html>
 	<head>
-		<title>MetaSim - Alpha 0.6</title>
+		<title>MetaSim - Alpha 0.7</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="description" content="First Generation WebGL Simulation">
+		<meta name="author" content="rSimulate Community">
+
+	<!--### 	Our libraries 			###-->
+		<script src="js/main.js"></script>
+		<script src="js/space_creator.js"></script>
+		<script src="js/physics/orbitlines.js"></script>
+		<script src="js/camera_target.js"></script>
 		
-			
+	<!--### 	Three.js Files 			###-->
 		<!--<script src="vendor/three.js/Three.js"></script>-->
 		<script src="vendor/three.js/three.min.js"></script>
 		<script src="vendor/three.js/three-extras.min.js"></script>
@@ -17,38 +25,94 @@
 		<script src="vendor/threex/THREEx.FullScreen.js"></script>
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
+		<script src='vendor/threex/THREEx.KeyboardState.js'></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script src="vendor/random.js/random-0.26.js"></script>
+
+		<script src="js/main.js"></script>
+		<link  href="css/main.css" rel="stylesheet"/>
+
+        <!--### 	Other vendor imports 	###-->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 		<!-- jquery-ui -->
 		<script src="vendor/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js"></script>
 		<link  href="vendor/jquery-ui-1.10.2.custom/css/cupertino/jquery-ui-1.10.2.custom.css" rel="stylesheet"/>
 
-		<script src="js/main.js"></script>
-		<link  href="css/main.css" rel="stylesheet"/>
-
+        <!-- shader files -->
 		<script src="shaders/vertexSky.vs" type="x-shader/x-vertex" id="vertexSky"></script>
 		<script src="shaders/fragmentSky.fs" type="x-shader/x-fragment" id="fragmentSky"></script>
 		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
 		<script src="shaders/fragmentGround.fs" type="x-shader/x-fragment" id="fragmentGround"></script>
+		
+        <!--### 	Bootstrap sand Styles 	###-->
+		<link  href="css/main.css" rel="stylesheet">
+		<link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<style type="text/css">
+		  body {
+			padding-top: 40px;
+			padding-bottom: 40px;
+		  }
+		  .sidebar-nav {
+			padding: 9px 0;
+		  }
 
-	</head>
+		  @media (max-width: 980px) {
+			/* Enable use of floated navbar text */
+			.navbar-text.pull-right {
+			  float: none;
+			  padding-left: 5px;
+			  padding-right: 5px;
+			}
+		  }
+		</style>
+		<link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">		
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+		<!-- Le fav and touch icons -->
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+			
+</head>
 <body>
-	<!-- three.js container -->
-    	<div id="container"></div>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.rsimulate.com">rSimulate</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+                <span id="userinfo">Login</span>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="#">About</a></li>
+              <li><a href="http://www.rsimulate.com/blog">Blog</a></li>
+			  <li><a href="http://www.rsimulate.com/forums">Forum</a></li>
+              <li><a href="#contact">Reddit</a></li>
+			  <li><a href="#contact">Github</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
 	<!-- info on screen display -->
-	<div id="info">
-		<div class="top">
-		Links:
-			<a href="http://www.reddit.com/r/MetaSim/" target="_blank">Metasim Subreddit</a>
-			&
-			<a href="https://github.com/rSimulate/WebHexPlanet/" target="_blank">Github</a>
-            &nbsp;
-            <span id="userinfo">
-                <span id="username"></span>
-                <span id="userImage"></span>
-                <a id="logout">Logout</a>
-            </span>
+
+		
+	<!-- three.js container -->
+    <!--<div class="container-fluid"> -->
+	<div id="container">
+	    <div id="info">
+	        <div class="top">
+            </div>
 		</div>
 	
         <div id="loginDialog">
@@ -63,33 +127,45 @@
               </span>
             </span>
         </div>
-		<div id="simulationsDialog"></div>
-		<div id="createSimulationDialog">
+
+		<div id="simulationsDialog" class="no-show"></div>
+
+		<div id="createSimulationDialog" class="no-show">
 			Name: <input name="name"/><br/>
 			Bodies Engine: <select name="bodiesEngine"></select></br>
 			Terrain Engine: <select name="terrainEngine"></select></br>
 			Agent Engine: <select name="agentEngine"></select></br>
 		</div>
-        <div id="simulationInfoDialog">
+
+        <div id="simulationInfoDialog" class="no-show">
             Created: <span class="dateCreated"></span>
         </div>
 		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
+			 n and m for time accel/decel
 		</div> 
 	</div> 
+
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var moongeometry,moonmaterial,moonmesh;
 		var camera, cameraControls;
+        var projector;
 		var gui;
 		var mouse = { x: 0, y: 0 };
+		var hexOutline;
+		var timeAccel = 1;
+
+		var camMODE = 1;
+		var camTARGET = 0;
 		var hexOutline, selectedHex;
         var bodies = [];
         var accessToken;
 
-		shaders = {vertex: [], fragment: []};
-		scene = new THREE.Scene();
+		var shaders = {vertex: [], fragment: []};
+		var scene = new THREE.Scene();
+		var keyboard = new THREEx.KeyboardState();
 
 		function getLinkByRel(links, rel, fn) {
 			for (var i in links) {
@@ -147,6 +223,11 @@
         }
 
         function showLoginDialog() {
+            $('#userinfo').empty().append(
+                '    <span id="username"></span>' +
+                '    <span id="userImage"></span>' +
+                '    <a id="logout">Logout</a>');
+
             $('#userinfo').hide();
             $('#signinButton').show();
             var $loginDialog = $('#loginDialog');
@@ -441,7 +522,6 @@
 			light = lights(scene);
 			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg', false)]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
 			bodies[0].planet.translateX(1.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
-			createMoon();
 			
 			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
 			var radius = 149.6;
@@ -466,7 +546,7 @@
 			var i = 0;
 			while(i < 6.437) {
 			i += 0.01;
-			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + planet.planet.position.x, 0 , radius * Math.sin(i) + planet.planet.position.z)); 
+			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + bodies[0].planet.position.x, 0 , radius * Math.sin(i) + bodies[0].planet.position.z)); 
 			
 			}
 			
@@ -485,7 +565,7 @@
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame(animate);
-			
+
 			// do the render
 			render();
 
@@ -496,8 +576,8 @@
 		// render the scene
 		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
-			var PIseconds	= Date.now() / 1000 * Math.PI;
-			var time = PIseconds;
+			var PIseconds	= Date.now() / 1000  * Math.PI;
+			var time = PIseconds * timeAccel;
 			var semimajoraxis = 7;    		// Turn into parameter
 			var eccentricity = 0.0549; 		// Turn into parameter
 			var angularvelocity = 0.003;		// Turn into paratmeter
@@ -507,19 +587,19 @@
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-			var rotationspeed = 0.00002; //need to study up on this relation to orbit and mass. 
-						
-			moonmesh.rotation.y += rotationspeed;	// Moon rotation
-			//Moon's orbit
-			moonmesh.position.x = radius * Math.cos(orbitphase) + planet.planet.position.x;
-			moonmesh.position.z = radius * Math.sin(orbitphase) + planet.planet.position.z;
-			moonmesh.position.y = height + planet.planet.position.y;
+			var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
+
+			var camangularvelocity = 0.002;//added camera rotation.
 			
 			var camangularvelocity = 0.001;//added camera rotation.
 			var camsemimajoraxis = 3; 
 			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
 			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+
+            if (cameraControls) {
+			    CameraTarget(cameraControls, bodies);
+	        }
 			
 			camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
 			camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
@@ -556,6 +636,10 @@
 			renderer.render(scene, camera);
 		}
 
+		function checkDistance(x1, x2, x3, xt, yt, zt) {
+			return Math.sqrt(Math.pow((x1 - xt), 2) + Math.pow((x2 - yt), 2) + Math.pow((x3 - zt), 2));
+		} 
+
 
 		function setHexUVs(geometry){
 			for(var f in geometry.faceVertexUvs[0]){
@@ -564,27 +648,6 @@
 			  	uvs[1] = new THREE.Vector2(0.51, 0.15);
 			  	uvs[2] = new THREE.Vector2(0.78, 0.70);
 			}
-		}
-		
-		
-		function createMoon() { // had to move back to index.html for now
-			var planetgeometry	= new THREE.IcosahedronGeometry(0.9, 4);
-			var material	= new THREE.MeshLambertMaterial(
-							{map: THREE.ImageUtils.loadTexture("images/moons/tethys.jpg")});
-			moonmesh	= new THREE.Mesh(planetgeometry, material); 
-			moonmesh.position.x = 15;
-			moonmesh.position.y = 0;
-			scene.add(moonmesh);
-
-			var hexgeometry	= new THREE.IcosahedronGeometry(0.91, 4);
-
-			setHexUVs(hexgeometry);
-			var material	= new THREE.MeshLambertMaterial({
-				map: THREE.ImageUtils.loadTexture("images/hex02.png"),
-				color: 0xFFFFFF,
-				transparent: true,
-				opacity: 0.2
-				});
 		}
 
 		document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -597,10 +660,10 @@
 		document.addEventListener('mousedown', onDocumentMouseDown, false);
 		function onDocumentMouseDown(event) {
 		    event.preventDefault();
-		
+
 		    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
 		    projector.unprojectVector(vector, camera);
-		
+
 			var raycaster = new THREE.Raycaster(
 				camera.position,
 				vector.sub(camera.position).normalize());
@@ -680,6 +743,7 @@
 				hexOutline.scale.x = 1.01;
 				hexOutline.scale.y = 1.01;
 				hexOutline.scale.z = 1.01;
+
 				
 				bodies[0].planet.add(hexOutline);
 				console.log("selected hex: " + getSelectedHex().object.name + " " + getSelectedHex().id);
