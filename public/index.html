@@ -151,7 +151,6 @@
 		var stats, scene, renderer, composer;
 		var moongeometry,moonmaterial,moonmesh;
 		var camera, cameraControls;
-<<<<<<< HEAD
 		var cameraTarget;	// must be some object with a .position attribute,
 							// initialized to bodies[0].planet by default
 		var isCameraRotatingAutomatically = true;
@@ -159,9 +158,7 @@
 		var camorbitphase = 0;
 		var camsemimajoraxis = 3.0; 
 
-=======
         var projector;
->>>>>>> 5549a899cbe49ce5bfbaa153d8802ed17e585981
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline;
@@ -558,14 +555,8 @@
 			var radius = 15
 			var i = 0;
 			while(i < 6.437) {
-<<<<<<< HEAD
 			    i += 0.01;
 			    geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + bodies[0].planet.position.x, 0 , radius * Math.sin(i) + bodies[0].planet.position.z)); 
-=======
-			i += 0.01;
-			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + bodies[0].planet.position.x, 0 , radius * Math.sin(i) + bodies[0].planet.position.z)); 
->>>>>>> 5549a899cbe49ce5bfbaa153d8802ed17e585981
-			
 			}
 			
 			var material = new THREE.LineBasicMaterial({
@@ -583,15 +574,11 @@
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame(animate);
-<<<<<<< HEAD
 			
 			// update camera controls
             if (cameraControls) {
 			    cameraControls.update();
             }
-=======
-
->>>>>>> 5549a899cbe49ce5bfbaa153d8802ed17e585981
 			// do the render
 			render();
 
@@ -613,19 +600,15 @@
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-<<<<<<< HEAD
-			var rotationspeed = 0.00002; //need to study up on this relation to orbit and mass. 
-						
-			moonmesh.rotation.y += rotationspeed;	// Moon rotation
-			//Moon's orbit
-			moonmesh.position.x = radius * Math.cos(orbitphase) + bodies[0].planet.position.x;
-			moonmesh.position.z = radius * Math.sin(orbitphase) + bodies[0].planet.position.z;
-			moonmesh.position.y = height + bodies[0].planet.position.y;
-=======
 			var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
+						
+			//moonmesh.rotation.y += rotationspeed;	// Moon rotation
+			//Moon's orbit
+			//moonmesh.position.x = radius * Math.cos(orbitphase) + bodies[0].planet.position.x;
+			//moonmesh.position.z = radius * Math.sin(orbitphase) + bodies[0].planet.position.z;
+			//moonmesh.position.y = height + bodies[0].planet.position.y;
 
 			var camangularvelocity = 0.002;//added camera rotation.
->>>>>>> 5549a899cbe49ce5bfbaa153d8802ed17e585981
 			
 			var camangularvelocity = 0.001;//added camera rotation.
 			var camsemimajoraxis = 3; 
@@ -741,11 +724,8 @@
 		document.addEventListener('mousedown', onDocumentMouseDown, false);
 		function onDocumentMouseDown(event) {
 		    event.preventDefault();
-<<<<<<< HEAD
 		
 		    isCameraRotatingAutomatically = false;
-=======
->>>>>>> 5549a899cbe49ce5bfbaa153d8802ed17e585981
 
 		    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
 		    projector.unprojectVector(vector, camera);
