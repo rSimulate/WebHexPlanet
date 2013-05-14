@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Charts - Stilearn Admin Bootstrap</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="stilearning">
+
+        <!-- google font -->
+        <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet" type="text/css" />
+
+        <!-- styles -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="css/stilearn.css" rel="stylesheet">
+        <link href="css/stilearn-responsive.css" rel="stylesheet">
+        <link href="css/stilearn-helper.css" rel="stylesheet">
+        <link href="css/stilearn-icon.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <link href="css/animate.css" rel="stylesheet">
+        <link href="css/uniform.default.css" rel="stylesheet">
+        
+        <style>
+            /* this use for demo knob only, you can delete this if you want*/
+            .demo-knob{
+                text-align: center;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        </style>
+            
+        
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <!-- section header -->
+        <header class="header" data-spy="affix" data-offset-top="0">
+            <!--nav bar helper-->
+            <div class="navbar-helper">
+                <div class="row-fluid">
+                    <!--panel site-name-->
+                    <div class="span2">
+                        <div class="panel-sitename">
+                            <h2><a href="index.html"><span class="color-teal">Sti</span>learn</a></h2>
+                        </div>
+                    </div>
+                    <!--/panel name-->
+
+                    <div class="span6">
+                        <!--panel search-->
+                        <div class="panel-search">
+                            <form>
+                                <div class="input-icon-append">
+                                    <button type="submit" rel="tooltip-bottom" title="search" class="icon"><i class="icofont-search"></i></button>
+                                    <input class="input-large search-query grd-white" maxlength="23" placeholder="Search here..." type="text">
+                                </div>
+                            </form>
+                        </div><!--/panel search-->
+                    </div>
+                    <div class="span4">
+                        <!--panel button ext-->
+                        <div class="panel-ext">
+                            <div class="btn-group">
+                                <!--notification-->
+                                <a class="btn btn-danger btn-small" data-toggle="dropdown" href="#" title="3 notification">3</a>
+                                <ul class="dropdown-menu dropdown-notification">
+                                    <li class="dropdown-header grd-white"><a href="#">View All Notifications</a></li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="new">
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">John Doe commented on a post</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lorem ipsum <small class="helper-font-small"> john doe</small></h4>
+                                                    <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Tortor dapibus</h4>
+                                                    <p>Vegan fanny pack odio cillum wes anderson 8-bit.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="notification">Request new order</div>
+                                            <div class="media">
+                                                <img class="media-object pull-left" data-src="js/holder.js/64x64" />
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Lacinia non</h4>
+                                                    <p>Messenger bag gentrify pitchfork tattooed craft beer.</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- <li class="dropdown-footer"><a href=""></a></li> -->
+                                </ul><!--notification-->
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Shortcut
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li><a tabindex="-1" href="calendar.html">Calendar</a></li>
+                                    <li><a tabindex="-1" href="invoice.html">Invoice</a></li>
+                                    <li><a tabindex="-1" href="message.html">Message</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Sample Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="pricing.html">Pricing</a></li>
+                                            <li><a tabindex="-1" href="bonus-page/resume/index.html">Resume</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a tabindex="-1" href="#">Error Page</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a tabindex="-1" href="403.html">Error 403</a></li>
+                                            <li><a tabindex="-1" href="404.html">Error 404</a></li>
+                                            <li><a tabindex="-1" href="405.html">Error 405</a></li>
+                                            <li><a tabindex="-1" href="500.html">Error 500</a></li>
+                                            <li><a tabindex="-1" href="503.html">Error 503</a></li>
+                                            <li><a tabindex="-1" href="under-construction.html">Under Construction</a></li>
+                                            <li><a tabindex="-1" href="coming-son.html">Coming Son</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a tabindex="-1" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-inverse btn-small" href="#">Other Action</a>
+                            </div>
+                            <div class="btn-group user-group">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <img class="corner-all" align="middle" src="img/user-thumb.jpg" title="John Doe" alt="john doe" /> <!--this for display on PC device-->
+                                    <button class="btn btn-small btn-inverse">John Doe</button> <!--this for display on tablet and phone device-->
+                                </a>
+                                <ul class="dropdown-menu dropdown-user" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <div class="media">
+                                            <a class="pull-left" href="#">
+                                                <img class="img-circle" src="img/user.jpg" title="profile" alt="profile" />
+                                            </a>
+                                            <div class="media-body description">
+                                                <p><strong>John Doe</strong></p>
+                                                <p class="muted">johndoe@mail.com</p>
+                                                <p class="action"><a class="link" href="#">Activity</a> - <a class="link" href="#">Setting</a></p>
+                                                <a class="btn btn-primary btn-small btn-block">View Profile</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="dropdown-footer">
+                                        <div>
+                                            <a class="btn btn-small pull-right" href="login.html">Logout</a>
+                                            <a class="btn btn-small" href="#">Add Account</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><!--panel button ext-->
+                    </div>
+                </div>
+            </div><!--/nav bar helper-->
+        </header>
+
+        <!-- section content -->
+        <section class="section">
+            <div class="row-fluid">
+                <!-- span side-left -->
+                <div class="span1">
+                    <!--side bar-->
+                    <aside class="side-left">
+                        <ul class="sidebar">
+                            <li>
+                                <a href="index.html" title="dashboard">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-dashboard"></i>
+                                    </div>
+                                    <span class="sidebar-text">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="interface.html" title="interface">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-magnet"></i>
+                                    </div>
+                                    <span class="sidebar-text">Interface</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="form.html" title="form">
+                                    <div class="badge badge-important">3</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-edit"></i>
+                                    </div>
+                                    <span class="sidebar-text">Form</span>
+                                </a>
+                                <ul class="sub-sidebar-form corner-top shadow-white">
+                                    <li class="title muted">Quick Upload</li>
+                                    <li>
+                                        <input type="file" data-form="uniform" onchange="alert('your progres uploading file...')" />
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="form.html" title="form element" class="corner-all">
+                                            <i class="icofont-file"></i>
+                                            <span class="sidebar-text">Form Element</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="code_editor.html" title="code editor" class="corner-all">
+                                            <i class="icofont-book"></i>
+                                            <span class="sidebar-text">Code Editor</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="gallery.html" title="gallery" class="corner-all">
+                                            <i class="icofont-picture"></i>
+                                            <span class="sidebar-text">Gallery</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="active">
+                                <a href="charts.html" title="charts">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-bar-chart"></i>
+                                    </div>
+                                    <span class="sidebar-text">charts</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tables.html" title="table">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-table"></i>
+                                    </div>
+                                    <span class="sidebar-text">Tables</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="grids.html" title="grids">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-columns"></i>
+                                    </div>
+                                    <span class="sidebar-text">Grids</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="icons.html" title="icons">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-star"></i>
+                                    </div>
+                                    <span class="sidebar-text">Icons</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="widgets.html" title="widgets">
+                                    <div class="helper-font-24">
+                                        <i class="icofont-reorder"></i>
+                                    </div>
+                                    <span class="sidebar-text">Widgets</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" title="more">
+                                    <div class="badge badge-important">5</div>
+                                    <div class="helper-font-24">
+                                        <i class="icofont-th-large"></i>
+                                    </div>
+                                    <span class="sidebar-text">More</span>
+                                </a>
+                                <ul class="sub-sidebar corner-top shadow-silver-dark">
+                                    <li>
+                                        <a href="404.html" title="not found">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-warning-sign"></i>
+                                            </div>
+                                            <span class="sidebar-text">404</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="login.html" title="login">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-lock"></i>
+                                            </div>
+                                            <span class="sidebar-text">Login</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="invoice.html" title="invoice">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-barcode"></i>
+                                            </div>
+                                            <span class="sidebar-text">Invoice</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="pricing.html" title="pricing table">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-briefcase"></i>
+                                            </div>
+                                            <span class="sidebar-text">Pricing</span>
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="bonus-page/resume/index.html" title="resume">
+                                            <div class="helper-font-24">
+                                                <i class="icofont-user"></i>
+                                            </div>
+                                            <span class="sidebar-text">Resume</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </aside><!--/side bar -->
+                </div><!-- span side-left -->
+                
+                <!-- span content -->
+                <div class="span9">
+                    <!-- content -->
+                    <div class="content">
+                        <!-- content-header -->
+                        <div class="content-header">
+                            <ul class="content-header-action pull-right">
+                                <li>
+                                    <a href="#">
+                                        <span data-chart="peity-bar" data-height="32" data-colours='["#00A600", "#00A600"]'>5,3,9,6,5,9,7,3,5,2</span>
+                                        <div class="action-text color-green">8765 <span class="helper-font-small color-silver-dark">Visits</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <span data-chart="peity-line" data-height="32" data-colour="#00A0B1">5,3,9,6,5,9,7,3,5,2</span>
+                                        <div class="action-text color-teal">1437 <span class="helper-font-small color-silver-dark">Users</span></div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <span data-chart="peity-pie" data-diameter="32" data-colours='["#DC572E", "#2E8DEF"]'>226,134</span>
+                                        <div class="action-text color-orange">4367 <span class="helper-font-small color-silver-dark">Orders</span></div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <h2><i class="icofont-bar-chart"></i> Chart</h2>
+                        </div><!-- /content-header -->
+                        
+                        <!-- content-breadcrumb -->
+                        <div class="content-breadcrumb">
+                            <!--breadcrumb-nav-->
+                            <ul class="breadcrumb-nav pull-right">
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-money"></i> Orders <span class="color-red">(+12)</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link">
+                                        <i class="icofont-user"></i> Users <span class="color-red">(+34)</span>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="btn-group">
+                                    <a href="#" class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icofont-tasks"></i> Tasks
+                                        <i class="icofont-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Some Action</a></li>
+                                        <li><a href="#">Other Action</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Something Else</a></li>
+                                    </ul>
+                                </li>
+                            </ul><!--/breadcrumb-nav-->
+                            
+                            <!--breadcrumb-->
+                            <ul class="breadcrumb">
+                                <li><a href="index.html"><i class="icofont-home"></i> Dashboard</a> <span class="divider">&rsaquo;</span></li>
+                                <li><a href="charts.html">Charts</a> <span class="divider">&rsaquo;</span></li>
+                                <li class="active">Data elements</li>
+                            </ul><!--/breadcrumb-->
+                        </div><!-- /content-breadcrumb -->
+                        
+                        <!-- content-body -->
+                        <div class="content-body">
+                            
+                            <!-- =========================================
+                                        KNOB (Circular chart)
+                            =========================================== -->
+                            <!--row-fluid-->
+                            <div class="row-fluid">
+                                <!--span-->
+                                <div class="span12">
+                                    <!--box-->
+                                    <div class="box corner-all">
+                                        <!--box header-->
+                                        <div class="box-header grd-white color-silver-dark corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close">&times;</a>
+                                            </div>
+                                            <span>Circular Chart</span>
+                                        </div><!--/box header-->
+                                        <!--box body-->
+                                        <div class="box-body">
+                                            <!--knob-->
+                                            <div class="row-fluid">
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="100" data-displayInput=false value="35">
+                                                    <p class="help-block bold">Disable display input</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-cursor=true data-fgColor="#222222" data-thickness=.3 value="29">
+                                                    <p class="help-block bold">'cursor' mode</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-min="-100" data-displayPrevious=true value="44">
+                                                    <p class="help-block bold">Display previous value</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="divider-content"><span></span></div> <!-- use hr as divider -->
+                                            
+                                            <div class="row-fluid">
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-angleOffset=90 data-fgColor="#00CCFF" value="35">
+                                                    <p class="help-block bold">Angle offset</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-angleOffset=-125 data-angleArc=250 data-fgColor="#00A0B1" value="35">
+                                                    <p class="help-block bold">Angle offset and arc</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-min="-15000" data-max="15000" data-fgColor="#2E8DEF" value="-11000">
+                                                    <p class="help-block bold">5-digit values</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="divider-content"><span></span></div> <!-- use hr as divider -->
+                                            
+                                            <div class="row-fluid">
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-displayPrevious=true data-fgColor="#A700AE" data-skin="tron" data-cursor=true value="75" data-thickness=".2">
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-displayPrevious=true data-fgColor="#643EBF" data-skin="tron" data-thickness=".2" value="75">
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-angleOffset="180" data-fgColor="#BF1E4B" data-skin="tron" data-thickness=".1" value="35">
+                                                </div>
+                                                <p class="help-block bold clearfix">Overloaded 'draw' method (Skin)</p>
+                                            </div>
+                                            
+                                            <div class="divider-content"><span></span></div> <!-- use hr as divider -->
+                                            
+                                            <div class="row-fluid">
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-width="120" data-fgColor="chartreuse" data-fgColor="#DC572E" data-thickness=".4" data-readOnly=true value="22">
+                                                    <p class="help-block bold">Readonly</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-min="-100" data-max="100" data-fgColor="#00A600" data-width="100" data-height="100" data-thickness=".3" data-cursor=true>
+                                                    <p class="help-block label bold">Width & Height medium</p>
+                                                </div>
+                                                <div class="span4 demo-knob">
+                                                    <input data-chart="knob" data-min="-100" data-max="100" data-fgColor="#0A5BC4" data-width="80" data-height="80" data-thickness=".3" data-cursor=true>
+                                                    <p class="help-block label bold">Width & Height small</p>
+                                                </div>
+                                            </div>
+                                            <!--/knob-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <!-- =========================================
+                                        MINI CHART (peity)
+                            =========================================== -->
+                            <!--row-fluid-->
+                            <div class="row-fluid">
+                                <!--span-->
+                                <div class="span12">
+                                    <!--box-->
+                                    <div class="box corner-all">
+                                        <!--box header-->
+                                        <div class="box-header grd-white color-silver-dark corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close">&times;</a>
+                                            </div>
+                                            <span>Mini Chart</span>
+                                        </div><!--/box header-->
+                                        <!--box body-->
+                                        <div class="box-body">
+                                            <!--peity-->
+                                            <div class="row-fluid">
+                                                <div class="span2">
+                                                    <p class="help-block">Pie Charts</p>
+                                                    <span data-chart="peity-pie">1/5</span>
+                                                    <span data-chart="peity-pie">226/360</span>
+                                                    <span data-chart="peity-pie">0.52/1.561</span>
+                                                    <span data-chart="peity-pie">1,4</span>
+                                                    <span data-chart="peity-pie">226,134</span>
+                                                    <span data-chart="peity-pie">0.52,1.041</span>
+                                                    <span data-chart="peity-pie">1,2,3,2,2</span>
+                                                </div>
+                                                <div class="span2">
+                                                    <p class="help-block">Line Charts</p>
+                                                    <span data-chart="peity-line">5,3,9,6,5,9,7,3,5,2</span>
+                                                    <span data-chart="peity-line">5,3,2,-1,-3,-2,2,3,5,2</span>
+                                                    <span data-chart="peity-line">0,-3,-6,-4,-5,-4,-7,-3,-5,-2</span>
+                                                </div>
+                                                <div class="span2">
+                                                    <p class="help-block">Bar Charts</p>
+                                                    <span data-chart="peity-bar">5,3,9,6,5,9,7,3,5,2</span>
+                                                    <span data-chart="peity-bar">5,3,2,-1,-3,-2,2,3,5,2</span>
+                                                    <span data-chart="peity-bar">0,-3,-6,-4,-5,-4,-7,-3,-5,-2</span>
+                                                </div>
+                                                <div class="span2">
+                                                    <p class="help-block">Colours Dynamically</p>
+                                                    <span data-chart="bar-colours-1">5,3,9,6,5,9,7,3,5,2</span>
+                                                    <span data-chart="bar-colours-2">5,3,2,-1,-3,-2,2,3,5,2</span>
+                                                    <span data-chart="bar-colours-3">0,-3,-6,-4,-5,-4,-7,-3,-5,-2</span>
+                                                    <span data-chart="pie-colours-1">4,7,6,5</span>
+                                                    <span data-chart="pie-colours-2">5,3,9,6,5</span>
+                                                </div>
+                                                <div class="span2">
+                                                    <p data-chart="help-block">Updating Charts</p>
+                                                    <span class="updating-chart">5,3,9,6,5,9,7,3,5,2,5,3,9,6,5,9,7,3,5,2</span>
+                                                </div>
+                                            </div>
+                                            <!--/peity-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <!-- =========================================
+                                        FLOT CHART (Regular chart)
+                            =========================================== -->
+                            <!-- realtime -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Realtime</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-realtime" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /realtime -->
+                            <!-- lines -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Lines With Interactions</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-lines" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /lines -->
+                            <!-- points -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Points With Custom Symbols</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-points" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /points -->
+                            <!-- filled -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Filled With Tooltip</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-filled" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /filled -->
+                            <!-- bars -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Bars With Crosshairs</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-bars" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /bars -->
+                            <!-- stacking -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Stacking</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-stacking" class="chart"></div>
+                                            <div class="stackControls">
+                                                <input class="btn btn-mini" type="button" value="With stacking">
+                                                <input class="btn btn-mini" type="button" value="Without stacking">
+                                            </div>
+                                                
+                                            <div class="graphControls">
+                                                <input class="btn btn-mini" type="button" value="Bars">
+                                                <input class="btn btn-mini" type="button" value="Lines">
+                                                <input class="btn btn-mini" type="button" value="Lines with steps">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /stacking -->
+                            <!-- pie -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Pie</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row-fluid">
+                                                <div class="span4">
+                                                    <!-- You have to set the width of an element using pixel for pie charts -->
+                                                    <div id="chart-pie1" class="chart" style="width: 200px;"></div>
+                                                </div>
+                                                <div class="span4">
+                                                    <div id="chart-pie2" class="chart" style="width: 200px;"></div>
+                                                </div>
+                                                <div class="span4">
+                                                    <div id="chart-pie3" class="chart" style="width: 200px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /pie -->
+                            <!-- ajax -->
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="box corner-all">
+                                        <div class="box-header grd-white corner-top">
+                                            <div class="header-control">
+                                                <a data-box="collapse"><i class="icofont-caret-up"></i></a>
+                                                <a data-box="close" data-hide="rotateOut">&times;</a>
+                                            </div>
+                                            <span>Ajax</span>
+                                        </div>
+                                        <div class="box-body">
+                                            <div id="chart-ajax" class="chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /ajax -->
+                            
+                            
+                            <!--/plots-->
+                        </div><!--/content-body -->
+                    </div><!-- /content -->
+                </div><!-- /span content -->
+                
+                <!-- span side-right -->
+                <div class="span2">
+                    <!-- side-right -->
+                    <aside class="side-right">
+                        <!-- sidebar-right -->
+                        <div class="sidebar-right">
+                            <!--sidebar-right-header-->
+                            <div class="sidebar-right-header">
+                                <div class="sr-header-right">
+                                    <h2><span class="label label-info">$26,875</span></h2>
+                                </div>
+                                <div class="sr-header-left">
+                                    <p class="bold">Balance</p>
+                                    <small class="muted">Dec 30 2012</small>
+                                </div>
+                            </div><!--/sidebar-right-header-->
+                            <!--sidebar-right-control-->
+                            <div class="sidebar-right-control">
+                                <ul class="sr-control-item">
+                                    <li class="active"><a href="#alt1" data-toggle="tab" title="alternative 1"><i class="icofont-share-alt"></i></a></li>
+                                    <li><a href="#alt2" data-toggle="tab" title="alternative 2"><i class="icofont-flag"></i></a></li>
+                                    <li rel="tooltip-bottom" title="view site"><a href="index.html" target="_BLANK"><i class="icofont-external-link"></i></a></li>
+                                </ul>
+                            </div><!-- /sidebar-right-control-->
+                            <!-- sidebar-right-content -->
+                            <div class="sidebar-right-content">
+                                <div class="tab-content">
+                                    <!--alternative 1-->
+                                    <div class="tab-pane fade active in" id="alt1">
+                                        <div class="divider-content"><span></span></div>
+                                        
+                                        <div class="side-nav">
+                                            <ul class="nav-side">
+                                                <li class="active">
+                                                    <a href="403.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Error 403</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="404.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Error 404</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="405.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Error 405</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="500.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Error 500</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="503.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Error 503</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="under-construction.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Under Construction</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="coming-son.html">
+                                                        <i class="icofont-random"></i>
+                                                        <span>Coming son</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="divider-content"><span></span></div>
+                                        
+                                        <div class="side-box">
+                                            <button class="btn btn-mini btn-block">Default</button>
+                                            <button class="btn btn-mini btn-block btn-primary">Primary</button>
+                                            <button class="btn btn-mini btn-block btn-success">Success</button>
+                                            <button class="btn btn-mini btn-block btn-info">Info</button>
+                                            <button class="btn btn-mini btn-block btn-danger">Danger</button>
+                                            <button class="btn btn-mini btn-block btn-inverse">Inverse</button>
+                                            <button class="btn btn-mini btn-block btn-warning">Warning</button>
+                                        </div>
+                                        
+                                        <div class="divider-content"><span></span></div>
+                                    </div><!--/alternative 1-->
+                                    
+                                    <!--alternative 2-->
+                                    <div class="tab-pane fade" id="alt2">
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <button class="btn btn-block btn-mini btn-primary">Add Action</button>
+                                        <button class="btn btn-block btn-mini">Add Action</button>
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                        <!-- side-task -->
+                                        <div class="side-task">
+                                            <div class="task active">
+                                                <span class="task-header">
+                                                    <img src="img/loader_16.gif" /> 
+                                                    <strong>Portofolio_W34GF.zip</strong>
+                                                </span>
+                                                <span class="task-desc">9.1 of 17MB - 243KB/sec - 1 min</span>
+                                                <div class="progress progress-striped active" rel="tooltip" title="40%">
+                                                    <div class="bar bar-success" style="width: 40%;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Paralax_bg_5448.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="typicn-loop color-silver-dark" title="cancel"></i>
+                                                <span class="task-desc">Widget_sidebar_W0089.psd</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-ok-sign color-green" title="success"></i>
+                                                <span class="task-desc">Icons_bg_I98GH.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                            <div class="task fade in">
+                                                <i class="icofont-remove-sign color-red" title="failed"></i>
+                                                <span class="task-desc">Dashboard_3805.jpg</span>
+                                                <button data-dismiss="alert" class="close">&times;</button>
+                                            </div>
+                                        </div><!-- /side-task -->
+                                        
+                                        <div class="divider-content"><span></span></div> <!--divider-->
+                                        
+                                    </div><!--/alternative 1-->
+                                    
+                                </div>
+                            </div><!-- /sidebar-right-content -->
+                        </div><!-- /sidebar-right -->
+                    </aside><!-- /side-right -->
+                </div><!-- /span side-right -->
+            </div>
+        </section>
+
+        <!-- section footer -->
+        <footer>
+            <a rel="to-top" href="#top"><i class="icofont-circle-arrow-up"></i></a>
+        </footer>
+
+        <!-- javascript
+        ================================================== -->
+        <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/uniform/jquery.uniform.js"></script>
+        
+        <script src="js/knob/jquery.knob.js"></script>
+        <script src="js/peity/jquery.peity.js"></script>
+        <script src="js/flot/jquery.flot.js"></script>
+        <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot/excanvas.js"></script><![endif]-->
+        <script src="js/flot/jquery.flot.categories.js"></script>
+        <script src="js/flot/jquery.flot.symbol.js"></script>
+        <script src="js/flot/jquery.flot.crosshair.js"></script>
+        <script src="js/flot/jquery.flot.stack.js"></script>
+        <script src="js/flot/jquery.flot.pie.js"></script>
+        <script src="js/flot/jquery.flot.resize.js"></script>
+        
+        <script src="js/flot/jquery.flot.demo.js"></script>
+        
+        <!-- required stilearn template js, for full feature-->
+        <script src="js/holder.js"></script>
+        <script src="js/stilearn-base.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // to view the configuration flot chart you can see the file jquery.flot.demo.js
+                
+                // uniform
+                $('[data-form=uniform]').uniform();
+                
+                // knob (include for skin setting)
+                $('[data-chart=knob]').knob({
+                    /*change : function (value) {
+                        //console.log("change : " + value);
+                    },
+                    release : function (value) {
+                        console.log("release : " + value);
+                    },
+                    cancel : function () {
+                        console.log("cancel : " + this.value);
+                    },*/
+                    draw : function () {
+
+                        // "tron" case
+                        if(this.$.data('skin') == 'tron') {
+
+                            var a = this.angle(this.cv)  // Angle
+                                , sa = this.startAngle          // Previous start angle
+                                , sat = this.startAngle         // Start angle
+                                , ea                            // Previous end angle
+                                , eat = sat + a                 // End angle
+                                , r = 1;
+
+                            this.g.lineWidth = this.lineWidth;
+
+                            this.o.cursor
+                                && (sat = eat - 0.3)
+                                && (eat = eat + 0.3);
+
+                            if (this.o.displayPrevious) {
+                                ea = this.startAngle + this.angle(this.v);
+                                this.o.cursor
+                                    && (sa = ea - 0.3)
+                                    && (ea = ea + 0.3);
+                                this.g.beginPath();
+                                this.g.strokeStyle = this.pColor;
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                                this.g.stroke();
+                            }
+
+                            this.g.beginPath();
+                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                            this.g.stroke();
+
+                            this.g.lineWidth = 2;
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.o.fgColor;
+                            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                            this.g.stroke();
+
+                            return false;
+                        }
+                    }
+                });
+                
+                
+                // peity mini chart
+                $("span[data-chart=peity-pie]").peity("pie");
+                $("span[data-chart=peity-line]").peity("line");
+                $("span[data-chart=peity-bar]").peity("bar");
+                
+                // colours peity chart
+                $("[data-chart=bar-colours-1]").peity("bar", {
+                    colours: ["red", "green", "blue"]
+                });
+
+                $("[data-chart=bar-colours-2]").peity("bar", {
+                    colours: function(value) {
+                        return value > 0 ? "green" : "red"
+                    }
+                });
+
+                $("[data-chart=bar-colours-3]").peity("bar", {
+                    colours: function(_, i, all) {
+                        var g = parseInt((i / all.length) * 255)
+                        return "rgb(255, " + g + ", 0)"
+                    }
+                });
+
+                $("[data-chart=pie-colours-1]").peity("pie", {
+                    colours: ["cyan", "magenta", "yellow", "black"]
+                });
+
+                $("[data-chart=pie-colours-2]").peity("pie", {
+                    colours: function(_, i, all) {
+                        var g = parseInt((i / all.length) * 255)
+                        return "rgb(255, " + g + ", 0)"
+                    }
+                });
+                
+                // dinamic peity chart
+                var updatingChart = $(".updating-chart").peity("line", { width: 64 })
+
+                setInterval(function() {
+                var random = Math.round(Math.random() * 10)
+                var values = updatingChart.text().split(",")
+                values.shift()
+                values.push(random)
+
+                updatingChart
+                    .text(values.join(","))
+                    .change()
+                }, 1000);
+                
+            });
+            
+        </script>
+    </body>
+</html>
