@@ -26,20 +26,31 @@
 		<script src="vendor/threex/THREEx.WindowResize.js"></script>
 		<script src="vendor/threex.dragpancontrols.js"></script>
 		<script src='vendor/threex/THREEx.KeyboardState.js'></script>
-
-	<!--### 	Other vendor imports 	###-->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="vendor/random.js/random-0.26.js"></script>
+
+		<script src="js/main.js"></script>
+		<link  href="css/main.css" rel="stylesheet"/>
+
+        <!--### 	Other vendor imports 	###-->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+		<!-- jquery-ui -->
+		<script src="vendor/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js"></script>
+		<link  href="vendor/jquery-ui-1.10.2.custom/css/cupertino/jquery-ui-1.10.2.custom.css" rel="stylesheet"/>
+
+        <!-- shader files -->
 		<script src="shaders/vertexSky.vs" type="x-shader/x-vertex" id="vertexSky"></script>
 		<script src="shaders/fragmentSky.fs" type="x-shader/x-fragment" id="fragmentSky"></script>
 		<script src="shaders/vertexGround.vs" type="x-shader/x-vertex" id="vertexGround"></script>
 		<script src="shaders/fragmentGround.fs" type="x-shader/x-fragment" id="fragmentGround"></script>
 		
-	<!--### 	Bootstrap sand Styles 	###-->
+        <!--### 	Bootstrap sand Styles 	###-->
 		<link  href="css/main.css" rel="stylesheet">
 		<link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">
 		  body {
-			padding-top: 60px;
+			padding-top: 40px;
 			padding-bottom: 40px;
 		  }
 		  .sidebar-nav {
@@ -67,7 +78,7 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 			
-	</head>
+</head>
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -80,7 +91,7 @@
           <a class="brand" href="http://www.rsimulate.com">rSimulate</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
+                <span id="userinfo">Login</span>
             </p>
             <ul class="nav">
               <li class="active"><a href="#">About</a></li>
@@ -93,15 +104,43 @@
         </div>
       </div>
     </div>
-		<!-- info on screen display -->
+	<!-- info on screen display -->
 
 		
 	<!-- three.js container -->
-<!--<div class="container-fluid"> -->
+    <!--<div class="container-fluid"> -->
 	<div id="container">
-	<div id="info">
-	<div class="top">
-	</div>
+	    <div id="info">
+	        <div class="top">
+            </div>
+		</div>
+	
+        <div id="loginDialog">
+            <span id="signinButton">
+              <span
+                class="g-signin"
+                data-callback="signinCallback"
+                data-clientid="740285172805.apps.googleusercontent.com"
+                data-cookiepolicy="single_host_origin"
+                data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.me">
+              </span>
+            </span>
+        </div>
+
+		<div id="simulationsDialog" class="no-show"></div>
+
+		<div id="createSimulationDialog" class="no-show">
+			Name: <input name="name"/><br/>
+			Bodies Engine: <select name="bodiesEngine"></select></br>
+			Terrain Engine: <select name="terrainEngine"></select></br>
+			Agent Engine: <select name="agentEngine"></select></br>
+		</div>
+
+        <div id="simulationInfoDialog" class="no-show">
+            Created: <span class="dateCreated"></span>
+        </div>
+		
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
 			 n and m for time accel/decel
@@ -111,7 +150,8 @@
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var moongeometry,moonmaterial,moonmesh;
-		var camera, cameraControl;
+		var camera, cameraControls;
+        var projector;
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline;
@@ -119,12 +159,306 @@
 
 		var camMODE = 1;
 		var camTARGET = 0;
+		var hexOutline, selectedHex;
+        var bodies = [];
+        var accessToken;
 
-		shaders = {vertex: [], fragment: []};
-		scene = new THREE.Scene();
+		var shaders = {vertex: [], fragment: []};
+		var scene = new THREE.Scene();
 		var keyboard = new THREEx.KeyboardState();
 
+		function getLinkByRel(links, rel, fn) {
+			for (var i in links) {
+				if (links[i].rel == rel) {
+					return fn(links[i].href);
+				}
+			}
+			console.log('Could not find rel: ' + rel);
+			return null;
+		}
+
+        function signinCallback(authResult) {
+          if (authResult['access_token']) {
+            // Successfully authorized
+            // Hide the sign-in button now that the user is authorized, for example:
+            document.getElementById('signinButton').setAttribute('style', 'display: none');
+            var $loginDialog = $('#loginDialog');
+            accessToken = authResult['access_token'];
+            $loginDialog.dialog('close');
+			initMetaSimAPI('1.0', accessToken, function(engines, simulations, me) {
+				showSimulationsDialog(engines, simulations);
+                displayUserInformation(me);
+			});
+          } else if (authResult['error']) {
+            // There was an error.
+            // Possible error codes:
+            //   "access_denied" - User denied access to your app
+            //   "immediate_failed" - Could not automatically log in the user
+            console.log('There was an error: ' + authResult['error']);
+          }
+        }
+
+        function disconnectUser(access_token) {
+            var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + accessToken;
+
+            // Perform an asynchronous GET request.
+            $.ajax({
+              type: 'GET',
+              url: revokeUrl,
+              async: false,
+              contentType: "application/json",
+              dataType: 'jsonp',
+              success: function(nullResponse) {
+                // Do something now that user is disconnected
+                // The response is always undefined.
+                showLoginDialog();
+              },
+              error: function(e) {
+                // Handle the error
+                console.log(e);
+                // You could point users to manually disconnect if unsuccessful
+                // https://plus.google.com/apps
+              }
+            });
+        }
+
+        function showLoginDialog() {
+            $('#userinfo').empty().append(
+                '    <span id="username"></span>' +
+                '    <span id="userImage"></span>' +
+                '    <a id="logout">Logout</a>');
+
+            $('#userinfo').hide();
+            $('#signinButton').show();
+            var $loginDialog = $('#loginDialog');
+            $loginDialog.dialog({
+                draggable: false,
+                resizeable: false,
+                title: 'Login'
+            }); 
+        }
+
+        function displayUserInformation(me) {
+            $('#username').text(me.displayName);
+            $('#userImage').empty().append('<img src="' + me.image.url + '" height="18" width="18" />');
+            $('#userinfo').show();
+        }
+
+		function showSimulationInfoDialog(simulation, $parentDialog) {
+			// Show simulation info dialog
+			var $simulationInfoDialog = $('#simulationInfoDialog');
+			var $name = $simulationInfoDialog.find('.name');
+			var $dateCreated = $simulationInfoDialog.find('.dateCreated');
+
+			$name.text(simulation.name);
+            console.log(simulation.date_created);
+			$dateCreated.text((new Date(simulation.date_created).toDateString()));
+			$simulationInfoDialog.dialog({
+				draggable: false,
+				resizeable: false,
+				title: simulation.name,
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Resume",
+						click: function() {
+                            $simulationInfoDialog.dialog('close');
+                            $parentDialog.dialog('close');
+							// Change scene to new simulation
+                            var loadSceneResult = loadScene(simulation);
+                            scene = loadSceneResult.scene;
+                            bodies = loadSceneResult.bodies;
+
+			                // put a camera in the scene
+                            camera = addCamera(scene);
+
+			                // create a camera contol
+			                cameraControls	= new THREE.OrbitControls(camera)
+			                skymesh = drawSkyBox();
+						}
+					}, {
+						text: "Delete",
+						click: function() {
+							// DELETE to simulations resource
+							getLinkByRel(simulation.links, '/rel/delete', function(deleteSimulationUri) {
+								$.ajax({
+									type: 'DELETE',
+									url: deleteSimulationUri,
+									success: function(response, status, jqXHR) {
+										// go back to simulations dialog box
+										$simulationInfoDialog.dialog('close');
+										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
+											$simulationInfoDialog.dialog('close');
+											showSimulationsDialog(engines, simulations);
+										});
+									}
+								});			
+							});
+						}
+					}	
+				]
+			});
+		}
+
+		function showCreateSimulationDialog(engines, simulations, $parentDialog) {
+			// Show create simulation dialog
+			var $createSimulationDialog = $('#createSimulationDialog');
+			var $bodiesEngineSelect = $createSimulationDialog.find('select[name=bodiesEngine]');
+			var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
+			var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
+			for (var i in engines) {
+				var engine = engines[i];
+				if (engine.type == 'bodies') {
+					$bodiesEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+				else if (engine.type == 'terrain') {
+					$terrainEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+				else if (engine.type == 'agent') { 
+					$agentEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
+				}
+			}
+			$createSimulationDialog.dialog({
+				draggable: false,
+				resizeable: false,
+				title: 'New Simulation',
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Create",
+						click: function() {
+							// POST to simulations resource
+							getLinkByRel(simulations.links, '/rel/add', function(addSimulationUri) {
+								$.ajax({
+									type: 'POST',
+									url: addSimulationUri,
+									data: JSON.stringify({
+										name: $createSimulationDialog.find('input[name=name]').val(),
+										bodies_engine_name: $bodiesEngineSelect.find(':selected').val(),
+										terrain_engine_name: $terrainEngineSelect.find(':selected').val(),
+										agent_engine_name: $agentEngineSelect.find(':selected').val()
+									}),
+									contentType: 'application/json; charset=utf-8',
+									success: function(response, status, jqXHR) {
+										var simulationUri = jqXHR.getResponseHeader('location');
+										console.log('created simulation @ ' + simulationUri);
+										$.getJSON(simulationUri, function(response) {
+											$createSimulationDialog.dialog('close');
+											showSimulationInfoDialog(response, $parentDialog);
+										});
+									}
+								});			
+							});
+						}
+					}
+				]
+			});
+		}
+
+		function showSimulationsDialog(engines, simulations) {
+			var $simulationsDialog = $('#simulationsDialog');
+			if (simulations.active.length > 0) {
+				// Add a <ul> to the dialog
+                var $dialogUl = $('<ul></ul>');
+                $simulationsDialog.empty().append($dialogUl);
+				for (var i in simulations.active) {
+					var simulation = simulations.active[i];
+					// Add all of the simulation names as <li>'s.
+					var $link = $('<a>' + (simulation.name || 'unknown') + '</a>');
+                    // properly create a closure of simulation. see http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example
+                    $link.click(function(simulation) {
+                        return function() {
+						    getLinkByRel(simulation.links, 'self', function(simulationUri) {
+						    	$.getJSON(simulationUri, function(response) {
+						    		$simulationsDialog.dialog('close');
+						    		showSimulationInfoDialog(response, $simulationsDialog);
+						    	});
+						    });
+                        };
+					}(simulation));
+					$dialogUl.append($('<li></li>').append($link));
+				}
+			} else {
+				// Simulation.length == 0; no simulations
+				$simulationsDialog.empty().append('<i>none</i>');
+			}
+			$simulationsDialog.dialog({
+				dialogClass: "no-close",
+				draggable: false,
+				resizeable: false,
+				title: 'Simulations',
+				buttons: [
+					{
+						text: "Create",
+						click: function() {
+							// Hide simulations dialog
+							$simulationsDialog.dialog('close');
+							showCreateSimulationDialog(engines, simulations, $simulationsDialog);
+						}
+					}
+
+				]
+			});
+
+		}
+
+		function initMetaSimAPI(requestedVersion/*string*/, accessToken/*string*/, fn/*(engines, simulations, me)*/) {
+			// Get versions
+			$.getJSON('/metasim?accessToken=' + accessToken, function(response) {
+				if (response.versions != undefined) {
+					for (var i in response.versions) {
+						var version = response.versions[i];
+						if (version.id === '1.0') {
+							getLinkByRel(version.links, '/rel/entrypoint', function(entryPointUri) {
+								console.log('Got entrypoint 1.0: ' + entryPointUri);
+								// Get version 1.0
+								$.getJSON(entryPointUri, function(entryPointResponse) {
+									console.log('Got ' + JSON.stringify(response) + ' from entrypoint');
+									getLinkByRel(entryPointResponse.links, '/rel/engines', function(enginesUri) {
+										$.getJSON(enginesUri, function(response) {
+											var engines = response.engines;
+											getLinkByRel(entryPointResponse.links, '/rel/simulations', function(simulationsUri) {
+												// Get simulations
+                                                $.getJSON(simulationsUri, function(response) {
+                                                    var simulations = response;
+                                                    getLinkByRel(entryPointResponse.links, '/rel/user/me', function(userUri) {
+                                                        $.getJSON(userUri, function (response) {
+                                                            var me = response;
+													        fn(engines, simulations, me);
+                                                        });
+                                                    });
+												});
+											});
+										});
+									});
+								});
+							});
+							break;
+						}
+					}
+				}
+			});
+
+		}
 		$(function(){
+            // With Stars For Eyes” (by h+) http://freemusicarchive.org/music/h_1657/Giga/Wood__Wire_-_GIGA_-_04_With_Stars_For_Eyes
+            // With Stars For Eyes by h+ is licensed under a Attribution-NonCommercial-NoDerivatives (aka Music Sharing) License.
+            var audio = new Audio('audio/78caa984d4ead66a2cdf1e7216b6f2677fdbd791.mp3'); 
+            audio.addEventListener('ended', function() {
+                audio.currentTime = 0;
+                audio.play();
+            }, false);
+            audio.loop = true;
+            audio.play();
+
+            showLoginDialog();
+            $('#logout').click(function() {
+                disconnectUser();
+            });
 			var $shaderScripts = $("script[type='x-shader/x-vertex']").
 				add("script[type='x-shader/x-fragment']");
 			var latch = $shaderScripts.length;
@@ -143,12 +477,13 @@
 			});
 		});
 
-		// init the scene
+		// init three.js
 		function init(){
 			if(Detector.webgl){
 				renderer = new THREE.WebGLRenderer({
 					antialias		: true,	// to get smoother output
-					preserveDrawingBuffer	: true	// to allow screenshot
+					preserveDrawingBuffer	: true,	// to allow screenshot
+					clearAlpha: 1
 				});
 				renderer.setClearColorHex(0xBBBBBB, 1);
 			}else{
@@ -167,12 +502,11 @@
 			projector = new THREE.Projector();	
 
 			// put a camera in the scene
-			camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .01, 50000);
-			camera.position.set(0, 0, 15);
-			scene.add(camera);
+            camera = addCamera(scene);
 
 			// create a camera contol
-			cameraControls	= new THREE.OrbitControls(camera)
+            // no camera controls for menu
+			//cameraControls	= new THREE.OrbitControls(camera)
 
 			// transparently support window resize
 			THREEx.WindowResize.bind(renderer, camera);
@@ -185,19 +519,43 @@
 			}
 
 			skymesh = drawSkyBox();
-			light = lights();
-			planet = createTerra(2,THREE.ImageUtils.loadTexture('images/TEWworld.jpg')); // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
-			planet.planet.translateX(146.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
+			light = lights(scene);
+			bodies = [createPlanet(scene, 2, 'images/TEWworld.jpg', 'images/TEWworld-night.jpg', false)]; // DO NOT PUT ABOVE 3 THIS CLASS IS A WORK IN PROGRESS
+			bodies[0].planet.translateX(1.60); // let's just say that this is 149.60E6 km from the sun at (0,0,0).
 			
-			//Creating the moon an alternative way
-			moonmesh = createRocky(0.9, 4);//createWorld('rocky','','');
-
-			drawOrbit(146.6,0x0000FF, 0, 0, 0);
-			drawOrbit(820,0xFE2E64, 0, 0, 0);
-		    drawOrbit(86.45,0xFF0000, 0, 0, 0);
-			drawOrbit(15.0,0xFFFF00, planet.planet.position.x, planet.planet.position.z, 0);
-
-
+			var geometry = new THREE.Geometry();//PROTOCODE FOR orbits needs ecentricity
+			var radius = 149.6;
+			var i = 0;
+			while(i < 6.437) {
+			i += 0.01;
+			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i), 0 , radius * Math.sin(i))); 
+			
+			}
+			
+			var material = new THREE.LineBasicMaterial({
+				color: 0x0000FF,
+				linewidth: 10});
+			
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+			
+			
+				
+			var geometry = new THREE.Geometry();//moons orbital line
+			var radius = 15
+			var i = 0;
+			while(i < 6.437) {
+			i += 0.01;
+			geometry.vertices.push(new THREE.Vector3(radius * Math.cos(i) + bodies[0].planet.position.x, 0 , radius * Math.sin(i) + bodies[0].planet.position.z)); 
+			
+			}
+			
+			var material = new THREE.LineBasicMaterial({
+				color: 0xFFFF00,
+				linewidth: 10});
+			
+			var line = new THREE.Line(geometry, material);
+			//scene.add(line);
 		}
 
 		// animation loop
@@ -222,7 +580,7 @@
 			var time = PIseconds * timeAccel;
 			var semimajoraxis = 7;    		// Turn into parameter
 			var eccentricity = 0.0549; 		// Turn into parameter
-			var angularvelocity = 0.01;		// Turn into paratmeter
+			var angularvelocity = 0.003;		// Turn into paratmeter
 			var orbitphase = angularvelocity * time;
 			var radius = semimajoraxis * ((1.0 - eccentricity^2)/(1.0 + eccentricity * Math.cos(orbitphase)));
 			var inclination = 6.0 ;
@@ -231,39 +589,47 @@
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
 			var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
 
-			moonmesh.rotation.y += rotationspeed;	// Moon rotation
-			//Moon's orbit
-			moonmesh.position.x = radius * Math.cos(orbitphase) + planet.planet.position.x;
-			moonmesh.position.z = radius * Math.sin(orbitphase) + planet.planet.position.z;
-			moonmesh.position.y = height + planet.planet.position.y;
-
 			var camangularvelocity = 0.002;//added camera rotation.
+			
+			var camangularvelocity = 0.001;//added camera rotation.
 			var camsemimajoraxis = 3; 
 			var camorbitphase = camangularvelocity * time;
 			var cameccentricity = 0.0549;
 			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 
-			CameraTarget();
-		
+            if (cameraControls) {
+			    CameraTarget(cameraControls, bodies);
+	        }
+			
+			camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
+			camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
+			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
+			//camera.position.z = camradius * Math.sin(camorbitphase);
+			
+			// update camera controls
+            if (cameraControls != null) {
+                cameraControls.update();
+            }
+			camera.lookAt(bodies[0].planet.position);
 
 			// animation of all objects
 			// TODO
 
 			skymesh.position = camera.position;
-			var lightposition = light.position.clone().sub(planet.planet.position).normalize();
-			var cameraHeight = camera.position.clone().sub(planet.planet.position).length();
+			var lightposition = light.position.clone().sub(bodies[0].planet.position).normalize();
+			var cameraHeight = camera.position.clone().sub(bodies[0].planet.position).length();
 			var planetInverse = new THREE.Matrix4();
-			planetInverse.getInverse(planet.planet.matrixWorld.clone());
+			planetInverse.getInverse(bodies[0].planet.matrixWorld.clone());
 
-  			planet.atmosphere.material.uniforms.v3LightPosition.value = lightposition;
-  			planet.atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
-  			planet.atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
-  			planet.atmosphere.material.uniforms.m4ModelInverse.value = planetInverse;
-  			planet.planet.material.uniforms.v3CameraPosition.value = camera.position.clone();
-  			planet.planet.material.uniforms.v3LightPosition.value = lightposition;
-  			planet.planet.material.uniforms.fCameraHeight.value = cameraHeight;
-			planet.planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
-  			planet.planet.material.uniforms.m4ModelInverse.value = planetInverse;
+  			bodies[0].atmosphere.material.uniforms.v3LightPosition.value = lightposition;
+  			bodies[0].atmosphere.material.uniforms.fCameraHeight.value = cameraHeight;
+  			bodies[0].atmosphere.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+  			bodies[0].atmosphere.material.uniforms.m4ModelInverse.value = planetInverse;
+  			bodies[0].planet.material.uniforms.v3CameraPosition.value = camera.position.clone();
+  			bodies[0].planet.material.uniforms.v3LightPosition.value = lightposition;
+  			bodies[0].planet.material.uniforms.fCameraHeight.value = cameraHeight;
+			bodies[0].planet.material.uniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+  			bodies[0].planet.material.uniforms.m4ModelInverse.value = planetInverse;
 
 
 			// actually render the scene
@@ -302,36 +668,35 @@
 				camera.position,
 				vector.sub(camera.position).normalize());
 
-			var intersects = raycaster.intersectObjects([planet]);	
+			var intersects = raycaster.intersectObjects([bodies[0].hex]);	
 		    if (intersects.length > 0) {
 				var p = intersects[ 0 ].point;
-				var v0 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.a]
-				var v1 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.b]
-				var v2 = intersects[ 0 ].object.geometry.vertices[intersects[ 0 ].face.c]
-				var d0 = p.sub(v0).lengthSq();
-				var d1 = p.sub(v1).lengthSq();
-				var d2 = p.sub(v2).lengthSq();
+				var v0 = intersects[ 0 ].face.a;
+				var v1 = intersects[ 0 ].face.b;
+				var v2 = intersects[ 0 ].face.c;
+				var d0 = p.sub(intersects[ 0 ].object.geometry.vertices[v0]).lengthSq();
+				var d1 = p.sub(intersects[ 0 ].object.geometry.vertices[v1]).lengthSq();
+				var d2 = p.sub(intersects[ 0 ].object.geometry.vertices[v2]).lengthSq();
 
 				// v is the vertex id closest to the intersection point and also
 				// the vertex id of the center of the hexagon
 				var v;
 				if (d0 < d1 && d0 < d2) {
-					v = intersects[0].face.a;
+					v = v0;
 				} else if (d1 < d0 && d1 < d2) {
-					v = intersects[0].face.b;
+					v = v1;
 				}  else if (d2 < d0 && d2 < d1) {
-					v = intersects[0].face.c;
+					v = v2;
 				}
+
+				// save selectedHex for later for use in getSelectedHex, findNeighbors, isPentagon.
+				selectedHex = { object: intersects[0].object, id: v };
 
 				// find all of the centers of faces that share the vertex id of the of the center of the hex
 				var hexVertices = [];
 				for (var i in intersects[0].object.geometry.faces) {
 					var face = intersects[0].object.geometry.faces[i];
-					if (face.a == v) {
-						hexVertices.push(face.centroid);
-					} else if (face.b == v) {
-						hexVertices.push(face.centroid);
-					} else if (face.c == v) {
+					if (face.a == v || face.b == v || face.c == v) {
 						hexVertices.push(face.centroid);
 					}
 				}
@@ -340,7 +705,8 @@
 				do {
 					var lastSortedVertex = sortedHexVertices[sortedHexVertices.length - 1];
 					// find vertex closest to last sorted vertex
-					var dSqMin = 10000000, idx;
+					var dSqMin = Infinity;
+					var idx;
 					for (var i in hexVertices) {
 						var dSq = lastSortedVertex.clone().sub(hexVertices[i]).lengthSq();
 						if (dSq < dSqMin) {
@@ -365,25 +731,67 @@
 				// wrap around a little more so that line joining works correctly between the start and end points
 				geometry.vertices.push(sortedHexVertices[1]);
 
-
 				var material = new THREE.LineBasicMaterial({
 					color: 0xFF0000,
-					linewidth: 10});
+					linewidth: 5});
 
 				// remove the outline if it already exists
 				if (hexOutline != null || hexOutline != undefined) {
-					scene.remove(hexOutline);
+					bodies[0].planet.remove(hexOutline);
 				}
 				hexOutline = new THREE.Line(geometry, material);
 				hexOutline.scale.x = 1.01;
 				hexOutline.scale.y = 1.01;
 				hexOutline.scale.z = 1.01;
 
-				scene.add(hexOutline);
+				
+				bodies[0].planet.add(hexOutline);
+				console.log("selected hex: " + getSelectedHex().object.name + " " + getSelectedHex().id);
+				console.log("neighbors: " + JSON.stringify($.map(findNeighbors(getSelectedHex()), function(e) {
+					return e.id})));
+				console.log("isPentagon?: " + JSON.stringify(isPentagon(getSelectedHex())));
 		    }
 		}		
-	
+		// Returns undefined if no hex has been selected or returns {mesh: Object, id: int}
+		function getSelectedHex() {
+			return selectedHex;
+		}
+
+		function findNeighbors(hex) {
+			// find all of the vertices of faces that share a vertex with the center of the hex 
+			var neighborVertices = [];
+			for (var i in hex.object.geometry.faces) {
+				var face = hex.object.geometry.faces[i];
+				if (face.a == hex.id) {
+					neighborVertices.push(face.b);
+					neighborVertices.push(face.c);
+				} else if (face.b == hex.id) {
+					neighborVertices.push(face.a);
+					neighborVertices.push(face.c);
+				} else if (face.c == hex.id) {
+					neighborVertices.push(face.a);
+					neighborVertices.push(face.b);
+				}
+			}
+
+			// remove duplicate entries
+			return $.map(neighborVertices.filter(function(elem, pos, self) {
+				return self.indexOf(elem) == pos;
+			}), function (elem) {
+				return { object: hex.object, id: elem };
+			});
+		}
+
+		function isPentagon(hex) {
+			return findNeighbors(hex).length == 5;
+		}
 	</script>
-	</div>
+    <script type="text/javascript">
+      (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/client:plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+    </script> 
 </body>
 </html>
