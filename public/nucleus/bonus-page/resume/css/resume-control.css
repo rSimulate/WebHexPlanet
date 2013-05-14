@@ -1,0 +1,39 @@
+/** css for box controller, you can edit or delete this.*/
+
+.controller{
+	position: fixed;
+	top:20px;
+	right:20px;
+	border: 1px solid #D7D7D7;
+	padding: 5px;
+	display: inline-block;
+	width: 100px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px #f1f1f1;
+        background: #FFFFFF;
+}
+.controller ul{
+	list-style-type: none;
+	margin: 0px;
+	margin-top: 20px;
+	margin-bottom: 5px;
+}
+
+.controller ul li{
+	list-style-type: none;
+	margin: 0px;
+}
+
+.controller ul li a.avail-color{
+	display: block;
+	height: 20px;
+}
+
+
+
+
+@media print{
+	.controller{
+		display: none;
+	}
+}

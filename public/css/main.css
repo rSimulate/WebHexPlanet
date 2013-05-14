@@ -22,13 +22,13 @@ body {
 #info a:hover {
 	text-decoration	: underline;
 }
-#info .bottom {
+.bottom {
 	position	: absolute;
 	bottom		: 0px;
 	right		: 5px;
 	padding		: 5px;
+	color		: #FFF;
 }
-
 #username {
     color:#cccccc;
 }
@@ -59,3 +59,6 @@ body {
     color: #ffffff;
 }
 
+.no-show {
+    display: none;
+}
