@@ -158,7 +158,7 @@
 		var camorbitphase = 0;
 		var camsemimajoraxis = 3.0; 
 
-        var projector;
+    var projector;
 		var gui;
 		var mouse = { x: 0, y: 0 };
 		var hexOutline;
@@ -512,7 +512,7 @@
             camera = addCamera(scene);
 
 			// create a camera contol
-            // no camera controls for menu
+      // no camera controls for menu
 			//cameraControls	= new THREE.OrbitControls(camera)
 
 			// transparently support window resize
@@ -576,9 +576,9 @@
 			requestAnimationFrame(animate);
 			
 			// update camera controls
-            if (cameraControls) {
-			    cameraControls.update();
-            }
+      if (cameraControls) {
+			  cameraControls.update();
+      }
 			// do the render
 			render();
 
@@ -600,51 +600,51 @@
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-			var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
-						
-			//moonmesh.rotation.y += rotationspeed;	// Moon rotation
-			//Moon's orbit
-			//moonmesh.position.x = radius * Math.cos(orbitphase) + bodies[0].planet.position.x;
-			//moonmesh.position.z = radius * Math.sin(orbitphase) + bodies[0].planet.position.z;
-			//moonmesh.position.y = height + bodies[0].planet.position.y;
+      var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
+            
+      //moonmesh.rotation.y += rotationspeed; // Moon rotation
+      //Moon's orbit
+      //moonmesh.position.x = radius * Math.cos(orbitphase) + bodies[0].planet.position.x;
+      //moonmesh.position.z = radius * Math.sin(orbitphase) + bodies[0].planet.position.z;
+      //moonmesh.position.y = height + bodies[0].planet.position.y;
 
-			var camangularvelocity = 0.002;//added camera rotation.
-			
-			var camangularvelocity = 0.001;//added camera rotation.
-			var camsemimajoraxis = 3; 
-			var camorbitphase = camangularvelocity * time;
-			var cameccentricity = 0.0549;
-			var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+      var camangularvelocity = 0.002;//added camera rotation.
+      
+      var camangularvelocity = 0.001;//added camera rotation.
+      var camsemimajoraxis = 3; 
+      var camorbitphase = camangularvelocity * time;
+      var cameccentricity = 0.0549;
+      var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 
             if (cameraControls) {
-			    CameraTarget(cameraControls, bodies);
-	        }
-			
-			camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
-			camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
-			//camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
-			//camera.position.z = camradius * Math.sin(camorbitphase);
-			
-			// update camera controls
+          CameraTarget(cameraControls, bodies);
+          }
+      
+      camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
+      camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
+      //camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
+      //camera.position.z = camradius * Math.sin(camorbitphase);
+      
+      // update camera controls
             if (cameraControls != null) {
                 cameraControls.update();
             }
-			camera.lookAt(bodies[0].planet.position);
+      camera.lookAt(bodies[0].planet.position);
 
-			var cameraOffset = camera.position.clone().sub(cameraTarget.position);
+      var cameraOffset = camera.position.clone().sub(cameraTarget.position);
 
-			if (isCameraRotatingAutomatically) {
-				var camangularvelocity = 0.100; //added camera rotation.
-				
+      if (isCameraRotatingAutomatically) {
+        var camangularvelocity = 0.100; //added camera rotation.
+        
 
-				// keep the cam orbit phase within 2*pi radians
-				camorbitphase += camangularvelocity * (time - timeOfLastRender);
-				camorbitphase %= 2.0 * Math.PI;
-			} else {
-				// we need to know where in the phase we've been dragged to,
-				// so when rotation starts again it can be seamless
-				camorbitphase = Math.atan2(cameraOffset.z,cameraOffset.x);
-			}
+        // keep the cam orbit phase within 2*pi radians
+        camorbitphase += camangularvelocity * (time - timeOfLastRender);
+        camorbitphase %= 2.0 * Math.PI;
+      } else {
+        // we need to know where in the phase we've been dragged to,
+        // so when rotation starts again it can be seamless
+        camorbitphase = Math.atan2(cameraOffset.z,cameraOffset.x);
+      }
 				
 			// zoom can change the radius of our camera orbit
 			// knowing what the camorbitphase is, and what our current X-Z distance is from our target, we need to simulate winding the orbit to camorbitphase=0
@@ -663,9 +663,9 @@
 				camera.position.z = camradius * Math.sin(camorbitphase) + cameraTarget.position.z;
 			}
 
-            if (cameraControls) {
-			    cameraControls.center = cameraTarget.position.clone();
-            }
+      if (cameraControls) {
+			   cameraControls.center = cameraTarget.position.clone();
+      }
 			camera.lookAt(cameraTarget.position);
 			
 			// animation of all objects
