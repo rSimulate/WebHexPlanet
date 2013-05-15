@@ -58,7 +58,7 @@ function getUser(client, accessToken, callback) {
         res.on('end', function() {
             var jsonBody = JSON.parse(body);
             console.log('got me results: ' + body);
-            callback(body);
+            callback(jsonBody);
         });
     });
 }
@@ -134,13 +134,13 @@ mongo.connect(mongoUri, {}, function(error, db) {
 
     // Create default admin users
     // Tom
-    db.collection('users').update({id:115530733245482981656}, {
+    db.collection('users').update({id:'115530733245482981656'}, {
         id:115530733245482981656,
-        admin: true}, {upsert, true});
+        admin: true}, {upsert: true});
     // Aaron
-    db.collection('users').update({id:113479285279093781959}, {
-        id:113479285279093781959,
-        admin: true}, {upsert, true});
+    db.collection('users').update({id:'113479285279093781959'}, {
+        id: '113479285279093781959',
+        admin: true}, {upsert: true});
 
     // Create a default route to pass unknown uris to engines (if they exist)
     var proxy = new httpProxy.RoutingProxy();
@@ -196,8 +196,10 @@ mongo.connect(mongoUri, {}, function(error, db) {
         if (request.params.version == '1.0') {
             var accessToken = request.query.accessToken;
             getUser(https, accessToken, function(me) {
-                    console.log('got me results: ' + JSON.stringify(me));
-                    response.send(me);
+                console.log('got me results: ' + JSON.stringify(me));
+                db.collection('users').findOne({id:me.id.toString()}, function(err, user) {
+                    response.send(extend(me, user));
+                });
             });
         }
     });
