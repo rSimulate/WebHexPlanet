@@ -1,0 +1,182 @@
+
+html, body {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-image: url('/static/images/grass_tiny.png');
+}
+
+#colorpicker {
+    display: none;
+}
+
+#crosshair {
+    display: none;
+    position: fixed;
+}
+
+#dropper {
+    display: none;
+    position: fixed;
+}
+
+#projectBlobsize {
+    color: #333333 !important;
+    text-shadow: none !important;
+}
+
+#renderer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+#help {
+    position: fixed;
+    padding: 32px;
+    display: none;
+    border-radius: 8px;
+    color: white;
+    background-color: rgba(0,0,0,0.75);
+    box-shadow: 0 0 16px #000;
+}
+
+#helphelp {
+    position: fixed;
+    bottom: 4px;
+    right: 4px;
+    background-color: white;
+    color: black;
+    padding: 4px;
+    opacity: 0.25;
+    border-radius: 0px;
+    display: none;
+    font-weight: bold;
+}
+
+#needToSaveButNotLoggedIn {
+    position: fixed;
+    bottom: 4px;
+    left: 4px;
+    background-color: red;
+    color: white;
+    padding: 4px;
+    opacity: 1;
+    border-radius: 0px;
+    display: none;
+    font-weight: bold;
+}
+
+#needToSave {
+    position: fixed;
+    bottom: 4px;
+    left: 4px;
+    background-color: red;
+    color: white;
+    padding: 4px;
+    opacity: 1;
+    border-radius: 0px;
+    display: none;
+    font-weight: bold;
+}
+
+#interactcue {
+    width:512px; 
+    height:128px; 
+    position: absolute; 
+    left: 50%; 
+    margin-left: -256px; 
+    top: -64px; 
+    text-align: center;
+    font-size: 64px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0px 0px 4px #000;
+    opacity: 0.5;
+}
+
+#toolConsoleModal .modal-body {
+    height: 400px;
+}
+
+#toolConsoleModal {
+    width: 90%;
+    margin: 0px 0 0 -45%;
+}
+
+#menu {
+    position: fixed;
+    top:0px;
+    left: 0px;
+    width: 100%;
+}
+
+.menu-info {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #0088FF;
+    cursor: default;
+}
+
+.hand {
+    cursor: pointer;
+}
+
+#projectBanner {
+    position: fixed;
+    display: block;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-image: url('/static/images/light_toast.png');
+    color: #555;
+    text-shadow: 0px 3px 2px #fff, 0px 2px 1px #fff, 0px 1px 0px #fff;
+    box-shadow: 0px 0px 10px #000;
+    padding: 16px;
+    text-align: right;
+}
+
+#projectName {
+    font-size: 48px;
+    text-align: left;
+    border-left: 1px solid #888;
+}
+
+#spinner {
+    position:fixed; 
+    color: black; 
+    background: white;
+    padding: 16px;
+    border-radius: 3px;
+    border: 1px solid black;
+    display: none;
+    z-index: 10000;
+}
+
+#preloader {
+    z-index: 10001;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
