@@ -58,7 +58,7 @@ function getUser(client, accessToken, callback) {
         res.on('end', function() {
             var jsonBody = JSON.parse(body);
             console.log('got me results: ' + body);
-            callback(body);
+            callback(jsonBody);
         });
     });
 }
@@ -92,29 +92,55 @@ mongo.connect(mongoUri, {}, function(error, db) {
 
     // setup default data for engines
     db.collection('engines').update({name: 'BodiesReferenceEngine'}, {
-        name: 'BodiesReferenceEngine',
+        name: 'BodiesReferenceEngine (Heroku)',
         type: 'bodies',
-        //href: 'http://metasimBodiesReferenceEngine.herokuapp.com/metasim/1.0',
+        href: 'http://metasimBodiesReferenceEngine.herokuapp.com/metasim/1.0',
+        version: '1.0'}, {upsert: true});
+    db.collection('engines').update({name: 'BodiesReferenceEngine'}, {
+        name: 'BodiesReferenceEngine (local)',
+        type: 'bodies',
         href: 'http://localhost:5004/metasim/1.0',
         version: '1.0'}, {upsert: true});
     db.collection('engines').update({name: 'TerrainReferenceEngine'}, {
-        name: 'TerrainReferenceEngine',
+        name: 'TerrainReferenceEngine (Heroku)',
         type: 'terrain',
-        //href: 'http://metasimTerrainReferenceEngine.herokuapp.com/metasim/1.0',
+        href: 'http://metasimTerrainReferenceEngine.herokuapp.com/metasim/1.0',
+        version: '1.0'}, {upsert: true});
+    db.collection('engines').update({name: 'TerrainReferenceEngine'}, {
+        name: 'TerrainReferenceEngine (local)',
+        type: 'terrain',
         href: 'http://localhost:5001/metasim/1.0',
         version: '1.0'}, {upsert: true});
-       db.collection('engines').update({name: 'WeatherReferenceEngine'}, {
+    db.collection('engines').update({name: 'WeatherReferenceEngine (Heroku)'}, {
         name: 'WeatherReferenceEngine',
         type: 'weather',
-        //href: 'http://metasimWeatherReferenceEngine.herokuapp.com/metasim/1.0',
+        href: 'http://metasimWeatherReferenceEngine.herokuapp.com/metasim/1.0',
+        version: '1.0'}, {upsert: true});
+    db.collection('engines').update({name: 'WeatherReferenceEngine'}, {
+        name: 'WeatherReferenceEngine (local)',
+        type: 'weather',
         href: 'http://localhost:5002/metasim/1.0',
         version: '1.0'}, {upsert: true});
     db.collection('engines').update({name: 'AgentReferenceEngine'}, {
-        name: 'AgentReferenceEngine',
+        name: 'AgentReferenceEngine (Heroku)',
         type: 'agent',
-        //href: 'http://metasimAgentReferenceEngine.herokuapp.com/metasim/1.0',
+        href: 'http://metasimAgentReferenceEngine.herokuapp.com/metasim/1.0',
+        version: '1.0'}, {upsert: true});
+    db.collection('engines').update({name: 'AgentReferenceEngine'}, {
+        name: 'AgentReferenceEngine (local)',
+        type: 'agent',
         href: 'http://localhost:5003/metasim/1.0',
         version: '1.0'}, {upsert: true});
+
+    // Create default admin users
+    // Tom
+    db.collection('users').update({id:'115530733245482981656'}, {
+        id:115530733245482981656,
+        admin: true}, {upsert: true});
+    // Aaron
+    db.collection('users').update({id:'113479285279093781959'}, {
+        id: '113479285279093781959',
+        admin: true}, {upsert: true});
 
     // Create a default route to pass unknown uris to engines (if they exist)
     var proxy = new httpProxy.RoutingProxy();
@@ -170,8 +196,10 @@ mongo.connect(mongoUri, {}, function(error, db) {
         if (request.params.version == '1.0') {
             var accessToken = request.query.accessToken;
             getUser(https, accessToken, function(me) {
-                    console.log('got me results: ' + JSON.stringify(me));
-                    response.send(me);
+                console.log('got me results: ' + JSON.stringify(me));
+                db.collection('users').findOne({id:me.id.toString()}, function(err, user) {
+                    response.send(extend(me, user));
+                });
             });
         }
     });
