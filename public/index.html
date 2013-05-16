@@ -610,9 +610,8 @@
 
       var camangularvelocity = 0.002;//added camera rotation.
       
-      var camangularvelocity = 0.001;//added camera rotation.
       var camsemimajoraxis = 3; 
-      var camorbitphase = camangularvelocity * time;
+      //var camorbitphase = camangularvelocity * time;
       var cameccentricity = 0.0549;
       var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
 
@@ -634,9 +633,6 @@
       var cameraOffset = camera.position.clone().sub(cameraTarget.position);
 
       if (isCameraRotatingAutomatically) {
-        var camangularvelocity = 0.100; //added camera rotation.
-        
-
         // keep the cam orbit phase within 2*pi radians
         camorbitphase += camangularvelocity * (time - timeOfLastRender);
         camorbitphase %= 2.0 * Math.PI;
