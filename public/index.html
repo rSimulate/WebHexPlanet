@@ -158,6 +158,15 @@
 		var camorbitphase = 0;
 		var camsemimajoraxis = 3.0; 
 
+		// for tracking motion of the camera from body to body when selecting new target
+		var isCameraFlying = false;
+		var cameraFlightSource = null;
+		var cameraFlightDestination = null;
+		var cameraFlightDuration = 0;
+		var cameraFlightStartTime = 0;
+		var cameraFlightTarget = {};	// a moving target of our "spaceship" as the camera
+										// flies from body to body
+
     var projector;
 		var gui;
 		var mouse = { x: 0, y: 0 };
@@ -612,6 +621,10 @@
 				handleCameraRotation(time);
 			}
 			
+			if (isCameraFlying) {
+				handleCameraFlight();
+			}
+
 			// animation of all objects
 			// TODO
 
@@ -635,6 +648,86 @@
 
 			// actually render the scene
 			renderer.render(scene, camera);
+		}
+
+		// destinationBody must be object with .position properties
+		// The reason for this is that we want to go to where the object will be,
+		// not where it is now.
+		// flightTime: time in ms to fly from source to destination in straight line
+		function flyCameraTo(destinationBody, flightTime) {
+			if (cameraTarget) {
+				console.log("flying to: ");
+				console.log(destinationBody);
+				console.log("t=" + flightTime);
+
+				isCameraFlying = true;
+				cameraFlightSource = cameraTarget;
+				cameraFlightDestination = destinationBody;
+				cameraFlightDuration = flightTime;
+				cameraFlightStartTime = Date.now();
+				cameraFlightTarget = {};
+			}
+			else {
+				console.log("no cameraTarget set to move from");
+			}
+		}
+
+
+		function handleCameraFlight() {
+			var currentTime = Date.now();
+			// check if we've arrived at our destination
+			if (Date.now() >= cameraFlightStartTime + cameraFlightDuration) {
+				// flight's over, reset values
+				cameraTarget = cameraFlightDestination;
+
+				cameraFlightDestination = null;
+				cameraFlightSource = null;
+				cameraFlightDuration = 0;
+				cameraFlightStartTime = 0;
+				cameraFlightTarget = {};
+
+				isCameraFlying = false;
+				return;
+			}
+
+			if (cameraFlightDestination && cameraFlightSource && cameraFlightDuration > 0) {
+				var totalFlightDistance = cameraFlightDestination.position.clone().sub(cameraFlightSource.position);
+
+				var flightProgress = (currentTime - cameraFlightStartTime) / cameraFlightDuration;	// 0 = at start, 1 = at dest
+
+				var currentFlightLocation = cameraFlightSource.position.clone().add(totalFlightDistance.multiplyScalar(flightProgress));
+
+				cameraFlightTarget.position = currentFlightLocation;
+				cameraTarget = cameraFlightTarget;
+			}
+		}
+
+		function addTestBodies(numBodies, minSize, maxSize, distance){
+
+			for (var i = 0; i < numBodies; i++) { 
+				var size = (Math.random()*maxSize)+minSize;
+
+
+				var testBodyGeometry	= new THREE.SphereGeometry(size, 50, 250);
+				var testBodyMaterial =new THREE.MeshPhongMaterial({
+			        // light
+			        specular: '#a9fcff',
+			        // intermediate
+			        color: '#00abb1',
+			        // dark
+			        emissive: '#006063',
+			        shininess: 100 
+			      });
+				var testBodyMesh	= new THREE.Mesh(testBodyGeometry, testBodyMaterial); 
+
+				var positionX = Math.floor((Math.random() * 2 * distance) - distance);
+				var positionY = Math.floor((Math.random() * 2 * distance) - distance);
+				var positionZ = Math.floor((Math.random() * 2 * distance) - distance);
+
+				testBodyMesh.position = new THREE.Vector3(positionX,positionY,positionZ);
+
+				scene.add(testBodyMesh);
+			}
 		}
 
 		function handleCameraRotation(time) {
