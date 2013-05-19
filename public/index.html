@@ -282,7 +282,10 @@
                             camera = addCamera(scene);
 
 			                // create a camera contol
-			                cameraControls	= new THREE.OrbitControls(camera)
+			                cameraControls	= new THREE.OrbitControls(camera);
+
+			                cameraTarget = bodies[0].planet;	// set the cameraTarget to the first body of the simulation
+
 			                skymesh = drawSkyBox();
 						}
 					}, {
@@ -576,9 +579,9 @@
 			requestAnimationFrame(animate);
 			
 			// update camera controls
-      if (cameraControls) {
-			  cameraControls.update();
-      }
+      		if (cameraControls) {
+				cameraControls.update();
+      		}
 			// do the render
 			render();
 
@@ -600,69 +603,14 @@
 			var incRadian = (inclination / 180.0) * Math.PI;
 			var maxH = 2;
 			var height = maxH * Math.cos(incRadian) * Math.sin(orbitphase);
-      var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
-            
-      //moonmesh.rotation.y += rotationspeed; // Moon rotation
-      //Moon's orbit
-      //moonmesh.position.x = radius * Math.cos(orbitphase) + bodies[0].planet.position.x;
-      //moonmesh.position.z = radius * Math.sin(orbitphase) + bodies[0].planet.position.z;
-      //moonmesh.position.y = height + bodies[0].planet.position.y;
+    		var rotationspeed = 0.00002 * timeAccel; //need to study up on this relation to orbit and mass. 
 
-      var camangularvelocity = 0.002;//added camera rotation.
-      
-      var camsemimajoraxis = 3; 
-      //var camorbitphase = camangularvelocity * time;
-      var cameccentricity = 0.0549;
-      var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
-
-            if (cameraControls) {
-          CameraTarget(cameraControls, bodies);
-          }
-      
-      camera.position.x = camradius * Math.cos(camorbitphase) + bodies[0].planet.position.x;//act on camera rotation.
-      camera.position.z = camradius * Math.sin(camorbitphase) + bodies[0].planet.position.z;
-      //camera.position.x = camradius * Math.cos(camorbitphase);//act on camera rotation.
-      //camera.position.z = camradius * Math.sin(camorbitphase);
-      
-      // update camera controls
-            if (cameraControls != null) {
-                cameraControls.update();
-            }
-      camera.lookAt(bodies[0].planet.position);
-
-      var cameraOffset = camera.position.clone().sub(cameraTarget.position);
-
-      if (isCameraRotatingAutomatically) {
-        // keep the cam orbit phase within 2*pi radians
-        camorbitphase += camangularvelocity * (time - timeOfLastRender);
-        camorbitphase %= 2.0 * Math.PI;
-      } else {
-        // we need to know where in the phase we've been dragged to,
-        // so when rotation starts again it can be seamless
-        camorbitphase = Math.atan2(cameraOffset.z,cameraOffset.x);
-      }
-				
-			// zoom can change the radius of our camera orbit
-			// knowing what the camorbitphase is, and what our current X-Z distance is from our target, we need to simulate winding the orbit to camorbitphase=0
-			// because that's where the distance will be the semimajor axis that we need to update to
-			// (note: this is all still in 2d, assuming orbits are on the X-Z plane)
-			var currentCamRadius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
-
-			var xzCameraTargetDistance = Math.sqrt(Math.pow(cameraOffset.x,2) + Math.pow(cameraOffset.z,2));
-
-			camsemimajoraxis *= (xzCameraTargetDistance / currentCamRadius);
-
-			if (isCameraRotatingAutomatically) {	
-				var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
-				
-				camera.position.x = camradius * Math.cos(camorbitphase) + cameraTarget.position.x;//act on camera rotation.
-				camera.position.z = camradius * Math.sin(camorbitphase) + cameraTarget.position.z;
+    		// if there is no camera target, there will be no auto-rotation,
+    		// and no following of a particular body; however the orbit camera controls
+    		// will still work as default on camera.position.
+    		if (cameraTarget) {
+				handleCameraRotation(time);
 			}
-
-      if (cameraControls) {
-			   cameraControls.center = cameraTarget.position.clone();
-      }
-			camera.lookAt(cameraTarget.position);
 			
 			// animation of all objects
 			// TODO
@@ -687,6 +635,51 @@
 
 			// actually render the scene
 			renderer.render(scene, camera);
+		}
+
+		function handleCameraRotation(time) {
+			// defining camera orbit properties
+			var camangularvelocity = 0.002;
+      		var camsemimajoraxis = 3; 
+      		var cameccentricity = 0.0549;
+
+      		var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+
+      		var cameraOffset = camera.position.clone().sub(cameraTarget.position);
+
+      		if (isCameraRotatingAutomatically) {
+      			// move the orbit along by the arc length since it was last updated
+        		camorbitphase += camangularvelocity * (time - timeOfLastRender);
+
+        		// keep the cam orbit phase within 2*pi radians
+        		camorbitphase %= 2.0 * Math.PI;
+      		} else {
+        		// we need to know where in the phase we've been dragged to,
+        		// so when rotation starts again it can be seamless
+        		camorbitphase = Math.atan2(cameraOffset.z,cameraOffset.x);
+      		}
+
+			// zoom can change the radius of our camera orbit
+			// knowing what the camorbitphase is, and what our current X-Z distance is from our target, we need to simulate winding the orbit to camorbitphase=0
+			// because that's where the distance will be the semimajor axis that we need to update to
+			// (note: this is all still in 2d, assuming orbits are on the X-Z plane)
+			var currentCamRadius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+
+			var xzCameraTargetDistance = Math.sqrt(Math.pow(cameraOffset.x,2) + Math.pow(cameraOffset.z,2));
+
+			camsemimajoraxis *= (xzCameraTargetDistance / currentCamRadius);
+
+			if (isCameraRotatingAutomatically) {	
+				var camradius = camsemimajoraxis * ((1.0 - cameccentricity^2)/(1.0 + cameccentricity * Math.cos(camorbitphase)));
+				
+				camera.position.x = camradius * Math.cos(camorbitphase) + cameraTarget.position.x; //act on camera rotation.
+				camera.position.z = camradius * Math.sin(camorbitphase) + cameraTarget.position.z;
+			}
+
+      		if (cameraControls) {
+			   cameraControls.center = cameraTarget.position.clone();
+      		}
+			camera.lookAt(cameraTarget.position);
 		}
 
 		function checkDistance(x1, x2, x3, xt, yt, zt) {
