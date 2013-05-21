@@ -223,7 +223,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
                         rel: 'self',
                         href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
                         method: 'GET'}, {
-                        rel: 'delete',
+                        rel: '/rel/delete',
                         href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
                         method: 'DELETE'}];
                 }
@@ -247,7 +247,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
             getUser(https, accessToken, function(me) {
                 if (me.admin) {
                     var engineId = new ObjectID();
-                    console.log('creatde new engine objectid: ' + engineId);
+                    console.log('created new engine objectid: ' + engineId);
                     var engine = request.body;
                     console.log('got engine as ' + JSON.stringify(engine));
                     engine._id = engineId;
@@ -281,9 +281,9 @@ mongo.connect(mongoUri, {}, function(error, db) {
                             rel: 'self',
                             href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
                             method: 'GET'}, {
-                            rel: 'delete',
+                            rel: '/rel/delete',
                             href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
-                            method: 'GET'}];
+                            method: 'DELETE'}];
 
                         response.send(engine);
                     });
@@ -303,7 +303,8 @@ mongo.connect(mongoUri, {}, function(error, db) {
                 if (me.admin) {
                     var engineId = BSON.ObjectID.createFromHexString(request.params.id);
                     db.collection('engines').findOne({_id:engineId}, function(err, engine) {
-                        db.collection('engines').save(extend(engine, request));
+                        console.log('merging into engine ' + engineId + ' ' + JSON.stringify(request.body));
+                        db.collection('engines').save(extend(engine, request.body));
                         response.send(204, null);
                     });
                 } else {
@@ -314,6 +315,29 @@ mongo.connect(mongoUri, {}, function(error, db) {
             response.send(404, null);
         }
     });
+
+    // Delete engine
+    app.delete('/metasim/:version/engines/:id', function(request, response) {
+        var version = request.params.version;
+        if (version == '1.0') {
+            var engineId = new BSON.ObjectID.createFromHexString(request.params.id);
+            console.log('searching for engine ' + engineId);
+            db.collection('engines').find({_id: engineId}).count(function(err, number) {    
+                if (number > 0) {
+                    console.log('deleting engine' + request.params.id);
+                    db.collection('engines').remove({_id: engineId});
+                    response.send(204, null);
+                } else {
+                    console.log('engine ' + engineId + ' not found');
+                    response.send(404, 'engine ' + engineId + ' not found');
+                }
+            });
+        } else {
+            console.log('version ' + version + ' not found');
+            response.send(404, 'version ' + version + ' not found');
+        }
+    });
+
 
     // Simulations resource
     app.get('/metasim/:version/simulations', function(request, response) {

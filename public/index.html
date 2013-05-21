@@ -381,11 +381,17 @@
 					{
 						text: "Save",
 						click: function() {
-							// PATCH to simulations resource
-							getLinkByRel(engine.links, '/rel/add', function(addEngineUri) {
+							// PATCH to engine resource
+							getLinkByRel(engine.links, 'edit', function(editEngineUri) {
 								$.ajax({
 									type: 'PATCH',
-									url: addEngineUri,
+									url: editEngineUri,
+									data: JSON.stringify({
+										name: $name.val(),
+										version: $version.find(':selected').val(),
+										href: $url.val()
+									}),
+									contentType: 'application/json; charset=utf-8',
 									success: function(response, status, jqXHR) {
 										// go back to engines dialog box
 										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
@@ -400,14 +406,14 @@
 						text: "Delete",
 						click: function() {
 							// DELETE to engine resource
-							getLinkByRel(engines.links, '/rel/delete', function(deleteEngineUri) {
+							getLinkByRel(engine.links, '/rel/delete', function(deleteEngineUri) {
 								$.ajax({
 									type: 'DELETE',
 									url: deleteEngineUri,
 									success: function(response, status, jqXHR) {
 										// go back to engines dialog box
 										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
-											$enginesInfoDialog.dialog('close');
+											$engineInfoDialog.dialog('close');
 											showEnginesDialog(engines);
 										});
 									}
@@ -460,7 +466,7 @@
 						text: "Delete",
 						click: function() {
 							// DELETE to simulations resource
-							getLinkByRel(simulation.links, 'delete', function(deleteSimulationUri) {
+							getLinkByRel(simulation.links, '/rel/delete', function(deleteSimulationUri) {
 								$.ajax({
 									type: 'DELETE',
 									url: deleteSimulationUri,
