@@ -532,7 +532,7 @@
 										var simulationUri = jqXHR.getResponseHeader('location');
 										console.log('created simulation @ ' + simulationUri);
 										$.getJSON(simulationUri, function(response) {
-											$createSimulationDialog.dialog('close');
+											$createSimulationDialog.add($parentDialog).dialog('close');
 											showSimulationInfoDialog(response, $parentDialog);
 										});
 									}

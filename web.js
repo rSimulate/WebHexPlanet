@@ -10,7 +10,7 @@ var mongo = require('mongodb');
 var ObjectID = mongo.ObjectID;
 var BSON = require('mongodb').BSONPure;
 var async = require('async');
-var extend = require('xtend');
+var extend = require('extend');
 var util = require('util');
 
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/metasim';
@@ -32,6 +32,9 @@ function traverseLinks(client, uri, rels, callback) {
     console.log('GETting ' + uri);
     client.get(uri, function(res) {
         var body = ''; 
+        res.on('error', function(error) {
+            console.log(error);
+        });
         res.on('data', function(chunk) {
             body += chunk;
         }); 
@@ -127,6 +130,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
     db.collection('users').update({id:'113479285279093781959'}, {
         id: '113479285279093781959',
         admin: true}, {upsert: true});
+    // Add yourself here if you wish
 
     function getUser(client, accessToken, callback) {
         https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + accessToken, function(res){
@@ -148,8 +152,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
     var proxy = new httpProxy.RoutingProxy();
     app.all('/*', function(request, response, next) {
         // find a simulation (if any) that contains the requested url
-        console.log('Trying to forward to engine...');
-        console.log('Finding simulation with forwarding path: ' + request.originalUrl);
+        console.log(request.method.toString() + ' ' + request.originalUrl);
         var buffer = httpProxy.buffer(request);
         db.collection('simulations').find({
             forwardedPaths: {'$elemMatch': {originalUrl: request.originalUrl}}}, {
@@ -399,9 +402,9 @@ mongo.connect(mongoUri, {}, function(error, db) {
                 // transform the engineName, version list into a sequence of functions that when invoked,
                 // call a callback with the retrieved engine
                 async.eachSeries([
-                    {name:bodiesEngineName, version:request.params.version},
-                    {name:terrainEngineName, version:request.params.version},
-                    {name:agentEngineName, version:request.params.version}], function(item, callback) {
+                    {name:bodiesEngineName, version:request.params.version, type:'bodies'},
+                    {name:terrainEngineName, version:request.params.version, type:'terrain'},
+                    {name:agentEngineName, version:request.params.version, type:'agent'}], function(item, callback) {
                     console.log('Looking up engine ' + item.name + ' ' + item.version);
                     // find the matching engine
                     db.collection('engines').findOne(item, function(err, engine) {
@@ -433,7 +436,15 @@ mongo.connect(mongoUri, {}, function(error, db) {
                             });
                             req.on('response', function (res) {
                                 var simulationHref = res.headers.location;
-                                console.log('response status: ' + res.status);
+                                if (!simulation.engineHrefs) {
+                                    simulation.engineHrefs = {};
+                                }
+                                // Keep track of the location of each engine simulation.
+                                // We'll need it for refreshing bodies info and deleting the simulation
+                                // from all of the engines.
+                                simulation.engineHrefs[engine.type] = simulationHref;
+
+                                console.log('response status: ' + res.statusCode);
                                 console.log('response headers: ' + JSON.stringify(res.headers));
                                 console.log('Engine simulation created at ' + simulationHref);
                                 var body = ''; 
@@ -450,7 +461,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
                                             console.log('merging engine response into simulation ');
                                             console.log('engine response: ' + JSON.stringify(jsonBody));
                                             console.log('simulation: ' + JSON.stringify(simulation));
-                                            simulation = extend(simulation, jsonBody);
+                                            simulation = extend(true, simulation, jsonBody);
                                         }
                                         // _id field needs to be an objectId not a string
                                         simulation._id = simulationId;
@@ -487,11 +498,34 @@ mongo.connect(mongoUri, {}, function(error, db) {
                     console.log('simulation ' + simulationId + ' not found');
                     response.send(404, 'simulation ' + simulationId + ' not found');
                 } else {
-                    console.log('err: ' + JSON.stringify(err));
                     console.log('found simulation: ' + request.params.id);
-                    console.log('sending : ' + JSON.stringify(simulation));
-                    // TODO: Get new bodies data, merge it and save to db
-                    response.send(simulation);
+                    // Get new bodies data, merge it and save to db
+                    var bodiesEngineSimulationUrl = url.parse(simulation.engineHrefs.bodies);
+                    console.log('Fetching new bodies information from ' + simulation.engineHrefs.bodies);
+                    http.get(simulation.engineHrefs.bodies, function(res) {
+                        var body = ''; 
+                        res.on('data', function(chunk) {
+                            body += chunk;
+                        }); 
+                        res.on('end', function() {
+                            // only merge in body if an response was returned
+                            if (body != '') {
+                                console.log(body);
+                                var bodies = JSON.parse(body);
+
+                                // if the engine returned anything, merge it into the simulation object
+                                if (bodies != null) {
+                                    console.log('merging engine response into simulation ');
+                                    console.log('engine response: ' + JSON.stringify(bodies));
+                                    console.log('simulation: ' + JSON.stringify(simulation));
+                                    simulation = extend(true, simulation, bodies);
+                                    console.log('merged simulation: ' + JSON.stringify(simulation));
+                                    db.collection('simulations').save(simulation);
+                                }
+                            }
+                            response.send(simulation);
+                        });
+                    });
                 }
             });
         } else {
