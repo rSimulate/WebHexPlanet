@@ -8,6 +8,12 @@ body {
 	font-family	: arial;
 	font-size	: 100%;
 }
+select {
+    color: black;
+}
+input {
+    margin-bottom: 10px;
+}
 #info .top {
 	position	: absolute;
 	top		: 0px;
@@ -62,3 +68,9 @@ body {
 .no-show {
     display: none;
 }
+
+.ui-widget-overlay {
+    background: #222222;
+    opacity: 0.95;
+}
+

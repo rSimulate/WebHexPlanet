@@ -47,7 +47,7 @@
 		
         <!--### 	Bootstrap sand Styles 	###-->
 		<link  href="css/main.css" rel="stylesheet">
-		<link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">
 		  body {
 			padding-top: 40px;
@@ -66,7 +66,7 @@
 			}
 		  }
 		</style>
-		<link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">		
+        <link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -128,19 +128,39 @@
             </span>
         </div>
 
+		<div id="adminDialog" class="no-show"></div>
+		<div id="enginesDialog" class="no-show"></div>
 		<div id="simulationsDialog" class="no-show"></div>
 
+		<div id="createEngineDialog" class="no-show">
+			Name: <input name="name" class="input-xxlarge"/><br/>
+			API Version: <select name="version" class="input-xxlarge"></select></br>
+			URL: <input name="url" class="input-xxlarge"/><br/>
+		</div>
+
 		<div id="createSimulationDialog" class="no-show">
-			Name: <input name="name"/><br/>
-			Bodies Engine: <select name="bodiesEngine"></select></br>
-			Terrain Engine: <select name="terrainEngine"></select></br>
-			Agent Engine: <select name="agentEngine"></select></br>
+			Name: <input name="name"/ class="input-xxlarge"><br/>
+			Bodies Engine: <select name="bodiesEngine" class="input-xxlarge"></select></br>
+			Terrain Engine: <select name="terrainEngine" class="input-xxlarge"></select></br>
+			Agent Engine: <select name="agentEngine" class="input-xxlarge"></select></br>
 		</div>
 
         <div id="simulationInfoDialog" class="no-show">
             Created: <span class="dateCreated"></span>
         </div>
 		
+		<div id="engineInfoDialog" class="no-show">
+			Name: <input name="name" class="input-xxlarge"/><br/>
+            Type: <select name="type" class="input-xxlarge">
+                <option value="bodies">bodies</option>
+                <option value="terrain">terrain</option>
+                <option value="weather">weather</option>
+                <option value="agent">agent</option>
+            </select></br>
+            API Version: <select name="version" class="input-xxlarge"><option value="1.0">1.0</option></select></br>
+			URL: <input name="url" class="input-xxlarge"/><br/>
+		</div>
+
 		<div class="bottom" id="inlineDoc" >
 			- <i>p</i> for screenshot
 			 n and m for time accel/decel
@@ -232,6 +252,7 @@
         function showLoginDialog() {
             $('#userinfo').empty().append(
                 '    <span id="username"></span>' +
+                '    <span id="adminLinks"></span>' +
                 '    <span id="userImage"></span>' +
                 '    <a id="logout">Logout</a>');
 
@@ -246,10 +267,148 @@
         }
 
         function displayUserInformation(me) {
+            if (me.admin) {
+                $('#adminLinks').empty().append('<a id="adminLink" href="#">(admin)</a>').click(function() {
+                    showAdminDialog();
+                });
+            }
             $('#username').text(me.displayName);
             $('#userImage').empty().append('<img src="' + me.image.url + '" height="18" width="18" />');
             $('#userinfo').show();
         }
+
+        function showAdminDialog() {
+            var $adminDialog = $('#adminDialog');
+			// Add a <ul> to the dialog
+            var $dialogUl = $('<ul></ul>');
+            $adminDialog.empty().append($dialogUl);
+            var $enginesLink = $('<a>Edit engines</a>');
+            $enginesLink.click(function() {
+                showEnginesDialog($adminDialog);
+                $adminDialog.dialog('close');
+            });
+			$dialogUl.append($('<li></li>').append($enginesLink));
+			
+			$adminDialog.dialog({
+				draggable: false,
+				resizeable: false,
+                modal:true,
+				title: 'Admin Console'
+			});
+
+            
+        }
+
+        function showEnginesDialog($parentDialog) {
+			initMetaSimAPI('1.0', accessToken, function(engines, simulations, me) {
+			    var $enginesDialog = $('#enginesDialog');
+			    if (engines.engines.length > 0) {
+			    	// Add a <ul> to the dialog
+                    var $dialogUl = $('<ul></ul>');
+                    $enginesDialog.empty().append($dialogUl);
+			    	for (var i in engines.engines) {
+			    		var engine = engines.engines[i];
+			    		// Add all of the engine names as <li>'s.
+                        var $link = $('<li><a>' + (engine.name || 'unknown') + '</a></li>');
+                        // properly create a closure of engine. see http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example
+                        $link.click(function(engine) {
+                            return function() {
+			    			    getLinkByRel(engine.links, 'self', function(engineUri) {
+			    			    	$.getJSON(engineUri, function(response) {
+			    			    		$enginesDialog.dialog('close');
+			    			    		showEngineInfoDialog(response, $enginesDialog);
+			    			    	});
+			    			    });
+                            };
+			    		}(engine));
+			    		$dialogUl.append($('<li></li>').append($link));
+			    	}
+			    } else {
+			    	// engines.engines.length == 0; no engines
+			    	$enginesDialog.empty().append('<i>none</i>');
+			    }
+			    $enginesDialog.dialog({
+			    	draggable: false,
+			    	resizeable: false,
+                    modal:true,
+                    width: 800,
+			    	title: 'Engines',
+			    	buttons: [
+			    		{
+			    			text: "Create",
+			    			click: function() {
+			    				// Hide engines dialog
+			    				$enginesDialog.dialog('close');
+			    				showCreateEngineDialog(engines, $enginesDialog);
+			    			}
+			    		}
+
+			    	]
+			    });
+            });
+        }
+
+		function showEngineInfoDialog(engine, $parentDialog) {
+			// Show engine info dialog
+			var $engineInfoDialog = $('#engineInfoDialog');
+			var $name = $engineInfoDialog.find('input[name=name]');
+			var $type = $engineInfoDialog.find('input[name=type]');
+			var $version = $engineInfoDialog.find('input[name=version]');
+			var $url = $engineInfoDialog.find('input[name=url]');
+
+			$name.val(engine.name);
+			$version.val(engine.version);
+			$url.val(engine.href);
+			$engineInfoDialog.dialog({
+				draggable: false,
+				resizeable: false,
+                width: 600,
+                modal: true,
+				title: engine.name,
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Save",
+						click: function() {
+							// PATCH to simulations resource
+							getLinkByRel(engine.links, '/rel/add', function(addEngineUri) {
+								$.ajax({
+									type: 'PATCH',
+									url: addEngineUri,
+									success: function(response, status, jqXHR) {
+										// go back to engines dialog box
+										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
+											$engineInfoDialog.dialog('close');
+											showEnginesDialog(engines);
+										});
+									}
+								});			
+							});
+						}
+					}, {
+						text: "Delete",
+						click: function() {
+							// DELETE to engine resource
+							getLinkByRel(engines.links, '/rel/delete', function(deleteEngineUri) {
+								$.ajax({
+									type: 'DELETE',
+									url: deleteEngineUri,
+									success: function(response, status, jqXHR) {
+										// go back to engines dialog box
+										initMetaSimAPI('1.0', accessToken, function(engines, simulations) {
+											$enginesInfoDialog.dialog('close');
+											showEnginesDialog(engines);
+										});
+									}
+								});			
+							});
+						}
+					}	
+				]
+			});
+		}
 
 		function showSimulationInfoDialog(simulation, $parentDialog) {
 			// Show simulation info dialog
@@ -289,7 +448,7 @@
 						text: "Delete",
 						click: function() {
 							// DELETE to simulations resource
-							getLinkByRel(simulation.links, '/rel/delete', function(deleteSimulationUri) {
+							getLinkByRel(simulation.links, 'delete', function(deleteSimulationUri) {
 								$.ajax({
 									type: 'DELETE',
 									url: deleteSimulationUri,
@@ -315,8 +474,8 @@
 			var $bodiesEngineSelect = $createSimulationDialog.find('select[name=bodiesEngine]');
 			var $terrainEngineSelect = $createSimulationDialog.find('select[name=terrainEngine]');
 			var $agentEngineSelect = $createSimulationDialog.find('select[name=agentEngine]');
-			for (var i in engines) {
-				var engine = engines[i];
+			for (var i in engines.engines) {
+				var engine = engines.engines[i];
 				if (engine.type == 'bodies') {
 					$bodiesEngineSelect.append('<option value="' + engine.name + '">' + engine.name + '</option>');
 				}
@@ -331,6 +490,7 @@
 				draggable: false,
 				resizeable: false,
 				title: 'New Simulation',
+                width: 600,
 				close: function() {
 					$parentDialog.dialog('open');
 				},
@@ -357,6 +517,49 @@
 											$createSimulationDialog.dialog('close');
 											showSimulationInfoDialog(response, $parentDialog);
 										});
+									}
+								});			
+							});
+						}
+					}
+				]
+			});
+		}
+
+		function showCreateEngineDialog(engines, $parentDialog) {
+			// Show create engine dialog
+			var $createEngineDialog = $('#engineInfoDialog');
+			var $name = $createEngineDialog.find('input[name=name]');
+			var $version = $createEngineDialog.find('select[name=version]');
+			var $url = $createEngineDialog.find('input[name=url]');
+			$version.append('<option value="1.0">1.0</option>');
+			$createEngineDialog.dialog({
+				draggable: false,
+				resizeable: false,
+                modal:true,
+				title: 'New Engine',
+                width: 600,
+				close: function() {
+					$parentDialog.dialog('open');
+				},
+				buttons: [
+					{
+						text: "Create",
+						click: function() {
+							// POST to engines resource
+							getLinkByRel(engines.links, '/rel/add', function(addEngineUri) {
+								$.ajax({
+									type: 'POST',
+									url: addEngineUri,
+									data: JSON.stringify({
+										name: $name.val(),
+										version: $version.find(':selected').val(),
+										href: $url.val()
+									}),
+									contentType: 'application/json; charset=utf-8',
+									success: function(response, status, jqXHR) {
+                                        $createEngineDialog.dialog('close');
+                                        showEnginesDialog();
 									}
 								});			
 							});
@@ -427,7 +630,7 @@
 									console.log('Got ' + JSON.stringify(response) + ' from entrypoint');
 									getLinkByRel(entryPointResponse.links, '/rel/engines', function(enginesUri) {
 										$.getJSON(enginesUri, function(response) {
-											var engines = response.engines;
+											var engines = response;
 											getLinkByRel(entryPointResponse.links, '/rel/simulations', function(simulationsUri) {
 												// Get simulations
                                                 $.getJSON(simulationsUri, function(response) {
@@ -518,12 +721,14 @@
 			// transparently support window resize
 			THREEx.WindowResize.bind(renderer, camera);
 			// allow 'p' to make screenshot
-			THREEx.Screenshot.bindKey(renderer);
+            //TODO: Make this a button rather than a hotkey, because it interferes with input boxes.
+			//THREEx.Screenshot.bindKey(renderer);
 			// allow 'f' to go fullscreen where this feature is supported
-			if(THREEx.FullScreen.available()){
-				THREEx.FullScreen.bindKey();		
-				document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
-			}
+            //TODO: Make this a button rather than a hotkey, because it interferes with input boxes.
+			//if(THREEx.FullScreen.available()){
+			//	THREEx.FullScreen.bindKey();		
+			//	document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
+			//}
 
 			skymesh = drawSkyBox();
 			light = lights(scene);
@@ -547,7 +752,7 @@
 				linewidth: 10});
 			
 			var line = new THREE.Line(geometry, material);
-			scene.add(line);
+			//scene.add(line);
 			
 			
 				
@@ -712,14 +917,14 @@
 
 		document.addEventListener('mouseup', onDocumentMouseUp, false);
 		function onDocumentMouseUp(event) {
-		    event.preventDefault();
+		    //event.preventDefault();
 
 		    isCameraRotatingAutomatically = true;
 		}
 
 		document.addEventListener('mousedown', onDocumentMouseDown, false);
 		function onDocumentMouseDown(event) {
-		    event.preventDefault();
+		    //event.preventDefault();
 		
 		    isCameraRotatingAutomatically = false;
 

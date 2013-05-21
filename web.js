@@ -49,20 +49,6 @@ function traverseLinks(client, uri, rels, callback) {
     });
 }
 
-function getUser(client, accessToken, callback) {
-    https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + accessToken, function(res){
-        var body = ''; 
-        res.on('data', function(chunk) {
-            body += chunk;
-        }); 
-        res.on('end', function() {
-            var jsonBody = JSON.parse(body);
-            console.log('got me results: ' + body);
-            callback(jsonBody);
-        });
-    });
-}
-
 var app = express();
 
 // bodyParser goes after proxy route otherwise proxying will hang.
@@ -91,42 +77,42 @@ mongo.connect(mongoUri, {}, function(error, db) {
     });
 
     // setup default data for engines
-    db.collection('engines').update({name: 'BodiesReferenceEngine'}, {
+    db.collection('engines').update({name: 'BodiesReferenceEngine (Heroku)'}, {
         name: 'BodiesReferenceEngine (Heroku)',
         type: 'bodies',
         href: 'http://metasimBodiesReferenceEngine.herokuapp.com/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'BodiesReferenceEngine'}, {
+    db.collection('engines').update({name: 'BodiesReferenceEngine (local)'}, {
         name: 'BodiesReferenceEngine (local)',
         type: 'bodies',
         href: 'http://localhost:5004/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'TerrainReferenceEngine'}, {
+    db.collection('engines').update({name: 'TerrainReferenceEngine (Heroku)'}, {
         name: 'TerrainReferenceEngine (Heroku)',
         type: 'terrain',
         href: 'http://metasimTerrainReferenceEngine.herokuapp.com/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'TerrainReferenceEngine'}, {
+    db.collection('engines').update({name: 'TerrainReferenceEngine (local)'}, {
         name: 'TerrainReferenceEngine (local)',
         type: 'terrain',
         href: 'http://localhost:5001/metasim/1.0',
         version: '1.0'}, {upsert: true});
     db.collection('engines').update({name: 'WeatherReferenceEngine (Heroku)'}, {
-        name: 'WeatherReferenceEngine',
+        name: 'WeatherReferenceEngine (Heroku)',
         type: 'weather',
         href: 'http://metasimWeatherReferenceEngine.herokuapp.com/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'WeatherReferenceEngine'}, {
+    db.collection('engines').update({name: 'WeatherReferenceEngine (local)'}, {
         name: 'WeatherReferenceEngine (local)',
         type: 'weather',
         href: 'http://localhost:5002/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'AgentReferenceEngine'}, {
+    db.collection('engines').update({name: 'AgentReferenceEngine (Heroku)'}, {
         name: 'AgentReferenceEngine (Heroku)',
         type: 'agent',
         href: 'http://metasimAgentReferenceEngine.herokuapp.com/metasim/1.0',
         version: '1.0'}, {upsert: true});
-    db.collection('engines').update({name: 'AgentReferenceEngine'}, {
+    db.collection('engines').update({name: 'AgentReferenceEngine (local)'}, {
         name: 'AgentReferenceEngine (local)',
         type: 'agent',
         href: 'http://localhost:5003/metasim/1.0',
@@ -141,6 +127,22 @@ mongo.connect(mongoUri, {}, function(error, db) {
     db.collection('users').update({id:'113479285279093781959'}, {
         id: '113479285279093781959',
         admin: true}, {upsert: true});
+
+    function getUser(client, accessToken, callback) {
+        https.get('https://www.googleapis.com/plus/v1/people/me/?fields=displayName%2Cid%2Cimage&access_token=' + accessToken, function(res){
+            var body = ''; 
+            res.on('data', function(chunk) {
+                body += chunk;
+            }); 
+            res.on('end', function() {
+                var jsonBody = JSON.parse(body);
+                console.log('got me results: ' + body);
+                db.collection('users').findOne({id:jsonBody.id}, function(err, user) {
+                    callback(extend(jsonBody, user));
+                });
+            });
+        });
+    }
 
     // Create a default route to pass unknown uris to engines (if they exist)
     var proxy = new httpProxy.RoutingProxy();
@@ -211,8 +213,102 @@ mongo.connect(mongoUri, {}, function(error, db) {
 
             db.collection('engines').find({version: request.params.version}).toArray(function(err, engines) {
                 console.log('sending engines' + JSON.stringify(engines));
+                // links aren't stored in the engines collection, so add them at request-time
+                for (var i in engines) {
+                    var engineId = engines[i]._id;
+                    engines[i].links = [{
+                        rel: 'edit',
+                        href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                        method: 'PATCH'}, {
+                        rel: 'self',
+                        href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                        method: 'GET'}, {
+                        rel: 'delete',
+                        href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                        method: 'DELETE'}];
+                }
+
                 response.send({
-                    engines: engines});
+                    engines: engines,
+                    links: [{
+                        rel: '/rel/add',
+                        href: '/metasim/' + request.params.version + '/engines?accessToken=' + accessToken,
+                        method: 'POST'}]});
+            });
+        } else {
+            response.send(404, null);
+        }
+    });
+
+    // Create a new engine
+    app.post('/metasim/:version/engines', function(request, response) {
+        if (request.params.version == '1.0') {
+            var accessToken = request.query.accessToken;
+            getUser(https, accessToken, function(me) {
+                if (me.admin) {
+                    var engineId = new ObjectID();
+                    console.log('creatde new engine objectid: ' + engineId);
+                    var engine = request.body;
+                    console.log('got engine as ' + JSON.stringify(engine));
+                    engine._id = engineId;
+                    var enginePath = '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken;
+                    console.log('new engine will be located at: ' + enginePath);
+                    db.collection('engines').insert(engine, function(err, docs) {
+                        console.log('Returning 201 created at ' + enginePath);
+                        response.header('Location', enginePath);
+                        response.send(201, null);
+                    });
+                } else {
+                    response.send(401, null);
+                }
+            });
+        } else {
+            response.send(404, null);
+        }
+    });
+
+    app.get('/metasim/:version/engines/:id', function(request, response) {
+        if (request.params.version == '1.0') {
+            var accessToken = request.query.accessToken;
+            getUser(https, accessToken, function(me) {
+                if (me.admin) {
+                    var engineId = BSON.ObjectID.createFromHexString(request.params.id);
+                    db.collection('engines').findOne({_id:engineId}, function(err, engine) {
+                        engine.links = [{
+                            rel: 'edit',
+                            href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                            method: 'PATCH'}, {
+                            rel: 'self',
+                            href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                            method: 'GET'}, {
+                            rel: 'delete',
+                            href: '/metasim/' + request.params.version + '/engines/' + engineId + '?accessToken=' + accessToken,
+                            method: 'GET'}];
+
+                        response.send(engine);
+                    });
+                } else {
+                    response.send(401, null);
+                }
+            });
+        } else {
+            response.send(404, null);
+        }
+    });
+
+    app.patch('/metasim/:version/engines/:id', function(request, response) {
+        if (request.params.version == '1.0') {
+            var accessToken = request.query.accessToken;
+            getUser(https, accessToken, function(me) {
+                if (me.admin) {
+                    var engineId = BSON.ObjectID.createFromHexString(request.params.id);
+                    db.collection('engines').findOne({_id:engineId}, function(err, engine) {
+                        db.collection('engines').save(extend(engine, request));
+                        response.send(204, null);
+                    });
+                } else {
+                    response.send(401, null);
+                }
             });
         } else {
             response.send(404, null);
