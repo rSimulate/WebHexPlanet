@@ -473,7 +473,7 @@ mongo.connect(mongoUri, {}, function(error, db) {
                                     callback();
                                 });
                             });    
-                            req.write(JSON.stringify({simulation_href: simulationUrl}));
+                            req.write(JSON.stringify({simulation_id: simulationId.toString(), simulation_href: simulationUrl}));
                             req.end();
                         });
                    });
