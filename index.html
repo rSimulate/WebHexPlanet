@@ -1,40 +1,93 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Webhexplanet by rSimulate</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/rSimulate/WebHexPlanet">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/rSimulate/WebHexPlanet/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/rSimulate/WebHexPlanet/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+    <div class="wrapper">
 
-		<iframe src="https://raw.github.com/rSimulate/WebHexPlanet/master/index.html">
-		</iframe>
+      <section>
+        <div id="title">
+          <h1>Webhexplanet</h1>
+          <p>HexPlanet port to HTML5 + WebGL</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/rSimulate">rSimulate</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
+        <h1>
+<a name="webhexplanet" class="anchor" href="#webhexplanet"><span class="octicon octicon-link"></span></a>WebHexPlanet</h1>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
-    </body>
+<p>An HTML/WebGL port of HexPlanet using Three.js.</p>
+
+<p>View the live demo at <a href="http://webhexplanet.herokuapp.com/">http://webhexplanet.herokuapp.com/</a></p>
+
+<p>To jump straight into the code for our project, here's our cloud 9 share:
+<a href="https://github.com/rSimulate/WebHexPlanet/wiki/Cloud-9-Environment">https://github.com/rSimulate/WebHexPlanet/wiki/Cloud-9-Environment</a></p>
+
+<p>If you're using this for seperate purposes, or want to test your own fork of the code, follow the below procedures:</p>
+
+<h1>
+<a name="running-with-nodemongodb" class="anchor" href="#running-with-nodemongodb"><span class="octicon octicon-link"></span></a>Running with Node+MongoDB</h1>
+
+<p>Setup node.js
+<a href="http://nodejs.org/download/">http://nodejs.org/download/</a></p>
+
+<p>Setup mongodb
+<a href="http://www.mongodb.org/downloads">http://www.mongodb.org/downloads</a></p>
+
+<p>Checkout the source and download dependencies</p>
+
+<p><code>git clone https://github.com/rSimulate/WebHexPlanet.git</code></p>
+
+<p><code>cd WebHexPlanet</code></p>
+
+<p><code>npm install</code></p>
+
+<p>Serve up the web application</p>
+
+<p><code>node web.js</code></p>
+
+<p>Setup and run <a href="https://github.com/rSimulate/terrainReferenceEngine">https://github.com/rSimulate/terrainReferenceEngine</a> and <a href="https://github.com/rSimulate/agentReferenceEngine">https://github.com/rSimulate/agentReferenceEngine</a></p>
+
+<p>Navigate to localhost:9292</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-42079576-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
 </html>
